@@ -1,0 +1,20 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/beenode_bg.qm</file>
+        <file alias="de">locale/beenode_de.qm</file>
+        <file alias="en">locale/beenode_en.qm</file>
+        <file alias="es">locale/beenode_es.qm</file>
+        <file alias="fi">locale/beenode_fi.qm</file>
+        <file alias="fr">locale/beenode_fr.qm</file>
+        <file alias="it">locale/beenode_it.qm</file>
+        <file alias="ja">locale/beenode_ja.qm</file>
+        <file alias="pl">locale/beenode_pl.qm</file>
+        <file alias="pt">locale/beenode_pt.qm</file>
+        <file alias="ru">locale/beenode_ru.qm</file>
+        <file alias="sk">locale/beenode_sk.qm</file>
+        <file alias="sv">locale/beenode_sv.qm</file>
+        <file alias="vi">locale/beenode_vi.qm</file>
+        <file alias="zh_CN">locale/beenode_zh_CN.qm</file>
+        <file alias="zh_TW">locale/beenode_zh_TW.qm</file>
+    </qresource>
+</RCC>
