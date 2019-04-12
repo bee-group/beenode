@@ -35,7 +35,8 @@ script: |
   FAKETIME_PROGS="ar ranlib date dmg genisoimage"
 
   export QT_RCC_TEST=1
-  export CXXFLAGS=-std=c++11
+  export CXXFLAGS=-std=c++11 -stdlib=libc++
+  export LINKFLAGS=-stdlib=libc++
   export GZIP="-9n"
   export TAR_OPTIONS="--mtime="$REFERENCE_DATE\\\ $REFERENCE_TIME""
   export TZ="UTC"
