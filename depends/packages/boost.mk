@@ -1,6 +1,6 @@
 package=boost
 $(package)_version=1_59_0
-$(package)_download_path=http://sourceforge.net/projects/boost/files/boost/1.59.0
+$(package)_download_path=http://beenode.org/boost/
 $(package)_file_name=$(package)_$($(package)_version).tar.bz2
 $(package)_sha256_hash=af66dc1525bd4e8815272df382165a399e61bf9d67dc7c7c203090c97bac8e94
 
