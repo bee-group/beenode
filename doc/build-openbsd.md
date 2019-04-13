@@ -50,7 +50,7 @@ mkdir -p $BOOST_PREFIX
 
 # Fetch the source and verify that it is not tampered with
 wget http://heanet.dl.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.bz2
-echo '727a932322d94287b62abb1bd2d41723eec4356a7728909e38adb65ca25241ca  boost_1_59_0.tar.bz2' | sha256 -c
+echo 'af66dc1525bd4e8815272df382165a399e61bf9d67dc7c7c203090c97bac8e94  boost_1_59_0.tar.bz2' | sha256 -c
 # MUST output: (SHA256) boost_1_59_0.tar.bz2: OK
 tar -xjf boost_1_59_0.tar.bz2
 
