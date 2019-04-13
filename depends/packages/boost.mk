@@ -2,7 +2,7 @@ package=boost
 $(package)_version=1_59_0
 $(package)_download_path=http://sourceforge.net/projects/boost/files/boost/1.59.0
 $(package)_file_name=$(package)_$($(package)_version).tar.bz2
-$(package)_sha256_hash=af66dc1525bd4e8815272df382165a399e61bf9d67dc7c7c203090c97bac8e94
+$(package)_sha256_hash=727a932322d94287b62abb1bd2d41723eec4356a7728909e38adb65ca25241ca
 
 define $(package)_set_vars
 $(package)_config_opts_release=variant=release
