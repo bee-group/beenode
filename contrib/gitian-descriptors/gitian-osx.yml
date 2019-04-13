@@ -39,7 +39,7 @@ script: |
   export TAR_OPTIONS="--mtime="$REFERENCE_DATE\\\ $REFERENCE_TIME""
   export TZ="UTC"
   export BUILD_DIR=`pwd`
-  export ARM_ARCH="arm64”
+  export ARM_ARCH="arm64"
   export CFLAGS="-arch ${ARM_ARCH}"
   mkdir -p ${WRAP_DIR}
   if test -n "$GBUILD_CACHE_ENABLED"; then
