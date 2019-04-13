@@ -1,5 +1,5 @@
 ---
-name: "beenode-osx-0.7"
+name: "beenode-osx-0.12"
 enable_cache: true
 suites:
 - "trusty"
@@ -39,8 +39,6 @@ script: |
   export TAR_OPTIONS="--mtime="$REFERENCE_DATE\\\ $REFERENCE_TIME""
   export TZ="UTC"
   export BUILD_DIR=`pwd`
-  export ARM_ARCH="arm64"
-  export CFLAGS="-arch ${ARM_ARCH}"
   mkdir -p ${WRAP_DIR}
   if test -n "$GBUILD_CACHE_ENABLED"; then
     export SOURCES_PATH=${GBUILD_COMMON_CACHE}
@@ -125,7 +123,7 @@ script: |
     popd
 
     make deploy
-    ${WRAP_DIR}/dmg dmg Beenode-Core.dmg ${OUTDIR}/${DISTNAME}-osx-unsigned.dmg
+    ${WRAP_DIR}/dmg dmg beenode-Core.dmg ${OUTDIR}/${DISTNAME}-osx-unsigned.dmg
 
     cd installed
     find . -name "lib*.la" -delete
