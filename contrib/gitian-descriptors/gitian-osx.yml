@@ -2,7 +2,7 @@ name: "beenode-core-osx-0.7.1"
 enable_cache: true
 distro: "ubuntu"
 suites:
-- "maverick"
+- "trusty"
 architectures:
 - "amd64"
 packages:
