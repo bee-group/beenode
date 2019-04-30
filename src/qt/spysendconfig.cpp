@@ -2,9 +2,9 @@
 #include "ui_spysendconfig.h"
 
 #include "bitcoinunits.h"
-#include "spysend.h"
 #include "guiconstants.h"
 #include "optionsmodel.h"
+#include "privatesend-client.h"
 #include "walletmodel.h"
 
 #include <QMessageBox>
@@ -86,6 +86,6 @@ void SpysendConfig::configure(bool enabled, int coins, int rounds) {
     settings.setValue("nPrivateSendRounds", rounds);
     settings.setValue("nPrivateSendAmount", coins);
 
-    nPrivateSendRounds = rounds;
-    nPrivateSendAmount = coins;
+    privateSendClient.nPrivateSendRounds = rounds;
+    privateSendClient.nPrivateSendAmount = coins;
 }

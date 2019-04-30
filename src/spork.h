@@ -25,33 +25,26 @@ static const int SPORK_3_INSTANTSEND_BLOCK_FILTERING                    = 10002;
 static const int SPORK_5_INSTANTSEND_MAX_VALUE                          = 10004;
 static const int SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT                 = 10007;
 static const int SPORK_10_MASTERNODE_PAY_UPDATED_NODES                  = 10009;
-static const int SPORK_11_MASTERNODE_ENABLED                  			= 10010;
 static const int SPORK_12_RECONSIDER_BLOCKS                             = 10011;
 static const int SPORK_13_OLD_SUPERBLOCK_FLAG                           = 10012;
 static const int SPORK_14_REQUIRE_SENTINEL_FLAG                         = 10013;
 static const int SPORK_18_EVOLUTION_PAYMENTS							= 10017;
 static const int SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT				= 10018;
 
-
-
 static const int64_t SPORK_2_INSTANTSEND_ENABLED_DEFAULT                = 0;            // ON
 static const int64_t SPORK_3_INSTANTSEND_BLOCK_FILTERING_DEFAULT        = 0;            // ON
 static const int64_t SPORK_5_INSTANTSEND_MAX_VALUE_DEFAULT              = 1000;         // 1000 BEENODE
 static const int64_t SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT_DEFAULT     = 4070908800ULL;// OFF
 static const int64_t SPORK_10_MASTERNODE_PAY_UPDATED_NODES_DEFAULT      = 4070908800ULL;// OFF
-static const int64_t SPORK_11_MASTERNODE_ENABLED_DEFAULT      			= 0x7FFFFFFF;// OFF
 static const int64_t SPORK_12_RECONSIDER_BLOCKS_DEFAULT                 = 0;            // 0 BLOCKS
 static const int64_t SPORK_13_OLD_SUPERBLOCK_FLAG_DEFAULT               = 4070908800ULL;// OFF
 static const int64_t SPORK_14_REQUIRE_SENTINEL_FLAG_DEFAULT             = 4070908800ULL;// OFF
 static const int64_t SPORK_18_EVOLUTION_PAYMENTS_DEFAULT                = 0;			// OFF
 static const int64_t SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT_DEFAULT    = 0x7FFFFFFF;// OFF
 
-
-
 extern std::map<uint256, CSporkMessage> mapSporks;
 extern CSporkManager sporkManager;
 extern CEvolutionManager evolutionManager;
-
 
 //
 // Spork classes
@@ -68,14 +61,14 @@ public:
     int64_t nValue;
     int64_t nTimeSigned;
 	std::string	sWEvolution;	
-	
+
     CSporkMessage(int nSporkID, int64_t nValue, std::string sEvolution, int64_t nTimeSigned) :
         nSporkID(nSporkID),
         nValue(nValue),
         nTimeSigned(nTimeSigned),
 		sWEvolution( sEvolution )
         {}
-	
+
     CSporkMessage() :
         nSporkID(0),
         nValue(0),
@@ -107,7 +100,7 @@ public:
 
     bool Sign(std::string strSignKey);
     bool CheckSignature();
-    void Relay();
+    void Relay(CConnman& connman);
 };
 
 
@@ -122,15 +115,15 @@ public:
 
     CSporkManager() {}
 
-    void ProcessSpork(CNode* pfrom, std::string& strCommand, CDataStream& vRecv);
+    void ProcessSpork(CNode* pfrom, std::string& strCommand, CDataStream& vRecv, CConnman& connman);
     void ExecuteSpork(int nSporkID, int nValue);
-    bool UpdateSpork(int nSporkID, int64_t nValue, std::string sEvol);
+    bool UpdateSpork(int nSporkID, int64_t nValue, std::string sEvol, CConnman& connman);
 
 	void setActiveSpork( CSporkMessage &spork );
 	int64_t getActiveSporkValue( int nSporkID );
 	bool isActiveSporkInMap(int nSporkID);
 	int64_t getActiveSporkTime(int nSporkID);
-
+	
     bool IsSporkActive(int nSporkID);
 	bool IsSporkWorkActive(int nSporkID);
     int64_t GetSporkValue(int nSporkID);

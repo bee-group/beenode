@@ -1,4 +1,4 @@
-bitcoin (0.7.1-trusty1) trusty; urgency=medium
+bitcoin (0.12.1-trusty1) trusty; urgency=medium
 
   * New upstream release.
 

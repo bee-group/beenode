@@ -46,9 +46,9 @@ QString BitcoinUnits::name(int unit)
     {
         switch(unit)
         {
-            case BEENODE: return QString("BNODE");
-            case mBEENODE: return QString("mBNODE");
-            case uBEENODE: return QString::fromUtf8("μBNODE");
+            case BEENODE: return QString("BEENODE");
+            case mBEENODE: return QString("mBEENODE");
+            case uBEENODE: return QString::fromUtf8("μBEENODE");
             case duffs: return QString("duffs");
             default: return QString("???");
         }

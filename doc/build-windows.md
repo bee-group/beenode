@@ -12,6 +12,9 @@ but no one documented the steps to do this. If you are doing this, please contri
 Cross-compilation
 -------------------
 
+
+
+
 These steps can be performed on, for example, an Ubuntu VM. The depends system
 will also work on other Linux distributions, however the commands for
 installing the toolchain will be different.
@@ -22,6 +25,9 @@ First install the toolchains:
 
 To build executables for Windows 32-bit:
 
+	sudo update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-posix
+	sudo update-alternatives --set i686-w64-mingw32-g++  /usr/bin/i686-w64-mingw32-g++-posix
+
     cd depends
     make HOST=i686-w64-mingw32 -j4
     cd ..
@@ -29,6 +35,9 @@ To build executables for Windows 32-bit:
     make
 
 To build executables for Windows 64-bit:
+
+	sudo update-alternatives --set x86_64-w64-mingw32-gcc  /usr/bin/x86_64-w64-mingw32-gcc-posix
+	sudo update-alternatives --set x86_64-w64-mingw32-g++  /usr/bin/x86_64-w64-mingw32-g++-posix
 
     cd depends
     make HOST=x86_64-w64-mingw32 -j4

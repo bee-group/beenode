@@ -1,4 +1,4 @@
-# Copyright (c) 2014-2019 The Bitcoin Core developers
+# Copyright (c) 2014-2015 The Bitcoin Core developers
 # Copyright (c) 2019 The BeeGroup developers are EternityGroup
 # Distributed under the MIT/X11 software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.

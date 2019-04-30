@@ -7,7 +7,7 @@
 
 #include "chain.h"
 #include "chainparams.h"
-#include "main.h"
+#include "validation.h"
 #include "uint256.h"
 
 #include <stdint.h>
@@ -56,16 +56,6 @@ namespace Checkpoints {
         return fWorkBefore / (fWorkBefore + fWorkAfter);
     }
 
-    int GetTotalBlocksEstimate(const CCheckpointData& data)
-    {
-        const MapCheckpoints& checkpoints = data.mapCheckpoints;
-
-        if (checkpoints.empty())
-            return 0;
-
-        return checkpoints.rbegin()->first;
-    }
-
     CBlockIndex* GetLastCheckpoint(const CCheckpointData& data)
     {
         const MapCheckpoints& checkpoints = data.mapCheckpoints;
@@ -78,6 +68,16 @@ namespace Checkpoints {
                 return t->second;
         }
         return NULL;
+    }
+	
+    int GetTotalBlocksEstimate(const CCheckpointData& data)
+    {
+        const MapCheckpoints& checkpoints = data.mapCheckpoints;
+
+        if (checkpoints.empty())
+            return 0;
+
+        return checkpoints.rbegin()->first;
     }
 
 } // namespace Checkpoints

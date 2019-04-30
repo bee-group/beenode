@@ -1,4 +1,4 @@
-Beenode Core 0.7.1
+Beenode Core 0.12.1
 =====================
 
 This is the official reference wallet for Beenode digital currency and comprises the backbone of the Beenode peer-to-peer network. You can [download Beenode Core](https://www.beenode.org/downloads/) or [build it yourself](#building) using the guides below.
@@ -11,8 +11,8 @@ The following are some helpful notes on how to run Beenode on your native platfo
 
 Unpack the files into a directory and run:
 
-- `bin/bitcoin-qt` (GUI) or
-- `bin/bitcoind` (headless)
+- `bin/beenode-qt` (GUI) or
+- `bin/beenoded` (headless)
 
 ### Windows
 

@@ -3,7 +3,7 @@ Construct a linear, no-fork, best version of the blockchain.
 
 ## Step 0: Install beenode_hash
 
-https://github.com/eternity-group/beenode_hash
+https://github.com/bee-group/beenode
 
 ## Step 1: Download hash list
 

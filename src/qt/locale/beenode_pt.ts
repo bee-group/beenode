@@ -2733,7 +2733,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
     </message>
     <message>
         <source>The BeeGroup developers are EternityGroup</source>
-        <translation>Os desenvolvedores "do" BeeGroup são EternityGroup</translation>
+        <translation>Os desenvolvedores do BeeGroup são EternityGroup</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -3697,7 +3697,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
     </message>
     <message>
         <source>Copyright (C) %i The BeeGroup developers are EternityGroup</source>
-        <translation>Copyright (C) %i Os desenvolvedores "do" BeeGroup são EternityGroup</translation>
+        <translation>Copyright (C) %i Os desenvolvedores do BeeGroup são EternityGroup</translation>
     </message>
     <message>
         <source>Could not parse -rpcbind value %s as network address</source>

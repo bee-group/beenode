@@ -14,6 +14,13 @@
 #include "uint256.h"
 #include "version.h"
 
+#include "crypto/honeycomb/facet_one.h"
+#include "crypto/honeycomb/facet_two.h"
+#include "crypto/honeycomb/facet_three.h"
+#include "crypto/honeycomb/facet_four.h"
+#include "crypto/honeycomb/facet_five.h"
+#include "crypto/honeycomb/facet_six.h"
+
 
 #include <vector>
 
@@ -24,14 +31,6 @@ typedef uint256 ChainCode;
 #else
 #define GLOBAL extern
 #endif
-
-#include "crypto/honeycomb/facet_one.h"
-#include "crypto/honeycomb/facet_two.h"
-#include "crypto/honeycomb/facet_three.h"
-#include "crypto/honeycomb/facet_four.h"
-#include "crypto/honeycomb/facet_five.h"
-#include "crypto/honeycomb/facet_six.h"
-
 
 /* ----------- Bitcoin Hash ------------------------------------------------- */
 /** A hasher class for Bitcoin's 256-bit hash (double SHA-256). */
@@ -229,6 +228,41 @@ public:
     }
 };
 
+/** Reads data from an underlying stream, while hashing the read data. */
+template<typename Source>
+class CHashVerifier : public CHashWriter
+{
+private:
+    Source* source;
+
+public:
+    CHashVerifier(Source* source_) : CHashWriter(source_->GetType(), source_->GetVersion()), source(source_) {}
+
+    void read(char* pch, size_t nSize)
+    {
+        source->read(pch, nSize);
+        this->write(pch, nSize);
+    }
+
+    void ignore(size_t nSize)
+    {
+        char data[1024];
+        while (nSize > 0) {
+            size_t now = std::min<size_t>(nSize, 1024);
+            read(data, now);
+            nSize -= now;
+        }
+    }
+
+    template<typename T>
+    CHashVerifier<Source>& operator>>(T& obj)
+    {
+        // Unserialize from this stream
+        ::Unserialize(*this, obj, nType, nVersion);
+        return (*this);
+    }
+};
+
 /** Compute the 256-bit hash of an object's serialization. */
 template<typename T>
 uint256 SerializeHash(const T& obj, int nType=SER_GETHASH, int nVersion=PROTOCOL_VERSION)
@@ -242,6 +276,21 @@ unsigned int MurmurHash3(unsigned int nHashSeed, const std::vector<unsigned char
 
 void BIP32Hash(const ChainCode &chainCode, unsigned int nChild, unsigned char header, const unsigned char data[32], unsigned char output[64]);
 
+/** SipHash-2-4, using a uint64_t-based (rather than byte-based) interface */
+class CSipHasher
+{
+private:
+    uint64_t v[4];
+    int count;
+
+public:
+    CSipHasher(uint64_t k0, uint64_t k1);
+    CSipHasher& Write(uint64_t data);
+    uint64_t Finalize() const;
+};
+
+uint64_t SipHashUint256(uint64_t k0, uint64_t k1, const uint256& val);
+uint64_t SipHashUint256Extra(uint64_t k0, uint64_t k1, const uint256& val, uint32_t extra);
 
 //---------------------------------------------------------------------------------------------
 //--.
@@ -291,6 +340,5 @@ template<typename T1> inline uint256 HashHoneyComb( const T1 pbegin, const T1 pe
 	hash[11] = hash[8]^hash[10];	
 	return hash[11].trim256();
 }	
-
 
 #endif // BITCOIN_HASH_H

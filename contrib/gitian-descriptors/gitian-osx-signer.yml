@@ -8,7 +8,7 @@ packages:
 - "faketime"
 reference_datetime: "2017-01-01 00:00:00"
 remotes:
-- "url": "https://github.com/bee-group/beenode-detached-sigs.git"
+- "url": "https://github.com/bee-group/beenode"
   "dir": "signature"
 files:
 - "beenode-osx-unsigned.tar.gz"

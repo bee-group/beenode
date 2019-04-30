@@ -25,8 +25,8 @@ Build-Depends: debhelper,
  python
 Standards-Version: 3.9.2
 Homepage: https://www.beenode.org/
-Vcs-Git: git://github.com/beenodecoin/beenode.git
-Vcs-Browser: https://github.com/beenodecoin/beenode
+Vcs-Git: git://github.com/bee-group/beenode.git
+Vcs-Browser: https://github.com/bee-group/beenode
 
 Package: beenoded
 Architecture: any

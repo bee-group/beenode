@@ -1,7 +1,9 @@
-Beenode Core staging tree 0.7.1
+Beenode Core staging tree 0.12.2
 ===============================
 
-http://www.beenode.org
+`master:` [![Build Status](https://travis-ci.org/bee-group/beenode.svg?branch=master)](https://travis-ci.org/bee-group/beenode) `develop:` [![Build Status](https://travis-ci.org/bee-group/beenode.svg?branch=develop)](https://travis-ci.org/bee-group/beenode/branches)
+
+https://www.beenode.org
 
 
 What is Beenode?
@@ -14,7 +16,7 @@ are carried out collectively by the network. Beenode Core is the name of the ope
 source software which enables the use of this currency.
 
 For more information, as well as an immediately useable, binary version of
-the Beenode Core software, see http://www.beenode.org/get-beenode/.
+the Beenode Core software, see https://www.beenode.org/get-beenode/.
 
 
 License
@@ -27,7 +29,7 @@ Development Process
 -------------------
 
 The `master` branch is meant to be stable. Development is normally done in separate branches.
-[Tags](https://github.com/beenodecoin/beenode/tags) are created to indicate new official,
+[Tags](https://github.com/bee-group/beenode/tags) are created to indicate new official,
 stable release versions of Beenode Core.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
