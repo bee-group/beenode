@@ -4,7 +4,7 @@
 
 #include "sha256.h"
 
-#include "crypto/common.h"
+#include "../common.h"
 
 #include <string.h>
 
