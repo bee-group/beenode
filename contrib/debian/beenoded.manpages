@@ -1,3 +1,2 @@
-debian/manpages/beenoded.1
-debian/manpages/beenode.conf.5
-debian/manpages/beenode-cli.1
+doc/man/beenoded.1
+doc/man/beenode-cli.1
