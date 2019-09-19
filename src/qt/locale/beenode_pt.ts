@@ -2732,8 +2732,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Os programadores Bitcoin Core</translation>
     </message>
     <message>
-        <source>The BeeGroup developers are EternityGroup</source>
-        <translation>Os desenvolvedores do BeeGroup são EternityGroup</translation>
+        <source>The Beenode Core developers</source>
+        <translation>Os programadores Beenode Core</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -3654,8 +3654,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Aviso: Por favor verifique que a data e a hora do computador está correcta! Se o relógio estiver errado o Beenode Core não vai funcionar correctamente.</translation>
     </message>
     <message>
-        <source>(9999 could be used only on mainnet)</source>
-        <translation>(9999 apenas pode ser usado para mainnet)</translation>
+        <source>(4244 could be used only on mainnet)</source>
+        <translation>(4244 apenas pode ser usado para mainnet)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -3696,8 +3696,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Copyright (C) 2009-%i The Bitcoin Core Developers</translation>
     </message>
     <message>
-        <source>Copyright (C) %i The BeeGroup developers are EternityGroup</source>
-        <translation>Copyright (C) %i Os desenvolvedores do BeeGroup são EternityGroup</translation>
+        <source>Copyright (C) 2014-%i The Beenode Core Developers</source>
+        <translation>Copyright (C) 2014-%i Beenode Core Developers</translation>
     </message>
     <message>
         <source>Could not parse -rpcbind value %s as network address</source>
@@ -4064,8 +4064,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>masternodeprivkey inválida. Por favor reveja a documentação.</translation>
     </message>
     <message>
-        <source>(must be 9999 for mainnet)</source>
-        <translation>(deve ser 9999 para mainnet)</translation>
+        <source>(must be 4244 for mainnet)</source>
+        <translation>(deve ser 4244 para mainnet)</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>

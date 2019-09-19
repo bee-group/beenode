@@ -8,6 +8,7 @@
         <file alias="fr">locale/beenode_fr.qm</file>
         <file alias="it">locale/beenode_it.qm</file>
         <file alias="ja">locale/beenode_ja.qm</file>
+        <file alias="nl">locale/beenode_nl.qm</file>
         <file alias="pl">locale/beenode_pl.qm</file>
         <file alias="pt">locale/beenode_pt.qm</file>
         <file alias="ru">locale/beenode_ru.qm</file>
