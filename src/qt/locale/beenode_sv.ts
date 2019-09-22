@@ -2140,7 +2140,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Bitcoin Core-utvecklarna</translation>
     </message>
     <message>
-        <source>The BeeGroup developers are EternityGroup</source>
+        <source>The Beenode Core developers</source>
         <translation>Beenode Core-utvecklarna</translation>
     </message>
     <message>

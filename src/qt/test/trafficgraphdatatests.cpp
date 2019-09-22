@@ -176,8 +176,7 @@ void TrafficGraphDataTests::clearTests()
 void TrafficGraphDataTests::averageBandwidthTest()
 {
     TrafficGraphData trafficGraphData(TrafficGraphData::Range_5m);
-    int step = 123; // in bytes
-    float rate = step * TrafficGraphData::DESIRED_DATA_SAMPLES / (TrafficGraphData::RangeMinutes[TrafficGraphData::Range_5m] * 60.0f) / 1024.0f; // in KB/s
+    int step = 384;
     quint64 totalBytesRecv = 0;
     quint64 totalBytesSent = 0;
     for (int i = 1; i <= TrafficGraphData::DESIRED_DATA_SAMPLES; i++){
@@ -185,29 +184,25 @@ void TrafficGraphDataTests::averageBandwidthTest()
         totalBytesSent += step;
         trafficGraphData.update(totalBytesRecv, totalBytesSent);
     }
-
-    // check rate at initial range
     QCOMPARE(trafficGraphData.getCurrentRangeQueueWithAverageBandwidth().size(), TrafficGraphData::DESIRED_DATA_SAMPLES);
-    for (const auto& sample : trafficGraphData.getCurrentRangeQueueWithAverageBandwidth()){
-        QCOMPARE(sample.in, rate);
-        QCOMPARE(sample.out, rate);
+    for(auto& sample : trafficGraphData.getCurrentRangeQueueWithAverageBandwidth()){
+        QCOMPARE(sample.in, 1.0f);
+        QCOMPARE(sample.out, 1.0f);
     }
 
-    // rate should be the same regardless of the current range
     trafficGraphData.switchRange(TrafficGraphData::Range_10m);
 
     QCOMPARE(trafficGraphData.getCurrentRangeQueueWithAverageBandwidth().size(), TrafficGraphData::DESIRED_DATA_SAMPLES / 2);
-    for (const auto& sample : trafficGraphData.getCurrentRangeQueueWithAverageBandwidth()){
-        QCOMPARE(sample.in, rate);
-        QCOMPARE(sample.out, rate);
+    for(auto& sample : trafficGraphData.getCurrentRangeQueueWithAverageBandwidth()){
+        QCOMPARE(sample.in, 1.0f);
+        QCOMPARE(sample.out, 1.0f);
     }
 }
 
 void TrafficGraphDataTests::averageBandwidthEvery2EmptyTest()
 {
     TrafficGraphData trafficGraphData(TrafficGraphData::Range_5m);
-    int step = 123; // in bytes
-    float rate = step * TrafficGraphData::DESIRED_DATA_SAMPLES / (TrafficGraphData::RangeMinutes[TrafficGraphData::Range_5m] * 60.0f) / 1024.0f / 2.0f; // in KB/s
+    int step = 384;
     quint64 totalBytesRecv = 0;
     quint64 totalBytesSent = 0;
     for (int i = 1; i <= TrafficGraphData::DESIRED_DATA_SAMPLES; i++){
@@ -218,12 +213,11 @@ void TrafficGraphDataTests::averageBandwidthEvery2EmptyTest()
         trafficGraphData.update(totalBytesRecv, totalBytesSent);
     }
 
-    // rate should average out at larger range
     trafficGraphData.switchRange(TrafficGraphData::Range_10m);
 
     QCOMPARE(trafficGraphData.getCurrentRangeQueueWithAverageBandwidth().size(), TrafficGraphData::DESIRED_DATA_SAMPLES / 2);
-    for (const auto& sample : trafficGraphData.getCurrentRangeQueueWithAverageBandwidth()){
-        QCOMPARE(sample.in, rate);
-        QCOMPARE(sample.out, rate);
+    for(auto& sample : trafficGraphData.getCurrentRangeQueueWithAverageBandwidth()){
+        QCOMPARE(sample.in, 0.5f);
+        QCOMPARE(sample.out, 0.5f);
     }
 }

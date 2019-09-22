@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2014-2017 The Beenode Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -233,15 +233,15 @@ void CInstantSend::Vote(CTxLockCandidate& txLockCandidate, CConnman& connman)
 
         int nLockInputHeight = nPrevoutHeight + Params().GetConsensus().nInstantSendConfirmationsRequired - 2;
 
-        int nRank;
+        /*int nRank;
         int nMinRequiredProtocol = std::max(MIN_INSTANTSEND_PROTO_VERSION, mnpayments.GetMinMasternodePaymentsProto());
         if(!mnodeman.GetMasternodeRank(activeMasternode.outpoint, nRank, nLockInputHeight, nMinRequiredProtocol)) {
             LogPrint("instantsend", "CInstantSend::Vote -- Can't calculate rank for masternode %s\n", activeMasternode.outpoint.ToStringShort());
             ++itOutpointLock;
             continue;
-        }
+        }*/
 
-        int nSignaturesTotal = COutPointLock::SIGNATURES_TOTAL;
+       /* int nSignaturesTotal = COutPointLock::SIGNATURES_TOTAL;
         if(nRank > nSignaturesTotal) {
             LogPrint("instantsend", "CInstantSend::Vote -- Masternode not in the top %d (%d)\n", nSignaturesTotal, nRank);
             ++itOutpointLock;
@@ -249,7 +249,7 @@ void CInstantSend::Vote(CTxLockCandidate& txLockCandidate, CConnman& connman)
         }
 
         LogPrint("instantsend", "CInstantSend::Vote -- In the top %d (%d)\n", nSignaturesTotal, nRank);
-
+*/
         std::map<COutPoint, std::set<uint256> >::iterator itVoted = mapVotedOutpoints.find(itOutpointLock->first);
 
         // Check to see if we already voted for this outpoint,

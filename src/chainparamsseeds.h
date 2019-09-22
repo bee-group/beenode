@@ -16,4 +16,7 @@ static SeedSpec6 pnSeed6_main[] = {
 
 };
 
+static SeedSpec6 pnSeed6_test[] = {
+
+};
 #endif // BEENODE_CHAINPARAMSSEEDS_H

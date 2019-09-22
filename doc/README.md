@@ -1,4 +1,4 @@
-Beenode Core 0.7.2
+Beenode Core 0.12.1
 =====================
 
 This is the official reference wallet for Beenode digital currency and comprises the backbone of the Beenode peer-to-peer network. You can [download Beenode Core](https://www.beenode.org/downloads/) or [build it yourself](#building) using the guides below.

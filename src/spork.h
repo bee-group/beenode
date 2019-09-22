@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2014-2017 The Beenode Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -32,10 +32,9 @@ static const int SPORK_18_EVOLUTION_PAYMENTS							= 10017;
 static const int SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT				= 10018;
 static const int SPORK_20_EVOLUTION_DISABLE_NODE				        = 10019;
 static const int SPORK_21_MASTERNODE_ORDER_ENABLE			        	= 10020;
-static const int SPORK_22_MASTERNODE_UPDATE_PROTO			        	= 10021;
 
 static const int SPORK_START                                            = SPORK_2_INSTANTSEND_ENABLED;
-static const int SPORK_END                                              = SPORK_22_MASTERNODE_UPDATE_PROTO;
+static const int SPORK_END                                              = SPORK_21_MASTERNODE_ORDER_ENABLE;
 
 extern std::map<int, int64_t> mapSporkDefaults;
 extern std::map<uint256, CSporkMessage> mapSporks;

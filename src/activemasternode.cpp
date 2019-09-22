@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2014-2017 The Beenode Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -204,16 +204,14 @@ void CActiveMasternode::ManageStateRemote()
 {
     LogPrint("masternode", "CActiveMasternode::ManageStateRemote -- Start status = %s, type = %s, pinger enabled = %d, pubKeyMasternode.GetID() = %s\n", 
              GetStatus(), GetTypeString(), fPingerEnabled, pubKeyMasternode.GetID().ToString());
-//
+
     mnodeman.CheckMasternode(pubKeyMasternode, true);
     masternode_info_t infoMn;
     if(mnodeman.GetMasternodeInfo(pubKeyMasternode, infoMn)) {
-        if( 
-		infoMn.nProtocolVersion != PROTOCOL_VERSION
-		/*(sporkManager.IsSporkActive(SPORK_21_MASTEinfoMn.nProtocolVersion != PROTOCOL_VERSIONRNODE_ORDER_ENABLE) &&  infoMn.nProtocolVersion != PROTOCOL_VERSION) || (!sporkManager.IsSporkActive(SPORK_21_MASTERNODE_ORDER_ENABLE) &&  infoMn.nProtocolVersion != 7)*/) {
+        if(infoMn.nProtocolVersion != PROTOCOL_VERSION) {
             nState = ACTIVE_MASTERNODE_NOT_CAPABLE;
             strNotCapableReason = "Invalid protocol version";
-            LogPrintf("CActiveMasternode::ManageStateRemote -- %s: %s   infoMn.nProtocolVersion=%d PROTOCOL_VERSION=%d\n", GetStateString(), strNotCapableReason,infoMn.nProtocolVersion,PROTOCOL_VERSION);
+            LogPrintf("CActiveMasternode::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
             return;
         }
         if(service != infoMn.addr) {

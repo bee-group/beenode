@@ -71,7 +71,6 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     connect(ui->connectSocksTor, SIGNAL(toggled(bool)), ui->proxyPortTor, SLOT(setEnabled(bool)));
     connect(ui->connectSocksTor, SIGNAL(toggled(bool)), this, SLOT(updateProxyValidationState()));
 
-	
     /* Window elements init */
 #ifdef Q_OS_MAC
     /* remove Window tab on Mac */
@@ -93,7 +92,12 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     }
     
     /* Theme selector */
+    ui->theme->addItem(QString("BEENODE-light"), QVariant("light"));
+    ui->theme->addItem(QString("BEENODE-light-hires"), QVariant("light-hires"));
+    ui->theme->addItem(QString("BEENODE-light-retro"), QVariant("light-retro"));
+    ui->theme->addItem(QString("BEENODE-light-hires-retro"), QVariant("light-hires-retro"));
     ui->theme->addItem(QString("BEENODE-blue"), QVariant("drkblue"));
+    ui->theme->addItem(QString("BEENODE-Crownium"), QVariant("crownium"));
     ui->theme->addItem(QString("BEENODE-traditional"), QVariant("trad"));
     
     /* Language selector */

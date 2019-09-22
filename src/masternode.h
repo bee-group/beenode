@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2014-2017 The Beenode Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -29,7 +29,7 @@ static const int MASTERNODE_POSE_BAN_MAX_SCORE          = 5;
 // sentinel version before implementation of nSentinelVersion in CMasternodePing
 #define DEFAULT_SENTINEL_VERSION 0x010001
 // daemon version before implementation of nDaemonVersion in CMasternodePing
-#define DEFAULT_DAEMON_VERSION 70210
+#define DEFAULT_DAEMON_VERSION 70208
 
 class CMasternodePing
 {

@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2014-2017 The Beenode Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -2253,8 +2253,8 @@ void CConnman::SetNetworkActive(bool active)
 }
 
 CConnman::CConnman(uint64_t nSeed0In, uint64_t nSeed1In) :
-        
-        addrman(Params().AllowMultiplePorts()),nSeed0(nSeed0In), nSeed1(nSeed1In)
+        nSeed0(nSeed0In), nSeed1(nSeed1In),
+        addrman(Params().AllowMultiplePorts())
 {
     fNetworkActive = true;
     setBannedIsDirty = false;

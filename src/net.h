@@ -499,8 +499,7 @@ private:
     CClientUIInterface* clientInterface;
 
     /** SipHasher seeds for deterministic randomness */
-    const uint64_t nSeed0;
-	const uint64_t nSeed1;
+    const uint64_t nSeed0, nSeed1;
 
     /** flag for waking the message processor. */
     bool fMsgProcWake;

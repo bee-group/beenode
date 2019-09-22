@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2014-2017 The Beenode Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -170,19 +170,9 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
 }
 
 int CMasternodePayments::GetMinMasternodePaymentsProto() const {
-	if(!sporkManager.IsSporkActive(SPORK_22_MASTERNODE_UPDATE_PROTO))
-	{
-		return sporkManager.IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)
-				? MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2
-				: MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1;
-	}
-	else
-	{
-		return sporkManager.IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)
-				? MIN_MASTERNODE_PAYMENT_PROTO_VERSION_3
-				: MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1;
-		
-	}
+    return sporkManager.IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)
+            ? MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2
+            : MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1;
 }
 
 void CMasternodePayments::ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
@@ -439,25 +429,21 @@ bool CMasternodePayments::AddOrUpdatePaymentVote(const CMasternodePaymentVote& v
 
     LOCK2(cs_mapMasternodeBlocks, cs_mapMasternodePaymentVotes);
 
-	if(sporkManager.IsSporkActive(SPORK_21_MASTERNODE_ORDER_ENABLE))
-	{
-		auto it2 = mapMasternodeBlocks.find(vote.nBlockHeight);
-		if(it2!=mapMasternodeBlocks.end())
-			return false;
-	}
-    
+	auto it2 = mapMasternodeBlocks.find(vote.nBlockHeight);
+	if(it2!=mapMasternodeBlocks.end())
+		return false;
+	
 	CTxDestination address1;
 	ExtractDestination(vote.payee, address1);
 	CBitcoinAddress address2(address1);
-	
-    if(vote.nBlockHeight > sporkManager.GetSporkValue(SPORK_20_EVOLUTION_DISABLE_NODE))
-	{
+    
+    if( sporkManager.IsSporkWorkActive(SPORK_20_EVOLUTION_DISABLE_NODE) ){
 		CBitcoinAddress address( evolutionManager.getDisableNode(vote.nBlockHeight) );	
         if(address.ToString().compare(address2.ToString())==0)
             return false;
     }
     
-    
+	LogPrintf("CMasternodePayments::AddOrUpdatePaymentVote -- block %d paid to %s\n",vote.nBlockHeight,address2.ToString());
 	
     auto it = mapMasternodeBlocks.emplace(vote.nBlockHeight, CMasternodeBlockPayees(vote.nBlockHeight)).first;
 

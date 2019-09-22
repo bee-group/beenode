@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2014-2017 The Beenode Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #include "privatesend-server.h"
@@ -45,7 +45,7 @@ void CPrivateSendServer::ProcessMessage(CNode* pfrom, const std::string& strComm
 
         LogPrint("privatesend", "DSACCEPT -- nDenom %d (%s)  txCollateral %s", dsa.nDenom, CPrivateSend::GetDenominationsToString(dsa.nDenom), dsa.txCollateral.ToString());
 
-        if(dsa.nInputCount < 0 || dsa.nInputCount > (int)PRIVATESEND_ENTRY_MAX_SIZE) return;
+        if(dsa.nInputCount < 0 || dsa.nInputCount > PRIVATESEND_ENTRY_MAX_SIZE) return;
 
         masternode_info_t mnInfo;
         if(!mnodeman.GetMasternodeInfo(activeMasternode.outpoint, mnInfo)) {
@@ -100,7 +100,7 @@ void CPrivateSendServer::ProcessMessage(CNode* pfrom, const std::string& strComm
         LogPrint("privatesend", "DSQUEUE -- %s new\n", dsq.ToString());
 
         if(dsq.IsExpired()) return;
-        if(dsq.nInputCount < 0 || dsq.nInputCount > (int)PRIVATESEND_ENTRY_MAX_SIZE) return;
+        if(dsq.nInputCount < 0 || dsq.nInputCount > PRIVATESEND_ENTRY_MAX_SIZE) return;
 
         masternode_info_t mnInfo;
         if(!mnodeman.GetMasternodeInfo(dsq.masternodeOutpoint, mnInfo)) return;
@@ -168,13 +168,13 @@ void CPrivateSendServer::ProcessMessage(CNode* pfrom, const std::string& strComm
             return;
         }
 
-        if(nSessionInputCount != 0 && entry.vecTxDSIn.size() != (size_t) nSessionInputCount) {
+        if(nSessionInputCount != 0 && entry.vecTxDSIn.size() != nSessionInputCount) {
             LogPrintf("DSVIN -- ERROR: incorrect number of inputs! %d/%d\n", entry.vecTxDSIn.size(), nSessionInputCount);
             PushStatus(pfrom, STATUS_REJECTED, ERR_INVALID_INPUT_COUNT, connman);
             return;
         }
 
-        if(nSessionInputCount != 0 && entry.vecTxOut.size() != (size_t) nSessionInputCount) {
+        if(nSessionInputCount != 0 && entry.vecTxOut.size() != nSessionInputCount) {
             LogPrintf("DSVIN -- ERROR: incorrect number of outputs! %d/%d\n", entry.vecTxOut.size(), nSessionInputCount);
             PushStatus(pfrom, STATUS_REJECTED, ERR_INVALID_INPUT_COUNT, connman);
             return;
@@ -702,7 +702,7 @@ bool CPrivateSendServer::IsAcceptableDSA(const CSpysendAccept& dsa, PoolMessage&
         return false;
     }
 
-    if(dsa.nInputCount < 0 || dsa.nInputCount > (int) PRIVATESEND_ENTRY_MAX_SIZE) {
+    if(dsa.nInputCount < 0 || dsa.nInputCount > PRIVATESEND_ENTRY_MAX_SIZE) {
         LogPrint("privatesend", "CPrivateSendServer::%s -- requested count is not valid!\n", __func__);
         nMessageIDRet = ERR_INVALID_INPUT_COUNT;
         return false;

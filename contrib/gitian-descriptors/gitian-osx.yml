@@ -1,5 +1,5 @@
 ---
-name: "beenode-osx-0.7"
+name: "beenode-osx-0.12"
 enable_cache: true
 suites:
 - "trusty"
