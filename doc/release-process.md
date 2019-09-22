@@ -52,7 +52,7 @@ Check out the source code in the following directory hierarchy.
 
 Write release notes. git shortlog helps a lot, for example:
 
-    git shortlog --no-merges v(current version, e.g. 0.12.2)..v(new version, e.g. 0.7.3)
+    git shortlog --no-merges v(current version, e.g. 0.7.2)..v(new version, e.g. 0.7.3)
 
 Generate list of authors:
 

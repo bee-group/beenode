@@ -1,7 +1,6 @@
 Beenode Core staging tree 0.7.3
 ===============================
 
-`master:` [![Build Status](https://travis-ci.org/bee-group/beenode.svg?branch=master)](https://travis-ci.org/bee-group/beenode) `develop:` [![Build Status](https://travis-ci.org/bee-group/beenode.svg?branch=develop)](https://travis-ci.org/bee-group/beenode/branches)
 
 https://www.beenode.org
 
