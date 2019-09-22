@@ -1,4 +1,4 @@
-Beenode Core 0.12.1
+Beenode Core 0.7.2
 =====================
 
 Intro

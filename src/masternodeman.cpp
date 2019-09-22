@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The Beenode Core developers
+// Copyright (c) 2019 The BeeGroup developers are EternityGroup
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -587,30 +587,30 @@ bool CMasternodeMan::GetNextMasternodeInQueueForMasterPayment(int nBlockHeight, 
         if(GetUTXOConfirmations(mnpair.first) < nMnCount) continue;
 		
 		
-		
-		
-		bool bIsSkipMasternode=false;
-		for(int i=1;i<21;i++)
+		if(sporkManager.IsSporkActive(SPORK_21_MASTERNODE_ORDER_ENABLE)) 
 		{
-			const auto it = mnpayments.mapMasternodeBlocks.find(nBlockHeight-i);
-			if(it == mnpayments.mapMasternodeBlocks.end())continue;
-			
-			for (const auto& payee : it->second.vecPayees)
+			bool bIsSkipMasternode=false;
+			for(int i=1;i<21;i++)
 			{
-				masternode_info_t mnInfoRet;
-				if(!GetMasternodeInfo(payee.GetPayee(),mnInfoRet))
-					continue;
-				if(mnInfoRet.outpoint == mnpair.second.GetInfo().outpoint)
+				const auto it = mnpayments.mapMasternodeBlocks.find(nBlockHeight-i);
+				if(it == mnpayments.mapMasternodeBlocks.end())continue;
+				
+				for (const auto& payee : it->second.vecPayees)
 				{
-					LogPrintf("CMasternodeMan::GetNextMasternodeInQueueForMasterPayment -- skip masternode %s and getnext masternode, because current already payed\n",mnpair.second.GetInfo().outpoint.ToStringShort());
-					bIsSkipMasternode=true;
-					break;
+					masternode_info_t mnInfoRet;
+					if(!GetMasternodeInfo(payee.GetPayee(),mnInfoRet))
+						continue;
+					if(mnInfoRet.outpoint == mnpair.second.GetInfo().outpoint)
+					{
+						bIsSkipMasternode=true;
+						break;
+					}
 				}
+				if(bIsSkipMasternode)break;
+				
 			}
-			if(bIsSkipMasternode)break;
-			
+			if(bIsSkipMasternode)continue;
 		}
-		if(bIsSkipMasternode)continue;
 		
 		mnpair.second.enableTime=GetAdjustedTime();
 		

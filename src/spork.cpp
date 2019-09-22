@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The Beenode Core developers
+// Copyright (c) 2019 The BeeGroup developers are EternityGroup
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -30,8 +30,9 @@ std::map<int, int64_t> mapSporkDefaults = {
     {SPORK_14_REQUIRE_SENTINEL_FLAG,         	4070908800ULL}, // OFF
     {SPORK_18_EVOLUTION_PAYMENTS,         		0}, // OFF
     {SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT, 	0x7FFFFFFF}, // OFF
-    {SPORK_20_EVOLUTION_DISABLE_NODE, 	         0x7FFFFFFF}, // OFF
+    {SPORK_20_EVOLUTION_DISABLE_NODE, 	         0x7FFFFFFF},
     {SPORK_21_MASTERNODE_ORDER_ENABLE, 	         4070908800ULL}, // OFF
+    {SPORK_22_MASTERNODE_UPDATE_PROTO, 	         4070908800ULL}, // OFF
 };
 CEvolutionManager evolutionManager;
 
@@ -236,6 +237,7 @@ int CSporkManager::GetSporkIDByName(const std::string& strName)
     if (strName == "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT")	return SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT;
     if (strName == "SPORK_20_EVOLUTION_DISABLE_NODE")	          return SPORK_20_EVOLUTION_DISABLE_NODE;
     if (strName == "SPORK_21_MASTERNODE_ORDER_ENABLE")			return SPORK_21_MASTERNODE_ORDER_ENABLE;
+    if (strName == "SPORK_22_MASTERNODE_UPDATE_PROTO")	          return SPORK_22_MASTERNODE_UPDATE_PROTO;
 
     LogPrint("spork", "CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
     return -1;
@@ -257,6 +259,7 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT: 	return "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT";
         case SPORK_20_EVOLUTION_DISABLE_NODE: 	return "SPORK_20_EVOLUTION_DISABLE_NODE";
         case SPORK_21_MASTERNODE_ORDER_ENABLE: 	return "SPORK_21_MASTERNODE_ORDER_ENABLE";
+        case SPORK_22_MASTERNODE_UPDATE_PROTO: 	return "SPORK_22_MASTERNODE_UPDATE_PROTO";
         default:
             LogPrint("spork", "CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);
             return "Unknown";
@@ -276,6 +279,9 @@ bool CSporkManager::SetPrivKey(const std::string& strPrivKey)
 {
     CKey key;
     CPubKey pubKey;
+	
+	
+	
     if(!CMessageSigner::GetKeysFromSecret(strPrivKey, key, pubKey)) {
         LogPrintf("CSporkManager::SetPrivKey -- Failed to parse private key\n");
         return false;
@@ -364,17 +370,13 @@ bool CSporkMessage::CheckSignature(const CKeyID& pubKeyId) const
         }
     } else {
         std::string strMessage = boost::lexical_cast<std::string>(nSporkID) + boost::lexical_cast<std::string>(nValue) + boost::lexical_cast<std::string>(nTimeSigned);
-	/*Добавлено */	
-		CPubKey pubkey(ParseHex(Params().strSporkPubKey));
-	
 
-        if (!CMessageSigner::VerifyMessage(pubkey.GetID(), vchSig, strMessage, strError)){
- //       if (!CMessageSigner::VerifyMessage(pubKeyId, vchSig, strMessage, strError)){
+        if (!CMessageSigner::VerifyMessage(pubKeyId, vchSig, strMessage, strError)){
             // Note: unlike for other messages we have to check for new format even with SPORK_6_NEW_SIGS
             // inactive because SPORK_6_NEW_SIGS default is OFF and it is not the first spork to sync
             // (and even if it would, spork order can't be guaranteed anyway).
             uint256 hash = GetSignatureHash();
-            if (!CHashSigner::VerifyHash(hash, pubkey.GetID(), vchSig, strError)) {
+            if (!CHashSigner::VerifyHash(hash, pubKeyId, vchSig, strError)) {
                 LogPrintf("CSporkMessage::CheckSignature -- VerifyHash2() failed, error: %s\n", strError);
                 return false;
             }
