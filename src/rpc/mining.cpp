@@ -494,8 +494,15 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         && !masternodeSync.IsWinnersListSynced()
         && !mnpayments.GetBlockPayee(chainActive.Height() + 1, payee))
             throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Beenode Core is downloading masternode winners...");
+    
+    // when enforcement is on we need information about a masternode payee or otherwise our block is going to be orphaned by the network
+    CScript payee;
+    if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)
+        && !masternodeSync.IsWinnersListSynced()
+        && !mnpayments.GetBlockPayee(chainActive.Height() + 1, payee))
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Beenode Core is downloading masternode winners...");
 
-   
+
     static unsigned int nTransactionsUpdatedLast;
 
     if (!lpval.isNull())
@@ -706,7 +713,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     result.push_back(Pair("masternode_payments_enforced", sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)));
 
     UniValue superblockObjArray(UniValue::VARR);
-    /*if(pblock->voutSuperblock.size()) {
+    if(pblock->voutSuperblock.size()) {
         for (const auto& txout : pblock->voutSuperblock) {
             UniValue entry(UniValue::VOBJ);
             CTxDestination address1;
@@ -717,7 +724,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
             entry.push_back(Pair("amount", txout.nValue));
             superblockObjArray.push_back(entry);
         }
-    }*/
+    }
      result.push_back(Pair("evolution", superblockObjArray));
 	bool bWk1 = sporkManager.IsSporkWorkActive(SPORK_18_EVOLUTION_PAYMENTS);
     bool bWk2 = (pindexPrev->nHeight+1) > sporkManager.GetSporkValue(SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT);
