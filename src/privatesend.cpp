@@ -558,9 +558,6 @@ void ThreadCheckPrivateSend(CConnman& connman)
                 mnodeman.DoFullVerificationStep(connman);
             }
 
-            /*if(nTick % (60 * 5) == 0) {
-                governance.DoMaintenance(connman);
-            }*/
         }
     }
 }
