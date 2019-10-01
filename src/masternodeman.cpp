@@ -590,7 +590,8 @@ bool CMasternodeMan::GetNextMasternodeInQueueForMasterPayment(int nBlockHeight, 
 		if(sporkManager.IsSporkActive(SPORK_21_MASTERNODE_ORDER_ENABLE)) 
 		{
 			bool bIsSkipMasternode=false;
-			for(int i=1;i<21;i++)
+			size_t countNodes=mapMasternodes.size();
+			for(size_t i=1;i<countNodes;i++)
 			{
 				const auto it = mnpayments.mapMasternodeBlocks.find(nBlockHeight-i);
 				if(it == mnpayments.mapMasternodeBlocks.end())continue;

@@ -297,18 +297,14 @@ void CMasternodePayments::ProcessMessage(CNode* pfrom, const std::string& strCom
 		{
 	        int nCount = 0;
 	        //masternode_info_t mnInfo;
+			if (!mnodeman.GetNextMasternodeInQueueForMasterPayment(vote.nBlockHeight, true, nCount, mnInfo)) {
+				LogPrintf("CMasternodePayments::ProcessBlock -- ERROR: Failed to find masternode to pay\n");
+	            return;
+			}
+			LogPrintf("CMasternodePayments::ProcessBlock -- Masternode found : %s\n", mnInfo.outpoint.ToStringShort());
 	
-	            if (!mnodeman.GetNextMasternodeInQueueForMasterPayment(vote.nBlockHeight, true, nCount, mnInfo)) {
-	                LogPrintf("CMasternodePayments::ProcessBlock -- ERROR: Failed to find masternode to pay\n");
-	                return;
-	            }
-	
-	            LogPrintf("CMasternodePayments::ProcessBlock -- Masternode found : %s\n", mnInfo.outpoint.ToStringShort());
-	
-	
-	            CScript payee = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
-	
-	            CMasternodePaymentVote voteNew(vote.masternodeOutpoint, vote.nBlockHeight, payee);
+			CScript payee = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
+			CMasternodePaymentVote voteNew(vote.masternodeOutpoint, vote.nBlockHeight, payee);
 	       
 	        if(!UpdateLastVote(voteNew)) {
 	            LogPrintf("MASTERNODEPAYMENTVOTE -- masternode already voted, masternode=%s\n", voteNew.masternodeOutpoint.ToStringShort());
@@ -507,7 +503,6 @@ bool CMasternodeBlockPayees::GetBestPayee(CScript& payeeRet) const
 	if(sporkManager.IsSporkActive(SPORK_21_MASTERNODE_ORDER_ENABLE)) 
 	{
 	    for (const auto& payee : vecPayees) {
-			
 			payeeRet = payee.GetPayee();
 	    }
     	return true;
@@ -566,8 +561,6 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew) const
 	        }
 		}
 	}
-	
-
     // if we don't have at least MNPAYMENTS_SIGNATURES_REQUIRED signatures on a payee, approve whichever is the longest chain
     if(nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
 
