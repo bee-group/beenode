@@ -238,8 +238,6 @@ void CMasternodePayments::ProcessMessage(CNode* pfrom, const std::string& strCom
         pfrom->setAskFor.erase(nHash);
 
         // TODO: clear setAskFor for MSG_MASTERNODE_PAYMENT_BLOCK too
-
-        // Ignore any payments messages until masternode list is synced
         if(!masternodeSync.IsMasternodeListSynced()) return;
 
         {
