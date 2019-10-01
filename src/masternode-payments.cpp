@@ -359,33 +359,16 @@ uint256 CMasternodePaymentVote::GetSignatureHash() const
 bool CMasternodePaymentVote::Sign()
 {
     std::string strError;
-
-    if (sporkManager.IsSporkActive(SPORK_6_NEW_SIGS)) {
-        uint256 hash = GetSignatureHash();
-
-        if(!CHashSigner::SignHash(hash, activeMasternode.keyMasternode, vchSig)) {
-            LogPrintf("CMasternodePaymentVote::Sign -- SignHash() failed\n");
-            return false;
-        }
-
-        if (!CHashSigner::VerifyHash(hash, activeMasternode.pubKeyMasternode, vchSig, strError)) {
-            LogPrintf("CMasternodePaymentVote::Sign -- VerifyHash() failed, error: %s\n", strError);
-            return false;
-        }
-    } else {
-        std::string strMessage = masternodeOutpoint.ToStringShort() +
-                    boost::lexical_cast<std::string>(nBlockHeight) +
-                    ScriptToAsmStr(payee);
-
-        if(!CMessageSigner::SignMessage(strMessage, vchSig, activeMasternode.keyMasternode)) {
-            LogPrintf("CMasternodePaymentVote::Sign -- SignMessage() failed\n");
-            return false;
-        }
-
-        if(!CMessageSigner::VerifyMessage(activeMasternode.pubKeyMasternode, vchSig, strMessage, strError)) {
-            LogPrintf("CMasternodePaymentVote::Sign -- VerifyMessage() failed, error: %s\n", strError);
-            return false;
-        }
+	std::string strMessage = masternodeOutpoint.ToStringShort() +
+			boost::lexical_cast<std::string>(nBlockHeight) +
+            ScriptToAsmStr(payee);
+	if(!CMessageSigner::SignMessage(strMessage, vchSig, activeMasternode.keyMasternode)) {
+		LogPrintf("CMasternodePaymentVote::Sign -- SignMessage() failed\n");
+        return false;
+    }
+	if(!CMessageSigner::VerifyMessage(activeMasternode.pubKeyMasternode, vchSig, strMessage, strError)) {
+		LogPrintf("CMasternodePaymentVote::Sign -- VerifyMessage() failed, error: %s\n", strError);
+        return false;
     }
 
     return true;
@@ -757,42 +740,20 @@ bool CMasternodePaymentVote::CheckSignature(const CPubKey& pubKeyMasternode, int
     nDos = 0;
     std::string strError = "";
 
-    if (sporkManager.IsSporkActive(SPORK_6_NEW_SIGS)) {
-        uint256 hash = GetSignatureHash();
+	std::string strMessage = masternodeOutpoint.ToStringShort() +
+			boost::lexical_cast<std::string>(nBlockHeight) +
+            ScriptToAsmStr(payee);
 
-        if (!CHashSigner::VerifyHash(hash, pubKeyMasternode, vchSig, strError)) {
-            // could be a signature in old format
-            std::string strMessage = masternodeOutpoint.ToStringShort() +
-                        boost::lexical_cast<std::string>(nBlockHeight) +
-                        ScriptToAsmStr(payee);
-            if(!CMessageSigner::VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
-                // nope, not in old format either
-                // Only ban for future block vote when we are already synced.
-                // Otherwise it could be the case when MN which signed this vote is using another key now
-                // and we have no idea about the old one.
-                if(masternodeSync.IsMasternodeListSynced() && nBlockHeight > nValidationHeight) {
-                    nDos = 20;
-                }
-                return error("CMasternodePaymentVote::CheckSignature -- Got bad Masternode payment signature, masternode=%s, error: %s",
-                            masternodeOutpoint.ToStringShort(), strError);
-            }
+	if (!CMessageSigner::VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
+		// Only ban for future block vote when we are already synced.
+        // Otherwise it could be the case when MN which signed this vote is using another key now
+        // and we have no idea about the old one.
+		if(masternodeSync.IsMasternodeListSynced() && nBlockHeight > nValidationHeight) {
+			nDos = 20;
         }
-    } else {
-        std::string strMessage = masternodeOutpoint.ToStringShort() +
-                    boost::lexical_cast<std::string>(nBlockHeight) +
-                    ScriptToAsmStr(payee);
-
-        if (!CMessageSigner::VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
-            // Only ban for future block vote when we are already synced.
-            // Otherwise it could be the case when MN which signed this vote is using another key now
-            // and we have no idea about the old one.
-            if(masternodeSync.IsMasternodeListSynced() && nBlockHeight > nValidationHeight) {
-                nDos = 20;
-            }
-            return error("CMasternodePaymentVote::CheckSignature -- Got bad Masternode payment signature, masternode=%s, error: %s",
-                        masternodeOutpoint.ToStringShort(), strError);
-        }
-    }
+        return error("CMasternodePaymentVote::CheckSignature -- Got bad Masternode payment signature, masternode=%s, error: %s",
+				masternodeOutpoint.ToStringShort(), strError);
+	}
 
     return true;
 }
