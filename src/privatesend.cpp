@@ -47,33 +47,20 @@ bool CSpysendQueue::Sign()
 
     std::string strError = "";
 
-    if (sporkManager.IsSporkActive(SPORK_6_NEW_SIGS)) {
-        uint256 hash = GetSignatureHash();
 
-        if (!CHashSigner::SignHash(hash, activeMasternode.keyMasternode, vchSig)) {
-            LogPrintf("CSpysendQueue::Sign -- SignHash() failed\n");
-            return false;
-        }
-
-        if (!CHashSigner::VerifyHash(hash, activeMasternode.pubKeyMasternode, vchSig, strError)) {
-            LogPrintf("CSpysendQueue::Sign -- VerifyHash() failed, error: %s\n", strError);
-            return false;
-        }
-    } else {
-        std::string strMessage = CTxIn(masternodeOutpoint).ToString() +
+	std::string strMessage = CTxIn(masternodeOutpoint).ToString() +
                         boost::lexical_cast<std::string>(nDenom) +
                         boost::lexical_cast<std::string>(nTime) +
                         boost::lexical_cast<std::string>(fReady);
 
-        if(!CMessageSigner::SignMessage(strMessage, vchSig, activeMasternode.keyMasternode)) {
+	if(!CMessageSigner::SignMessage(strMessage, vchSig, activeMasternode.keyMasternode)) {
             LogPrintf("CSpysendQueue::Sign -- SignMessage() failed, %s\n", ToString());
             return false;
-        }
+    }
 
-        if(!CMessageSigner::VerifyMessage(activeMasternode.pubKeyMasternode, vchSig, strMessage, strError)) {
+    if(!CMessageSigner::VerifyMessage(activeMasternode.pubKeyMasternode, vchSig, strMessage, strError)) {
             LogPrintf("CSpysendQueue::Sign -- VerifyMessage() failed, error: %s\n", strError);
             return false;
-        }
     }
 
     return true;
@@ -83,24 +70,14 @@ bool CSpysendQueue::CheckSignature(const CPubKey& pubKeyMasternode) const
 {
     std::string strError = "";
 
-    if (sporkManager.IsSporkActive(SPORK_6_NEW_SIGS)) {
-        uint256 hash = GetSignatureHash();
-
-        if (!CHashSigner::VerifyHash(hash, pubKeyMasternode, vchSig, strError)) {
-            // we don't care about queues with old signature format
-            LogPrintf("CSpysendQueue::CheckSignature -- VerifyHash() failed, error: %s\n", strError);
-            return false;
-        }
-    } else {
-        std::string strMessage = CTxIn(masternodeOutpoint).ToString() +
+	std::string strMessage = CTxIn(masternodeOutpoint).ToString() +
                         boost::lexical_cast<std::string>(nDenom) +
                         boost::lexical_cast<std::string>(nTime) +
                         boost::lexical_cast<std::string>(fReady);
 
-        if(!CMessageSigner::VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
+    if(!CMessageSigner::VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
             LogPrintf("CSpysendQueue::CheckSignature -- Got bad Masternode queue signature: %s; error: %s\n", ToString(), strError);
             return false;
-        }
     }
 
     return true;
@@ -127,31 +104,18 @@ bool CSpysendBroadcastTx::Sign()
 
     std::string strError = "";
 
-    if (sporkManager.IsSporkActive(SPORK_6_NEW_SIGS)) {
-        uint256 hash = GetSignatureHash();
+	std::string strMessage = tx->GetHash().ToString() + boost::lexical_cast<std::string>(sigTime);
 
-        if (!CHashSigner::SignHash(hash, activeMasternode.keyMasternode, vchSig)) {
-            LogPrintf("CSpysendBroadcastTx::Sign -- SignHash() failed\n");
-            return false;
-        }
-
-        if (!CHashSigner::VerifyHash(hash, activeMasternode.pubKeyMasternode, vchSig, strError)) {
-            LogPrintf("CSpysendBroadcastTx::Sign -- VerifyHash() failed, error: %s\n", strError);
-            return false;
-        }
-    } else {
-        std::string strMessage = tx->GetHash().ToString() + boost::lexical_cast<std::string>(sigTime);
-
-        if(!CMessageSigner::SignMessage(strMessage, vchSig, activeMasternode.keyMasternode)) {
+    if(!CMessageSigner::SignMessage(strMessage, vchSig, activeMasternode.keyMasternode)) {
             LogPrintf("CSpysendBroadcastTx::Sign -- SignMessage() failed\n");
             return false;
-        }
+    }
 
-        if(!CMessageSigner::VerifyMessage(activeMasternode.pubKeyMasternode, vchSig, strMessage, strError)) {
+    if(!CMessageSigner::VerifyMessage(activeMasternode.pubKeyMasternode, vchSig, strMessage, strError)) {
             LogPrintf("CSpysendBroadcastTx::Sign -- VerifyMessage() failed, error: %s\n", strError);
             return false;
-        }
     }
+    
 
     return true;
 }
@@ -160,21 +124,11 @@ bool CSpysendBroadcastTx::CheckSignature(const CPubKey& pubKeyMasternode) const
 {
     std::string strError = "";
 
-    if (sporkManager.IsSporkActive(SPORK_6_NEW_SIGS)) {
-        uint256 hash = GetSignatureHash();
+	std::string strMessage = tx->GetHash().ToString() + boost::lexical_cast<std::string>(sigTime);
 
-        if (!CHashSigner::VerifyHash(hash, pubKeyMasternode, vchSig, strError)) {
-            // we don't care about dstxes with old signature format
-            LogPrintf("CSpysendBroadcastTx::CheckSignature -- VerifyHash() failed, error: %s\n", strError);
-            return false;
-        }
-    } else {
-        std::string strMessage = tx->GetHash().ToString() + boost::lexical_cast<std::string>(sigTime);
-
-        if(!CMessageSigner::VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
+    if(!CMessageSigner::VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
             LogPrintf("CSpysendBroadcastTx::CheckSignature -- Got bad dstx signature, error: %s\n", strError);
             return false;
-        }
     }
 
     return true;

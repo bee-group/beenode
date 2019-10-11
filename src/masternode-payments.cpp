@@ -170,16 +170,16 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
 }
 
 int CMasternodePayments::GetMinMasternodePaymentsProto() const {
-	if(!sporkManager.IsSporkActive(SPORK_22_MASTERNODE_UPDATE_PROTO))
+	if(!sporkManager.IsSporkActive(SPORK_23_MASTERNODE_UPDATE_PROTO))
 	{
 		return sporkManager.IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)
-				? MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2
+				? MIN_MASTERNODE_PAYMENT_PROTO_VERSION_3
 				: MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1;
 	}
 	else
 	{
 		return sporkManager.IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)
-				? MIN_MASTERNODE_PAYMENT_PROTO_VERSION_3
+				? MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2
 				: MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1;
 		
 	}
@@ -238,8 +238,6 @@ void CMasternodePayments::ProcessMessage(CNode* pfrom, const std::string& strCom
         pfrom->setAskFor.erase(nHash);
 
         // TODO: clear setAskFor for MSG_MASTERNODE_PAYMENT_BLOCK too
-
-        // Ignore any payments messages until masternode list is synced
         if(!masternodeSync.IsMasternodeListSynced()) return;
 
         {
@@ -297,18 +295,14 @@ void CMasternodePayments::ProcessMessage(CNode* pfrom, const std::string& strCom
 		{
 	        int nCount = 0;
 	        //masternode_info_t mnInfo;
+			if (!mnodeman.GetNextMasternodeInQueueForMasterPayment(vote.nBlockHeight, true, nCount, mnInfo)) {
+				LogPrintf("CMasternodePayments::ProcessBlock -- ERROR: Failed to find masternode to pay\n");
+	            return;
+			}
+			LogPrintf("CMasternodePayments::ProcessBlock -- Masternode found : %s\n", mnInfo.outpoint.ToStringShort());
 	
-	            if (!mnodeman.GetNextMasternodeInQueueForMasterPayment(vote.nBlockHeight, true, nCount, mnInfo)) {
-	                LogPrintf("CMasternodePayments::ProcessBlock -- ERROR: Failed to find masternode to pay\n");
-	                return;
-	            }
-	
-	            LogPrintf("CMasternodePayments::ProcessBlock -- Masternode found : %s\n", mnInfo.outpoint.ToStringShort());
-	
-	
-	            CScript payee = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
-	
-	            CMasternodePaymentVote voteNew(vote.masternodeOutpoint, vote.nBlockHeight, payee);
+			CScript payee = GetScriptForDestination(mnInfo.pubKeyCollateralAddress.GetID());
+			CMasternodePaymentVote voteNew(vote.masternodeOutpoint, vote.nBlockHeight, payee);
 	       
 	        if(!UpdateLastVote(voteNew)) {
 	            LogPrintf("MASTERNODEPAYMENTVOTE -- masternode already voted, masternode=%s\n", voteNew.masternodeOutpoint.ToStringShort());
@@ -365,33 +359,16 @@ uint256 CMasternodePaymentVote::GetSignatureHash() const
 bool CMasternodePaymentVote::Sign()
 {
     std::string strError;
-
-    if (sporkManager.IsSporkActive(SPORK_6_NEW_SIGS)) {
-        uint256 hash = GetSignatureHash();
-
-        if(!CHashSigner::SignHash(hash, activeMasternode.keyMasternode, vchSig)) {
-            LogPrintf("CMasternodePaymentVote::Sign -- SignHash() failed\n");
-            return false;
-        }
-
-        if (!CHashSigner::VerifyHash(hash, activeMasternode.pubKeyMasternode, vchSig, strError)) {
-            LogPrintf("CMasternodePaymentVote::Sign -- VerifyHash() failed, error: %s\n", strError);
-            return false;
-        }
-    } else {
-        std::string strMessage = masternodeOutpoint.ToStringShort() +
-                    boost::lexical_cast<std::string>(nBlockHeight) +
-                    ScriptToAsmStr(payee);
-
-        if(!CMessageSigner::SignMessage(strMessage, vchSig, activeMasternode.keyMasternode)) {
-            LogPrintf("CMasternodePaymentVote::Sign -- SignMessage() failed\n");
-            return false;
-        }
-
-        if(!CMessageSigner::VerifyMessage(activeMasternode.pubKeyMasternode, vchSig, strMessage, strError)) {
-            LogPrintf("CMasternodePaymentVote::Sign -- VerifyMessage() failed, error: %s\n", strError);
-            return false;
-        }
+	std::string strMessage = masternodeOutpoint.ToStringShort() +
+			boost::lexical_cast<std::string>(nBlockHeight) +
+            ScriptToAsmStr(payee);
+	if(!CMessageSigner::SignMessage(strMessage, vchSig, activeMasternode.keyMasternode)) {
+		LogPrintf("CMasternodePaymentVote::Sign -- SignMessage() failed\n");
+        return false;
+    }
+	if(!CMessageSigner::VerifyMessage(activeMasternode.pubKeyMasternode, vchSig, strMessage, strError)) {
+		LogPrintf("CMasternodePaymentVote::Sign -- VerifyMessage() failed, error: %s\n", strError);
+        return false;
     }
 
     return true;
@@ -507,7 +484,6 @@ bool CMasternodeBlockPayees::GetBestPayee(CScript& payeeRet) const
 	if(sporkManager.IsSporkActive(SPORK_21_MASTERNODE_ORDER_ENABLE)) 
 	{
 	    for (const auto& payee : vecPayees) {
-			
 			payeeRet = payee.GetPayee();
 	    }
     	return true;
@@ -566,8 +542,6 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew) const
 	        }
 		}
 	}
-	
-
     // if we don't have at least MNPAYMENTS_SIGNATURES_REQUIRED signatures on a payee, approve whichever is the longest chain
     if(nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
 
@@ -766,42 +740,20 @@ bool CMasternodePaymentVote::CheckSignature(const CPubKey& pubKeyMasternode, int
     nDos = 0;
     std::string strError = "";
 
-    if (sporkManager.IsSporkActive(SPORK_6_NEW_SIGS)) {
-        uint256 hash = GetSignatureHash();
+	std::string strMessage = masternodeOutpoint.ToStringShort() +
+			boost::lexical_cast<std::string>(nBlockHeight) +
+            ScriptToAsmStr(payee);
 
-        if (!CHashSigner::VerifyHash(hash, pubKeyMasternode, vchSig, strError)) {
-            // could be a signature in old format
-            std::string strMessage = masternodeOutpoint.ToStringShort() +
-                        boost::lexical_cast<std::string>(nBlockHeight) +
-                        ScriptToAsmStr(payee);
-            if(!CMessageSigner::VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
-                // nope, not in old format either
-                // Only ban for future block vote when we are already synced.
-                // Otherwise it could be the case when MN which signed this vote is using another key now
-                // and we have no idea about the old one.
-                if(masternodeSync.IsMasternodeListSynced() && nBlockHeight > nValidationHeight) {
-                    nDos = 20;
-                }
-                return error("CMasternodePaymentVote::CheckSignature -- Got bad Masternode payment signature, masternode=%s, error: %s",
-                            masternodeOutpoint.ToStringShort(), strError);
-            }
+	if (!CMessageSigner::VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
+		// Only ban for future block vote when we are already synced.
+        // Otherwise it could be the case when MN which signed this vote is using another key now
+        // and we have no idea about the old one.
+		if(masternodeSync.IsMasternodeListSynced() && nBlockHeight > nValidationHeight) {
+			nDos = 20;
         }
-    } else {
-        std::string strMessage = masternodeOutpoint.ToStringShort() +
-                    boost::lexical_cast<std::string>(nBlockHeight) +
-                    ScriptToAsmStr(payee);
-
-        if (!CMessageSigner::VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
-            // Only ban for future block vote when we are already synced.
-            // Otherwise it could be the case when MN which signed this vote is using another key now
-            // and we have no idea about the old one.
-            if(masternodeSync.IsMasternodeListSynced() && nBlockHeight > nValidationHeight) {
-                nDos = 20;
-            }
-            return error("CMasternodePaymentVote::CheckSignature -- Got bad Masternode payment signature, masternode=%s, error: %s",
-                        masternodeOutpoint.ToStringShort(), strError);
-        }
-    }
+        return error("CMasternodePaymentVote::CheckSignature -- Got bad Masternode payment signature, masternode=%s, error: %s",
+				masternodeOutpoint.ToStringShort(), strError);
+	}
 
     return true;
 }
