@@ -30,8 +30,9 @@ std::map<int, int64_t> mapSporkDefaults = {
     {SPORK_18_EVOLUTION_PAYMENTS,         		0}, // OFF
     {SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT, 	0x7FFFFFFF}, // OFF
     {SPORK_20_EVOLUTION_DISABLE_NODE, 	         0x7FFFFFFF},
-    {SPORK_21_MASTERNODE_ORDER_ENABLE, 	         1569654200ULL}, // OFF
-    {SPORK_22_MASTERNODE_UPDATE_PROTO, 	         1569652800ULL}, // OFF
+    {SPORK_21_MASTERNODE_ORDER_ENABLE, 	         1569654200ULL}, // ON
+    {SPORK_22_MASTERNODE_UPDATE_PROTO, 	         1569652800ULL}, // ON
+    {SPORK_23_MASTERNODE_UPDATE_PROTO, 	         4070908800ULL}, // OFF
 };
 CEvolutionManager evolutionManager;
 
@@ -236,6 +237,7 @@ int CSporkManager::GetSporkIDByName(const std::string& strName)
     if (strName == "SPORK_20_EVOLUTION_DISABLE_NODE")	          return SPORK_20_EVOLUTION_DISABLE_NODE;
     if (strName == "SPORK_21_MASTERNODE_ORDER_ENABLE")			return SPORK_21_MASTERNODE_ORDER_ENABLE;
     if (strName == "SPORK_22_MASTERNODE_UPDATE_PROTO")	          return SPORK_22_MASTERNODE_UPDATE_PROTO;
+    if (strName == "SPORK_23_MASTERNODE_UPDATE_PROTO")	          return SPORK_23_MASTERNODE_UPDATE_PROTO;
 
     LogPrint("spork", "CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
     return -1;
@@ -257,6 +259,7 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_20_EVOLUTION_DISABLE_NODE: 	return "SPORK_20_EVOLUTION_DISABLE_NODE";
         case SPORK_21_MASTERNODE_ORDER_ENABLE: 	return "SPORK_21_MASTERNODE_ORDER_ENABLE";
         case SPORK_22_MASTERNODE_UPDATE_PROTO: 	return "SPORK_22_MASTERNODE_UPDATE_PROTO";
+        case SPORK_23_MASTERNODE_UPDATE_PROTO: 	return "SPORK_23_MASTERNODE_UPDATE_PROTO";
         default:
             LogPrint("spork", "CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);
             return "Unknown";

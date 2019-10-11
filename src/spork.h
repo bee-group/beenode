@@ -32,9 +32,10 @@ static const int SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT				= 10018;
 static const int SPORK_20_EVOLUTION_DISABLE_NODE				        = 10019;
 static const int SPORK_21_MASTERNODE_ORDER_ENABLE			        	= 10020;
 static const int SPORK_22_MASTERNODE_UPDATE_PROTO			        	= 10021;
+static const int SPORK_23_MASTERNODE_UPDATE_PROTO			        	= 10022;
 
 static const int SPORK_START                                            = SPORK_2_INSTANTSEND_ENABLED;
-static const int SPORK_END                                              = SPORK_22_MASTERNODE_UPDATE_PROTO;
+static const int SPORK_END                                              = SPORK_23_MASTERNODE_UPDATE_PROTO;
 
 extern std::map<int, int64_t> mapSporkDefaults;
 extern std::map<uint256, CSporkMessage> mapSporks;
