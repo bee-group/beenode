@@ -10,7 +10,6 @@ packages:
 - "curl"
 - "g++"
 - "git"
-- "cmake"
 - "pkg-config"
 - "autoconf"
 - "librsvg2-bin"
@@ -41,6 +40,10 @@ script: |
   FAKETIME_HOST_PROGS=""
   FAKETIME_PROGS="ar ranlib date dmg genisoimage"
 
+  sudo apt-get install software-properties-common
+  add-apt-repository ppa:george-edison55/cmake-3.x
+  sudo apt-get update
+  sudo apt-get install cmake
   export QT_RCC_TEST=1
   export GZIP="-9n"
   export TAR_OPTIONS="--mtime="$REFERENCE_DATE\\\ $REFERENCE_TIME""
