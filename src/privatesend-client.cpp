@@ -878,9 +878,9 @@ bool CPrivateSendClient::JoinExistingQueue(CAmount nBalanceNeedsAnonymized, CCon
         std::vector<COutput> vCoinsTmp;
         CAmount nMinAmount = vecStandardDenoms[vecBits.front()];
         CAmount nMaxAmount = nBalanceNeedsAnonymized;
-        // nInputCount is not covered by legacy signature, require SPORK_6_NEW_SIGS to activate to use new algo
+        // nInputCount is not covered by legacy signature
         // (to make sure nInputCount wasn't modified by some intermediary node)
-        bool fNewAlgo = infoMn.nProtocolVersion > 70208 && sporkManager.IsSporkActive(SPORK_6_NEW_SIGS);
+        bool fNewAlgo = infoMn.nProtocolVersion > 70208;
 
         if (fNewAlgo && dsq.nInputCount != 0) {
             nMinAmount = nMaxAmount = dsq.nInputCount * vecStandardDenoms[vecBits.front()];
@@ -990,9 +990,9 @@ bool CPrivateSendClient::StartNewQueue(CAmount nValueMin, CAmount nBalanceNeedsA
             return false;
         }
 
-        // nInputCount is not covered by legacy signature, require SPORK_6_NEW_SIGS to activate to use new algo
+        // nInputCount is not covered by legacy signature
         // (to make sure nInputCount wasn't modified by some intermediary node)
-        bool fNewAlgo = infoMn.nProtocolVersion > 70208 && sporkManager.IsSporkActive(SPORK_6_NEW_SIGS);
+        bool fNewAlgo = infoMn.nProtocolVersion > 70208;
         nSessionInputCount = fNewAlgo
                 ? std::min(vecTxDSInTmp.size(), size_t(5 + GetRand(PRIVATESEND_ENTRY_MAX_SIZE - 5 + 1)))
                 : 0;

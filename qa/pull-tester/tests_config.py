@@ -3,8 +3,8 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-SRCDIR="/home/develop/test_beenode_0731"
-BUILDDIR="/home/develop/test_beenode_0731"
+SRCDIR="/home/develop/beenode"
+BUILDDIR="/home/develop/beenode"
 EXEEXT=""
 
 # These will turn into comments if they were disabled when configuring.
