@@ -1,7 +1,7 @@
 ---
 name: "beenode-win-signer"
 suites:
-- "bionic"
+- "xenial"
 architectures:
 - "amd64"
 packages:
