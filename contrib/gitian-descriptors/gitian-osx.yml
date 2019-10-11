@@ -19,7 +19,6 @@ packages:
 - "automake"
 - "faketime"
 - "bsdmainutils"
-- "cmake"
 - "imagemagick"
 - "libcap-dev"
 - "libz-dev"
