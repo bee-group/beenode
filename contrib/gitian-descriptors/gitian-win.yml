@@ -2,7 +2,7 @@
 name: "beenode-win-0.7"
 enable_cache: true
 suites:
-- "xenial"
+- "trusty"
 architectures:
 - "amd64"
 packages:
