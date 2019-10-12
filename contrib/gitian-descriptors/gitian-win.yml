@@ -7,7 +7,6 @@ architectures:
 - "amd64"
 packages:
 - "curl"
-- "cmake"
 - "g++"
 - "git-core"
 - "pkg-config"
