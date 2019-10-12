@@ -1,5 +1,5 @@
 ---
-name: "beenode-raspberry-0.12"
+name: "beenode-raspberry-0.7"
 enable_cache: true
 suites:
 - "precise"
