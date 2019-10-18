@@ -315,8 +315,7 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.push_back(CDNSSeedData("beenodedot.io",  "testnet-seed.beenodedot.io"));
-        vSeeds.push_back(CDNSSeedData("masternode.io", "test.dnsseed.masternode.io"));
+        vSeeds.push_back(CDNSSeedData("beenode.org",  "test.dnsseed.beenode.org "));
 
         // Testnet Beenode addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,85);
@@ -427,7 +426,7 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        //vSeeds.push_back(CDNSSeedData("beenodeevo.org",  "devnet-seed.beenodeevo.org"));
+        vSeeds.push_back(CDNSSeedData("beenode.org",  "devnet.seed.beenode.org"));
 
         // Testnet Beenode addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
