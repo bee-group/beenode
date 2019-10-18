@@ -200,9 +200,6 @@ public:
 
 
         vSeeds.push_back(CDNSSeedData("beenode.org", "dnsseed.beenode.org"));
-        vSeeds.push_back(CDNSSeedData("beenodedot.io", "dnsseed.beenodedot.io"));
-        vSeeds.push_back(CDNSSeedData("masternode.io", "dnsseed.masternode.io"));
-        vSeeds.push_back(CDNSSeedData("bee-group.io", "dnsseed.bee-group.io"));
 
         // Beenode addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,25);
@@ -233,13 +230,18 @@ public:
         strSporkAddress = "B9X32axo2DTcGBDkdXf8nSB9z9SamU8CmQ";
 
         checkpointData = (CCheckpointData) {
-            boost::assign::map_list_of
-            (  0, uint256S(GENESIS_MAIN_HASH))
+              boost::assign::map_list_of
+            (  101, uint256S("0x00000003db140a03cef4075cf9d35cc1698e987c8fb23dc7daea3e3f7700f395"))
+			(  10000, uint256S("0x00000000002fc3f32012c1cc8a18621a6b52caba4e8957c30d781bca3c0cdbad"))
+			(  30090, uint256S("0x000000000019c48279bf51a610d089f2c6744c5090382c42f55910e09cd9b8dc"))
+			(  64279, uint256S("0x000000000002e2ae47dcf3562f5def04bfe76bfebba1171fc64ff8f908e181fe"))
+			(  76205, uint256S("0x00000000001051eb1c7cff246aa283e90458e21903d6d8be34d44da7c81971a8"))
+            (  85900, uint256S("0x0000000000124c4d744f373b1b5bd769c90c3a242239f458498c0cb032668e6a"))
         };
 
         chainTxData = ChainTxData{
-            1529305236, // * UNIX timestamp of last known number of transactions
-            6155435,    // * total number of transactions between genesis and that timestamp
+            1568864216, // * UNIX timestamp of last known number of transactions (Block 1068571)
+            159393,   // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
