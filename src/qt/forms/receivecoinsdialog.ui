@@ -6,9 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>776</width>
-    <height>387</height>
+    <width>950</width>
+    <height>572</height>
    </rect>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">color: rgb(46, 52, 54);
+background-color: rgb(255, 255, 255);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
    <item>
@@ -50,6 +54,9 @@
           <property name="toolTip">
            <string>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Beenode network.</string>
           </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(0, 0, 0);</string>
+          </property>
           <property name="text">
            <string>&amp;Message:</string>
           </property>
@@ -87,6 +94,9 @@
           <property name="toolTip">
            <string>An optional label to associate with the new receiving address.</string>
           </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(0, 0, 0);</string>
+          </property>
           <property name="text">
            <string>&amp;Label:</string>
           </property>
@@ -102,6 +112,9 @@
          <widget class="QLabel" name="label">
           <property name="toolTip">
            <string>An optional amount to request. Leave this empty or zero to not request a specific amount.</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(0, 0, 0);</string>
           </property>
           <property name="text">
            <string>&amp;Amount:</string>
@@ -137,6 +150,10 @@
               <height>0</height>
              </size>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(39, 43, 52);
+color: rgb(238, 238, 236);</string>
+            </property>
             <property name="text">
              <string>&amp;Request payment</string>
             </property>
@@ -152,6 +169,10 @@
             </property>
             <property name="toolTip">
              <string>Clear all fields of the form.</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(39, 43, 52);
+color: rgb(238, 238, 236);</string>
             </property>
             <property name="text">
              <string>Clear</string>
@@ -262,6 +283,10 @@
           <property name="toolTip">
            <string>Show the selected request (does the same as double clicking an entry)</string>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(39, 43, 52);
+color: rgb(238, 238, 236);</string>
+          </property>
           <property name="text">
            <string>Show</string>
           </property>
@@ -277,6 +302,10 @@
           </property>
           <property name="toolTip">
            <string>Remove the selected entries from the list</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(39, 43, 52);
+color: rgb(238, 238, 236);</string>
           </property>
           <property name="text">
            <string>Remove</string>

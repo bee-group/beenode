@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>729</width>
-    <height>150</height>
+    <width>823</width>
+    <height>186</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -15,6 +15,9 @@
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
   <widget class="QFrame" name="SendCoins">
    <property name="toolTip">
@@ -38,6 +41,9 @@
     </property>
     <item row="0" column="0">
      <widget class="QLabel" name="payToLabel">
+      <property name="styleSheet">
+       <string notr="true">color: rgb(46, 52, 54);</string>
+      </property>
       <property name="text">
        <string>Pay &amp;To:</string>
       </property>
@@ -119,6 +125,9 @@
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="labellLabel">
+      <property name="styleSheet">
+       <string notr="true">color: rgb(46, 52, 54);</string>
+      </property>
       <property name="text">
        <string>&amp;Label:</string>
       </property>
@@ -139,6 +148,9 @@
     </item>
     <item row="2" column="0">
      <widget class="QLabel" name="amountLabel">
+      <property name="styleSheet">
+       <string notr="true">color: rgb(46, 52, 54);</string>
+      </property>
       <property name="text">
        <string>A&amp;mount:</string>
       </property>
@@ -214,7 +226,7 @@
         <color alpha="255">
          <red>255</red>
          <green>255</green>
-         <blue>127</blue>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -295,7 +307,7 @@
         <color alpha="255">
          <red>255</red>
          <green>255</green>
-         <blue>127</blue>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -351,7 +363,7 @@
         <color alpha="255">
          <red>255</red>
          <green>255</green>
-         <blue>127</blue>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -432,7 +444,7 @@
         <color alpha="255">
          <red>255</red>
          <green>255</green>
-         <blue>127</blue>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -488,7 +500,7 @@
         <color alpha="255">
          <red>255</red>
          <green>255</green>
-         <blue>127</blue>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -560,7 +572,7 @@
         <color alpha="255">
          <red>255</red>
          <green>255</green>
-         <blue>127</blue>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -569,7 +581,7 @@
         <color alpha="255">
          <red>255</red>
          <green>255</green>
-         <blue>127</blue>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -616,7 +628,7 @@
     <string>This is an unauthenticated payment request.</string>
    </property>
    <property name="autoFillBackground">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="frameShape">
     <enum>QFrame::NoFrame</enum>
@@ -710,9 +722,9 @@
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>140</red>
-         <green>232</green>
-         <blue>119</blue>
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -782,18 +794,18 @@
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>119</red>
+         <red>255</red>
          <green>255</green>
-         <blue>233</blue>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>140</red>
-         <green>232</green>
-         <blue>119</blue>
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -856,9 +868,9 @@
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>140</red>
-         <green>232</green>
-         <blue>119</blue>
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -928,18 +940,18 @@
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>119</red>
+         <red>255</red>
          <green>255</green>
-         <blue>233</blue>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>140</red>
-         <green>232</green>
-         <blue>119</blue>
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -1002,9 +1014,9 @@
       <colorrole role="Button">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>140</red>
-         <green>232</green>
-         <blue>119</blue>
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -1074,18 +1086,18 @@
       <colorrole role="Base">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>140</red>
-         <green>232</green>
-         <blue>119</blue>
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
       <colorrole role="Window">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>140</red>
-         <green>232</green>
-         <blue>119</blue>
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
         </color>
        </brush>
       </colorrole>
@@ -1141,7 +1153,7 @@
     <string>This is an authenticated payment request.</string>
    </property>
    <property name="autoFillBackground">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="frameShape">
     <enum>QFrame::NoFrame</enum>
