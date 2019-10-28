@@ -510,7 +510,7 @@ bool CMasternodeMan::GetNextMasternodeInQueueForTmp(int nBlockHeight, bool fFilt
         return false;
     }
 
-    // Need LOCK2 here to ensure consistent locking order because the GetBlockHash call below locks cs_main
+    // Need LOCK2 here to ensure consistent locking order because the GetBlockHash call below locks cs_main 
     LOCK2(cs_main,cs);
 
     std::vector<std::pair<int64_t, CMasternode*> > vecMasternodeLastPaid;
@@ -557,7 +557,7 @@ bool CMasternodeMan::GetNextMasternodeInQueueForMasterPayment(bool fFilterSigTim
 
 bool CMasternodeMan::GetNextMasternodeInQueueForMasterPayment(int nBlockHeight, bool fFilterSigTime, int& nCountRet, masternode_info_t& mnInfoRet)
 {
-	mnInfoRet = masternode_info_t();
+    mnInfoRet = masternode_info_t();
     nCountRet = 0;
 
     if (!masternodeSync.IsWinnersListSynced()) {
@@ -575,59 +575,30 @@ bool CMasternodeMan::GetNextMasternodeInQueueForMasterPayment(int nBlockHeight, 
     */
 
     int nMnCount = CountMasternodes();
-
-	LOCK(cs_mapMasternodeBlocks);
+	
     for (auto& mnpair : mapMasternodes) {
-        if(!mnpair.second.IsValidForPayment()) continue;
-		//check protocol version
+		if(!mnpair.second.IsValidForPayment()) continue;
+
+        //check protocol version
         if(mnpair.second.nProtocolVersion < mnpayments.GetMinMasternodePaymentsProto()) continue;
-		//it's too new, wait for a cycle
+		
+        //it's too new, wait for a cycle
         if(fFilterSigTime && mnpair.second.sigTime + (nMnCount*2.6*60) > GetAdjustedTime()) continue;
-		//make sure it has at least as many confirmations as there are masternodes
+
+        //make sure it has at least as many confirmations as there are masternodes
         if(GetUTXOConfirmations(mnpair.first) < nMnCount) continue;
-		
-		
-		if(sporkManager.IsSporkActive(SPORK_21_MASTERNODE_ORDER_ENABLE)) 
-		{
-			bool bIsSkipMasternode=false; 
-			size_t countNodes=mapMasternodes.size()-1;
-			for(size_t i=1;i<countNodes;i++)
-			{
-				const auto it = mnpayments.mapMasternodeBlocks.find(nBlockHeight-i);
-				if(it == mnpayments.mapMasternodeBlocks.end())continue;
 				
-				for (const auto& payee : it->second.vecPayees)
-				{
-					masternode_info_t mnInfoRet;
-					if(!GetMasternodeInfo(payee.GetPayee(),mnInfoRet))
-						continue;
-					if(mnInfoRet.outpoint == mnpair.second.GetInfo().outpoint)
-					{
-						bIsSkipMasternode=true;
-						break;
-					}
-				}
-				if(bIsSkipMasternode)break;
-				
-			}
-			if(bIsSkipMasternode)continue;
-		}
-		
-		mnpair.second.enableTime=GetAdjustedTime();
-		
-		
-		
         vecMasternodeLastPaid.push_back(std::make_pair(mnpair.second.enableTime, &mnpair.second));
     }
-
+	
     nCountRet = (int)vecMasternodeLastPaid.size();
+	
 	if( nCountRet > 0 ){
 		// Sort them low to high
 		sort(vecMasternodeLastPaid.begin(), vecMasternodeLastPaid.end(), CompareLastPaidBlock());	
 		mnInfoRet = vecMasternodeLastPaid[0].second->GetInfo();
 		vecMasternodeLastPaid[0].second->enableTime = GetAdjustedTime();		
 	}
-	
 	
     return mnInfoRet.fInfoValid;
 }
@@ -1605,7 +1576,7 @@ void CMasternodeMan::UpdateLastPaid(const CBlockIndex* pindex)
     int nMaxBlocksToScanBack = std::max(LAST_PAID_SCAN_BLOCKS, nCachedBlockHeight - nLastRunBlockHeight);
     nMaxBlocksToScanBack = std::min(nMaxBlocksToScanBack, mnpayments.GetStorageLimit());
 
-    LogPrint("masternode", "CMasternodeMan::UpdateLastPaid -- nCachedBlockHeight=%d, nLastRunBlockHeight=%d, nMaxBlocksToScanBack=%d\n",
+    LogPrintf("masternode.CMasternodeMan::UpdateLastPaid -- nCachedBlockHeight=%d, nLastRunBlockHeight=%d, nMaxBlocksToScanBack=%d\n",
                             nCachedBlockHeight, nLastRunBlockHeight, nMaxBlocksToScanBack);
 
     for (auto& mnpair : mapMasternodes) {
