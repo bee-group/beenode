@@ -56,10 +56,6 @@
        <property name="toolTip">
         <string>Create a new address</string>
        </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
-       </property>
        <property name="text">
         <string>&amp;New</string>
        </property>
@@ -73,10 +69,6 @@ color: rgb(238, 238, 236);</string>
        <property name="toolTip">
         <string>Copy the currently selected address to the system clipboard</string>
        </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
-       </property>
        <property name="text">
         <string>&amp;Copy</string>
        </property>
@@ -89,10 +81,6 @@ color: rgb(238, 238, 236);</string>
       <widget class="QPushButton" name="deleteAddress">
        <property name="toolTip">
         <string>Delete the currently selected address from the list</string>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
        </property>
        <property name="text">
         <string>&amp;Delete</string>
@@ -120,10 +108,6 @@ color: rgb(238, 238, 236);</string>
        <property name="toolTip">
         <string>Export the data in the current tab to a file</string>
        </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
-       </property>
        <property name="text">
         <string>&amp;Export</string>
        </property>
@@ -139,10 +123,6 @@ color: rgb(238, 238, 236);</string>
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
        </property>
        <property name="text">
         <string>C&amp;lose</string>

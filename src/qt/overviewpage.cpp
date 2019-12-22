@@ -5,8 +5,7 @@
 
 #include "overviewpage.h"
 #include "ui_overviewpage.h"
-#include <QDesktopServices>
-#include <QUrl>
+
 #include "bitcoinunits.h"
 #include "clientmodel.h"
 #include "guiconstants.h"
@@ -20,7 +19,6 @@
 #include "walletmodel.h"
 
 #include "instantx.h"
-#include "spysendconfig.h"
 #include "masternode-sync.h"
 #include "privatesend-client.h"
 
@@ -566,7 +564,7 @@ void OverviewPage::privateSendStatus()
         updatePrivateSendProgress();
     }
 
-    QString strStatus = QString(privateSendClient.GetStatus().c_str());
+    QString strStatus = QString(privateSendClient.GetStatuses().c_str());
 
     QString s = tr("Last PrivateSend message:\n") + strStatus;
 
@@ -575,13 +573,7 @@ void OverviewPage::privateSendStatus()
 
     ui->labelPrivateSendLastMessage->setText(s);
 
-    if(privateSendClient.nSessionDenom == 0){
-        ui->labelSubmittedDenom->setText(tr("N/A"));
-    } else {
-        QString strDenom(CPrivateSend::GetDenominationsToString(privateSendClient.nSessionDenom).c_str());
-        ui->labelSubmittedDenom->setText(strDenom);
-    }
-
+    ui->labelSubmittedDenom->setText(QString(privateSendClient.GetSessionDenoms().c_str()));
 }
 
 void OverviewPage::privateSendAuto(){
@@ -644,18 +636,9 @@ void OverviewPage::togglePrivateSend(){
 
     if(!privateSendClient.fEnablePrivateSend){
         ui->togglePrivateSend->setText(tr("Start Mixing"));
-        privateSendClient.UnlockCoins();
+        privateSendClient.ResetPool();
     } else {
         ui->togglePrivateSend->setText(tr("Stop Mixing"));
-
-        /* show spysend configuration if client has defaults set */
-
-        if(privateSendClient.nPrivateSendAmount == 0){
-            SpysendConfig dlg(this);
-            dlg.setModel(walletModel);
-            dlg.exec();
-        }
-
     }
 }
 
@@ -690,79 +673,79 @@ void OverviewPage::DisablePrivateSendCompletely() {
 
 void OverviewPage::on_pushButton_clicked()
 {
-    QString link="https://www.beenode.org/";
-       QDesktopServices::openUrl(QUrl(link));
+  //  QString link="https://www.beenode.org/";
+  //     QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_2_clicked()
 {
-    QString link="https://robot.beenode.org";
-       QDesktopServices::openUrl(QUrl(link));
+//    QString link="https://robot.beenode.org";
+//       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_3_clicked()
 {
-    QString link="https://chainz.cryptoid.info/bnode/";
-       QDesktopServices::openUrl(QUrl(link));
+ //   QString link="https://chainz.cryptoid.info/bnode/";
+ //      QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_4_clicked()
 {
-    QString link="https://www.livecoin.net/en/trading/BNODE_BTC";
-       QDesktopServices::openUrl(QUrl(link));
+ //   QString link="https://www.livecoin.net/en/trading/BNODE_BTC";
+ //      QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_5_clicked()
 {
-    QString link="https://www.catex.io/trading/BNODE/BTC";
-       QDesktopServices::openUrl(QUrl(link));
+ //   QString link="https://www.catex.io/trading/BNODE/BTC";
+//       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_6_clicked()
 {
-    QString link="https://www.facebook.com/BeeNodeCoin";
-       QDesktopServices::openUrl(QUrl(link));
+//    QString link="https://www.facebook.com/BeeNodeCoin";
+ //      QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_7_clicked()
 {
-    QString link="https://twitter.com/node_bee";
-       QDesktopServices::openUrl(QUrl(link));
+ //   QString link="https://twitter.com/node_bee";
+ //      QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_8_clicked()
 {
-    QString link="https://bitcointalk.org/index.php?topic=5131731.0";
-       QDesktopServices::openUrl(QUrl(link));
+ //   QString link="https://bitcointalk.org/index.php?topic=5131731.0";
+ //      QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_9_clicked()
 {
-    QString link="https://www.reddit.com/user/BeeNode";
-       QDesktopServices::openUrl(QUrl(link));
+  //  QString link="https://www.reddit.com/user/BeeNode";
+  //     QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_10_clicked()
 {
-    QString link="https://t.me/BeeNode";
-       QDesktopServices::openUrl(QUrl(link));
+ //   QString link="https://t.me/BeeNode";
+ //      QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_11_clicked()
 {
-    QString link="https://www.youtube.com/channel/UCQo3bPEieFTtTzKPJZrRq8A";
-       QDesktopServices::openUrl(QUrl(link));
+ //   QString link="https://www.youtube.com/channel/UCQo3bPEieFTtTzKPJZrRq8A";
+ //      QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_12_clicked()
 {
-    QString link="https://t.me/BeeNodeChat";
-       QDesktopServices::openUrl(QUrl(link));
+//    QString link="https://t.me/BeeNodeChat";
+//       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_13_clicked()
 {
-    QString link="https://discordapp.com/invite/YF8YbFG";
-       QDesktopServices::openUrl(QUrl(link));
+//    QString link="https://discordapp.com/invite/YF8YbFG";
+ //      QDesktopServices::openUrl(QUrl(link));
 }
 

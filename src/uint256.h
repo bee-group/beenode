@@ -48,12 +48,7 @@ public:
     friend inline bool operator==(const base_blob& a, const base_blob& b) { return a.Compare(b) == 0; }
     friend inline bool operator!=(const base_blob& a, const base_blob& b) { return a.Compare(b) != 0; }
     friend inline bool operator<(const base_blob& a, const base_blob& b) { return a.Compare(b) < 0; }
-	friend inline base_blob<BITS> operator^(const base_blob<BITS>& a, const base_blob<BITS>& b){	 
-        base_blob<BITS> result;
-        for (int i = 0; i < WIDTH; i++) result.data[i] = a.data[i] ^ b.data[i];         
-		return result;
-	}
-
+    uint8_t& operator[](const size_t index) { return data[index]; }
     std::string GetHex() const;
     void SetHex(const char* psz);
     void SetHex(const std::string& str);
@@ -179,5 +174,15 @@ public:
     }
 };
 
+namespace std {
+    template <>
+    struct hash<uint256>
+    {
+        std::size_t operator()(const uint256& k) const
+        {
+            return (std::size_t)k.GetCheapHash();
+        }
+    };
+}
 
 #endif // BITCOIN_UINT256_H

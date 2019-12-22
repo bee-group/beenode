@@ -324,7 +324,7 @@ do
             # is incompatible with FreeBSD 'install' when (umask & 300) != 0.
             ;;
           *)
-            # $RANDOM is not portable (e.g. dash);  use it when possible to
+            # $RANDOM is not portable (e.g. beenode);  use it when possible to
             # lower collision chance
             tmpdir=${TMPDIR-/tmp}/ins$RANDOM-$$
             trap 'ret=$?; rmdir "$tmpdir/a/b" "$tmpdir/a" "$tmpdir" 2>/dev/null; exit $ret' 0

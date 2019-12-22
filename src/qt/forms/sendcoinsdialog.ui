@@ -6,16 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1009</width>
-    <height>644</height>
+    <width>850</width>
+    <height>526</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Send Coins</string>
-  </property>
-  <property name="styleSheet">
-   <string notr="true">color: rgb(46, 52, 54);
-background-color: rgb(255, 255, 255);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0,0">
    <property name="bottomMargin">
@@ -108,8 +104,7 @@ background-color: rgb(255, 255, 255);</string>
           <item>
            <widget class="QPushButton" name="pushButtonCoinControl">
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
+             <string notr="true"/>
             </property>
             <property name="text">
              <string>Inputs...</string>
@@ -592,8 +587,8 @@ color: rgb(238, 238, 236);</string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>989</width>
-        <height>185</height>
+        <width>830</width>
+        <height>104</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,1">
@@ -742,10 +737,6 @@ color: rgb(238, 238, 236);</string>
               </item>
               <item>
                <widget class="QPushButton" name="buttonChooseFee">
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
-                </property>
                 <property name="text">
                  <string>Choose...</string>
                 </property>
@@ -770,14 +761,14 @@ color: rgb(238, 238, 236);</string>
           </item>
           <item>
            <widget class="QLabel" name="fallbackFeeWarningLabel">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
             <property name="toolTip">
              <string>Using the fallbackfee can result in sending a transaction that will take several hours or days (or never) to confirm. Consider choosing your fee manually or wait until your have validated the complete chain.</string>
+            </property>
+            <property name="font">
+            <font>
+                <weight>75</weight>
+                <bold>true</bold>
+            </font>
             </property>
             <property name="text">
              <string>Warning: Fee estimation is currently not possible.</string>
@@ -807,10 +798,6 @@ color: rgb(238, 238, 236);</string>
            <widget class="QPushButton" name="buttonMinimizeFee">
             <property name="toolTip">
              <string>collapse fee-settings</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
             </property>
             <property name="text">
              <string>Hide</string>
@@ -1227,10 +1214,6 @@ color: rgb(238, 238, 236);</string>
        <property name="toolTip">
         <string>Confirm the send action</string>
        </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
-       </property>
        <property name="text">
         <string>S&amp;end</string>
        </property>
@@ -1253,10 +1236,6 @@ color: rgb(238, 238, 236);</string>
        <property name="toolTip">
         <string>Clear all fields of the form.</string>
        </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
-       </property>
        <property name="text">
         <string>Clear &amp;All</string>
        </property>
@@ -1269,10 +1248,6 @@ color: rgb(238, 238, 236);</string>
       <widget class="QPushButton" name="addButton">
        <property name="toolTip">
         <string>Send to multiple recipients at once</string>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(39, 43, 52);
-color: rgb(238, 238, 236);</string>
        </property>
        <property name="text">
         <string>Add &amp;Recipient</string>
@@ -1346,12 +1321,6 @@ color: rgb(238, 238, 236);</string>
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
          </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>

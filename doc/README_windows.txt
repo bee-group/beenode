@@ -1,4 +1,4 @@
-Beenode Core 0.7.2
+Beenode Core 0.13.0
 =====================
 
 Intro
@@ -18,6 +18,6 @@ However, it downloads and stores the entire history of Beenode transactions;
 depending on the speed of your computer and network connection, the synchronization
 process can take anywhere from a few hours to a day or more.
 
-See the beenode wiki at:
-  https://beenodepay.atlassian.net/wiki/
+See the Beenode documentation at:
+  https://docs.beenode.org
 for more help and information.

@@ -78,9 +78,9 @@ func_file_conv ()
   esac
 }
 
-# func_cl_dashL linkdir
+# func_cl_beenodeL linkdir
 # Make cl look for libraries in LINKDIR
-func_cl_dashL ()
+func_cl_beenodeL ()
 {
   func_file_conv "$1"
   if test -z "$lib_path"; then
@@ -91,9 +91,9 @@ func_cl_dashL ()
   linker_opts="$linker_opts -LIBPATH:$file"
 }
 
-# func_cl_dashl library
+# func_cl_beenodel library
 # Do a library search-path lookup for cl
-func_cl_dashl ()
+func_cl_beenodel ()
 {
   lib=$1
   found=no
@@ -168,21 +168,21 @@ func_cl_wrapper ()
 	  ;;
 	-l)
 	  eat=1
-	  func_cl_dashl "$2"
+	  func_cl_beenodel "$2"
 	  set x "$@" "$lib"
 	  shift
 	  ;;
 	-l*)
-	  func_cl_dashl "${1#-l}"
+	  func_cl_beenodel "${1#-l}"
 	  set x "$@" "$lib"
 	  shift
 	  ;;
 	-L)
 	  eat=1
-	  func_cl_dashL "$2"
+	  func_cl_beenodeL "$2"
 	  ;;
 	-L*)
-	  func_cl_dashL "${1#-L}"
+	  func_cl_beenodeL "${1#-L}"
 	  ;;
 	-static)
 	  shared=false

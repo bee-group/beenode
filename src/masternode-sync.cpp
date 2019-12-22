@@ -3,17 +3,15 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "activemasternode.h"
-#include "checkpoints.h"
+#include "init.h"
 #include "validation.h"
-#include "masternode.h"
 #include "masternode-payments.h"
 #include "masternode-sync.h"
 #include "masternodeman.h"
 #include "netfulfilledman.h"
 #include "netmessagemaker.h"
-#include "spork.h"
 #include "ui_interface.h"
-#include "util.h"
+#include "evo/deterministicmns.h"
 
 class CMasternodeSync;
 CMasternodeSync masternodeSync;
@@ -21,13 +19,13 @@ CMasternodeSync masternodeSync;
 void CMasternodeSync::Fail()
 {
     nTimeLastFailure = GetTime();
-    nRequestedMasternodeAssets = MASTERNODE_SYNC_FAILED;
+    nCurrentAsset = MASTERNODE_SYNC_FAILED;
 }
 
 void CMasternodeSync::Reset()
 {
-    nRequestedMasternodeAssets = MASTERNODE_SYNC_INITIAL;
-    nRequestedMasternodeAttempt = 0;
+    nCurrentAsset = MASTERNODE_SYNC_INITIAL;
+    nTriedPeerCount = 0;
     nTimeAssetSyncStarted = GetTime();
     nTimeLastBumped = GetTime();
     nTimeLastFailure = 0;
@@ -42,7 +40,7 @@ void CMasternodeSync::BumpAssetLastTime(const std::string& strFuncName)
 
 std::string CMasternodeSync::GetAssetName()
 {
-    switch(nRequestedMasternodeAssets)
+    switch(nCurrentAsset)
     {
         case(MASTERNODE_SYNC_INITIAL):      return "MASTERNODE_SYNC_INITIAL";
         case(MASTERNODE_SYNC_WAITING):      return "MASTERNODE_SYNC_WAITING";
@@ -56,32 +54,31 @@ std::string CMasternodeSync::GetAssetName()
 
 void CMasternodeSync::SwitchToNextAsset(CConnman& connman)
 {
-    switch(nRequestedMasternodeAssets)
+    switch(nCurrentAsset)
     {
         case(MASTERNODE_SYNC_FAILED):
             throw std::runtime_error("Can't switch to next asset from failed, should use Reset() first!");
             break;
         case(MASTERNODE_SYNC_INITIAL):
-            nRequestedMasternodeAssets = MASTERNODE_SYNC_WAITING;
+            nCurrentAsset = MASTERNODE_SYNC_WAITING;
             LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
             break;
         case(MASTERNODE_SYNC_WAITING):
             LogPrintf("CMasternodeSync::SwitchToNextAsset -- Completed %s in %llds\n", GetAssetName(), GetTime() - nTimeAssetSyncStarted);
-            nRequestedMasternodeAssets = MASTERNODE_SYNC_LIST;
+            nCurrentAsset = MASTERNODE_SYNC_LIST;
             LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
             break;
         case(MASTERNODE_SYNC_LIST):
             LogPrintf("CMasternodeSync::SwitchToNextAsset -- Completed %s in %llds\n", GetAssetName(), GetTime() - nTimeAssetSyncStarted);
-            nRequestedMasternodeAssets = MASTERNODE_SYNC_MNW;
+            nCurrentAsset = MASTERNODE_SYNC_MNW;
             LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
             break;
         case(MASTERNODE_SYNC_MNW):
             LogPrintf("CMasternodeSync::SwitchToNextAsset -- Completed %s in %llds\n", GetAssetName(), GetTime() - nTimeAssetSyncStarted);
-			nRequestedMasternodeAssets = MASTERNODE_SYNC_FINISHED;
+			nCurrentAsset = MASTERNODE_SYNC_FINISHED;
             uiInterface.NotifyAdditionalDataSyncProgressChanged(1);
             //try to activate our masternode if possible
-            activeMasternode.ManageState(connman);          
-
+            legacyActiveMasternodeManager.ManageState(connman);
 
             connman.ForEachNode(CConnman::AllNodes, [](CNode* pnode) {
                 netfulfilledman.AddFulfilledRequest(pnode->addr, "full-sync");
@@ -90,14 +87,14 @@ void CMasternodeSync::SwitchToNextAsset(CConnman& connman)
 
             break;
     }
-    nRequestedMasternodeAttempt = 0;
+    nTriedPeerCount = 0;
     nTimeAssetSyncStarted = GetTime();
     BumpAssetLastTime("CMasternodeSync::SwitchToNextAsset");
 }
 
 std::string CMasternodeSync::GetSyncStatus()
 {
-    switch (masternodeSync.nRequestedMasternodeAssets) {
+    switch (masternodeSync.nCurrentAsset) {
         case MASTERNODE_SYNC_INITIAL:       return _("Synchroning blockchain...");
         case MASTERNODE_SYNC_WAITING:       return _("Synchronization pending...");
         case MASTERNODE_SYNC_LIST:          return _("Synchronizing masternodes...");
@@ -126,7 +123,7 @@ void CMasternodeSync::ProcessMessage(CNode* pfrom, const std::string& strCommand
 void CMasternodeSync::ProcessTick(CConnman& connman)
 {
     static int nTick = 0;
-    if(nTick++ % MASTERNODE_SYNC_TICK_SECONDS != 0) return;
+    nTick++;
 
     // reset the sync process if the last call to this function was more than 60 minutes ago (client was in sleep mode)
     static int64_t nTimeLastProcess = GetTime();
@@ -137,6 +134,12 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
         nTimeLastProcess = GetTime();
         return;
     }
+
+    if(GetTime() - nTimeLastProcess < MASTERNODE_SYNC_TICK_SECONDS) {
+        // too early, nothing to do here
+        return;
+    }
+
     nTimeLastProcess = GetTime();
 
     // reset sync status in case of any other sync failure
@@ -157,8 +160,8 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
     }
 
     // Calculate "progress" for LOG reporting / GUI notification
-    double nSyncProgress = double(nRequestedMasternodeAttempt + (nRequestedMasternodeAssets - 1) * 8) / (8*4);
-    LogPrintf("CMasternodeSync::ProcessTick1 -- nTick %d nRequestedMasternodeAssets %d nRequestedMasternodeAttempt %d nSyncProgress %f\n", nTick, nRequestedMasternodeAssets, nRequestedMasternodeAttempt, nSyncProgress);
+    double nSyncProgress = double(nTriedPeerCount + (nCurrentAsset - 1) * 8) / (8*4);
+    LogPrintf("CMasternodeSync::ProcessTick -- nTick %d nCurrentAsset %d nTriedPeerCount %d nSyncProgress %f\n", nTick, nCurrentAsset, nTriedPeerCount, nSyncProgress);
     uiInterface.NotifyAdditionalDataSyncProgressChanged(nSyncProgress);
 
     std::vector<CNode*> vNodesCopy = connman.CopyNodeVector(CConnman::FullyConnectedOnly);
@@ -176,21 +179,23 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
         // QUICK MODE (REGTEST ONLY!)
         if(Params().NetworkIDString() == CBaseChainParams::REGTEST)
         {
-            if(nRequestedMasternodeAttempt <= 2) {
+            if (nCurrentAsset == MASTERNODE_SYNC_WAITING) {
                 connman.PushMessage(pnode, msgMaker.Make(NetMsgType::GETSPORKS)); //get current network sporks
-            } else if(nRequestedMasternodeAttempt < 4) {
-                mnodeman.DsegUpdate(pnode, connman);
-            } else if(nRequestedMasternodeAttempt < 6) {
-                //sync payment votes
-                if(pnode->nVersion == 70208) {
-                    connman.PushMessage(pnode, msgMaker.Make(NetMsgType::MASTERNODEPAYMENTSYNC, mnpayments.GetStorageLimit())); //sync payment votes
-                } else {
+                SwitchToNextAsset(connman);
+            } else if (nCurrentAsset == MASTERNODE_SYNC_LIST) {
+                if (!deterministicMNManager->IsDeterministicMNsSporkActive()) {
+                    mnodeman.DsegUpdate(pnode, connman);
+                }
+                SwitchToNextAsset(connman);
+            } else if (nCurrentAsset == MASTERNODE_SYNC_MNW) {
+                if (!deterministicMNManager->IsDeterministicMNsSporkActive()) {
                     connman.PushMessage(pnode, msgMaker.Make(NetMsgType::MASTERNODEPAYMENTSYNC)); //sync payment votes
                 }
+                SwitchToNextAsset(connman);
             } else {
-                nRequestedMasternodeAssets = MASTERNODE_SYNC_FINISHED;
+                nCurrentAsset = MASTERNODE_SYNC_FINISHED;
+                SwitchToNextAsset(connman);
             }
-            nRequestedMasternodeAttempt++;
             connman.ReleaseNodeVector(vNodesCopy);
             return;
         }
@@ -212,12 +217,12 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
                 netfulfilledman.AddFulfilledRequest(pnode->addr, "spork-sync");
                 // get current network sporks
                 connman.PushMessage(pnode, msgMaker.Make(NetMsgType::GETSPORKS));
-                LogPrintf("CMasternodeSync::ProcessTick -- nTick %d nRequestedMasternodeAssets %d -- requesting sporks from peer=%d\n", nTick, nRequestedMasternodeAssets, pnode->id);
+                LogPrintf("CMasternodeSync::ProcessTick -- nTick %d nCurrentAsset %d -- requesting sporks from peer=%d\n", nTick, nCurrentAsset, pnode->id);
             }
 
             // INITIAL TIMEOUT
 
-            if(nRequestedMasternodeAssets == MASTERNODE_SYNC_WAITING) {
+            if(nCurrentAsset == MASTERNODE_SYNC_WAITING) {
                 if(GetTime() - nTimeLastBumped > MASTERNODE_SYNC_TIMEOUT_SECONDS) {
                     // At this point we know that:
                     // a) there are peers (because we are looping on at least one of them);
@@ -233,12 +238,18 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
 
             // MNLIST : SYNC MASTERNODE LIST FROM OTHER CONNECTED CLIENTS
 
-            if(nRequestedMasternodeAssets == MASTERNODE_SYNC_LIST) {
-                LogPrint("masternode", "CMasternodeSync::ProcessTick -- nTick %d nRequestedMasternodeAssets %d nTimeLastBumped %lld GetTime() %lld diff %lld\n", nTick, nRequestedMasternodeAssets, nTimeLastBumped, GetTime(), GetTime() - nTimeLastBumped);
+            if(nCurrentAsset == MASTERNODE_SYNC_LIST) {
+                if (deterministicMNManager->IsDeterministicMNsSporkActive()) {
+                    SwitchToNextAsset(connman);
+                    connman.ReleaseNodeVector(vNodesCopy);
+                    return;
+                }
+
+                LogPrint("masternode", "CMasternodeSync::ProcessTick -- nTick %d nCurrentAsset %d nTimeLastBumped %lld GetTime() %lld diff %lld\n", nTick, nCurrentAsset, nTimeLastBumped, GetTime(), GetTime() - nTimeLastBumped);
                 // check for timeout first
                 if(GetTime() - nTimeLastBumped > MASTERNODE_SYNC_TIMEOUT_SECONDS) {
-                    LogPrintf("CMasternodeSync::ProcessTick -- nTick %d nRequestedMasternodeAssets %d -- timeout\n", nTick, nRequestedMasternodeAssets);
-                    if (nRequestedMasternodeAttempt == 0) {
+                    LogPrintf("CMasternodeSync::ProcessTick -- nTick %d nCurrentAsset %d -- timeout\n", nTick, nCurrentAsset);
+                    if (nTriedPeerCount == 0) {
                         LogPrintf("CMasternodeSync::ProcessTick -- ERROR: failed to sync %s\n", GetAssetName());
                         // there is no way we can continue without masternode list, fail here and try later
                         Fail();
@@ -253,7 +264,7 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
 				if(sporkManager.IsSporkActive(SPORK_21_MASTERNODE_ORDER_ENABLE)) 
 				{
 	                // request from three peers max
-	                if (nRequestedMasternodeAttempt > 2) {
+	                if (nTriedPeerCount > 2) {
 	                    connman.ReleaseNodeVector(vNodesCopy);
 	                    return;
 	                }
@@ -263,7 +274,7 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
                 netfulfilledman.AddFulfilledRequest(pnode->addr, "masternode-list-sync");
 
                 if (pnode->nVersion < mnpayments.GetMinMasternodePaymentsProto()) continue;
-                nRequestedMasternodeAttempt++;
+                nTriedPeerCount++;
 
                 mnodeman.DsegUpdate(pnode, connman);
 
@@ -273,14 +284,20 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
 
             // MNW : SYNC MASTERNODE PAYMENT VOTES FROM OTHER CONNECTED CLIENTS
 
-            if(nRequestedMasternodeAssets == MASTERNODE_SYNC_MNW) {
-                LogPrint("mnpayments", "CMasternodeSync::ProcessTick -- nTick %d nRequestedMasternodeAssets %d nTimeLastBumped %lld GetTime() %lld diff %lld\n", nTick, nRequestedMasternodeAssets, nTimeLastBumped, GetTime(), GetTime() - nTimeLastBumped);
+            if(nCurrentAsset == MASTERNODE_SYNC_MNW) {
+                if (deterministicMNManager->IsDeterministicMNsSporkActive()) {
+                    SwitchToNextAsset(connman);
+                    connman.ReleaseNodeVector(vNodesCopy);
+                    return;
+                }
+
+                LogPrint("mnpayments", "CMasternodeSync::ProcessTick -- nTick %d nCurrentAsset %d nTimeLastBumped %lld GetTime() %lld diff %lld\n", nTick, nCurrentAsset, nTimeLastBumped, GetTime(), GetTime() - nTimeLastBumped);
                 // check for timeout first
                 // This might take a lot longer than MASTERNODE_SYNC_TIMEOUT_SECONDS due to new blocks,
                 // but that should be OK and it should timeout eventually.
                 if(GetTime() - nTimeLastBumped > MASTERNODE_SYNC_TIMEOUT_SECONDS) {
-                    LogPrintf("CMasternodeSync::ProcessTick -- nTick %d nRequestedMasternodeAssets %d -- timeout\n", nTick, nRequestedMasternodeAssets);
-                    if (nRequestedMasternodeAttempt == 0) {
+                    LogPrintf("CMasternodeSync::ProcessTick -- nTick %d nCurrentAsset %d -- timeout\n", nTick, nCurrentAsset);
+                    if (nTriedPeerCount == 0) {
                         LogPrintf("CMasternodeSync::ProcessTick -- ERROR: failed to sync %s\n", GetAssetName());
                         // probably not a good idea to proceed without winner list
                         Fail();
@@ -295,8 +312,8 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
                 // check for data
                 // if mnpayments already has enough blocks and votes, switch to the next asset
                 // try to fetch data from at least two peers though
-                if(nRequestedMasternodeAttempt > 1 && mnpayments.IsEnoughData()) {
-                    LogPrintf("CMasternodeSync::ProcessTick -- nTick %d nRequestedMasternodeAssets %d -- found enough data\n", nTick, nRequestedMasternodeAssets);
+                if(nTriedPeerCount > 1 && mnpayments.IsEnoughData()) {
+                    LogPrintf("CMasternodeSync::ProcessTick -- nTick %d nCurrentAsset %d -- found enough data\n", nTick, nCurrentAsset);
                     SwitchToNextAsset(connman);
                     connman.ReleaseNodeVector(vNodesCopy);
                     return;
@@ -305,7 +322,7 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
 				if(!sporkManager.IsSporkActive(SPORK_21_MASTERNODE_ORDER_ENABLE)) 
 				{
 	                // request from three peers max
-	                if (nRequestedMasternodeAttempt > 2) {
+	                if (nTriedPeerCount > 2) {
 	                    connman.ReleaseNodeVector(vNodesCopy);
 	                    return;
 	                }
@@ -315,15 +332,10 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
                 netfulfilledman.AddFulfilledRequest(pnode->addr, "masternode-payment-sync");
 
                 if(pnode->nVersion < mnpayments.GetMinMasternodePaymentsProto()) continue;
-                nRequestedMasternodeAttempt++;
+                nTriedPeerCount++;
 
                 // ask node for all payment votes it has (new nodes will only return votes for future payments)
-                //sync payment votes
-                if(pnode->nVersion == 70208) {
-                    connman.PushMessage(pnode, msgMaker.Make(NetMsgType::MASTERNODEPAYMENTSYNC, mnpayments.GetStorageLimit()));
-                } else {
-                    connman.PushMessage(pnode, msgMaker.Make(NetMsgType::MASTERNODEPAYMENTSYNC));
-                }
+                connman.PushMessage(pnode, msgMaker.Make(NetMsgType::MASTERNODEPAYMENTSYNC));
                 // ask node for missing pieces only (old nodes will not be asked)
                 mnpayments.RequestLowDataPaymentBlocks(pnode, connman);
 
@@ -402,11 +414,18 @@ void CMasternodeSync::UpdatedBlockTip(const CBlockIndex *pindexNew, bool fInitia
     if (!IsBlockchainSynced() && fReachedBestHeader) {
         if (fLiteMode) {
             // nothing to do in lite mode, just finish the process immediately
-            nRequestedMasternodeAssets = MASTERNODE_SYNC_FINISHED;
+            nCurrentAsset = MASTERNODE_SYNC_FINISHED;
             return;
         }
         // Reached best header while being in initial mode.
         // We must be at the tip already, let's move to the next asset.
         SwitchToNextAsset(connman);
     }
+}
+
+void CMasternodeSync::DoMaintenance(CConnman &connman)
+{
+    if (ShutdownRequested()) return;
+
+    ProcessTick(connman);
 }

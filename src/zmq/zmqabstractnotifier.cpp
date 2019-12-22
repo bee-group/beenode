@@ -25,3 +25,8 @@ bool CZMQAbstractNotifier::NotifyTransactionLock(const CTransaction &/*transacti
 {
     return true;
 }
+
+bool CZMQAbstractNotifier::NotifyInstantSendDoubleSpendAttempt(const CTransaction& /*currentTx*/, const CTransaction& /*previousTx*/)
+{
+    return true;
+}

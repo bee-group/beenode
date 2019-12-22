@@ -24,12 +24,12 @@ Before every major release:
 
 ### First time / New builders
 
-If you're using the automated script (found in [contrib/gitian-build.sh](/contrib/gitian-build.sh)), then at this point you should run it with the "--setup" command. Otherwise ignore this.
+If you're using the automated script (found in [contrib/gitian-build.py](/contrib/gitian-build.py)), then at this point you should run it with the "--setup" command. Otherwise ignore this.
 
 Check out the source code in the following directory hierarchy.
 
 	cd /path/to/your/toplevel/build
-	git clone https://github.com/bee-group/gitian.sigs.git
+	git clone https://github.com/beenodepay/gitian.sigs.git
 	git clone https://github.com/bee-group/beenode-detached-sigs.git
 	git clone https://github.com/devrandom/gitian-builder.git
 	git clone https://github.com/bee-group/beenode.git
@@ -52,7 +52,7 @@ Check out the source code in the following directory hierarchy.
 
 Write release notes. git shortlog helps a lot, for example:
 
-    git shortlog --no-merges v(current version, e.g. 0.7.2)..v(new version, e.g. 0.7.3)
+    git shortlog --no-merges v(current version, e.g. 0.12.2)..v(new version, e.g. 0.12.3)
 
 Generate list of authors:
 
@@ -60,17 +60,17 @@ Generate list of authors:
 
 Tag version (or release candidate) in git
 
-    git tag -s v(new version, e.g. 0.7.3)
+    git tag -s v(new version, e.g. 0.12.3)
 
 ### Setup and perform Gitian builds
 
-If you're using the automated script (found in [contrib/gitian-build.sh](/contrib/gitian-build.sh)), then at this point you should run it with the "--build" command. Otherwise ignore this.
+If you're using the automated script (found in [contrib/gitian-build.py](/contrib/gitian-build.py)), then at this point you should run it with the "--build" command. Otherwise ignore this.
 
 Setup Gitian descriptors:
 
     pushd ./beenode
     export SIGNER=(your Gitian key, ie bluematt, sipa, etc)
-    export VERSION=(new version, e.g. 0.7.3)
+    export VERSION=(new version, e.g. 0.12.3)
     git fetch
     git checkout v${VERSION}
     popd

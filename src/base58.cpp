@@ -290,7 +290,6 @@ bool CBitcoinAddress::GetIndexKey(uint160& hashBytes, int& type) const
 
 bool CBitcoinAddress::GetKeyID(CKeyID& keyID) const
 {
-            
     if (!IsValid() || vchVersion != Params().Base58Prefix(CChainParams::PUBKEY_ADDRESS))
         return false;
     uint160 id;
