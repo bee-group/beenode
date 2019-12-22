@@ -321,6 +321,7 @@ template<typename T1> inline uint256 HashHoneyComb( const T1 pbegin, const T1 pe
 	static unsigned char pblank[1];
     uint512 hash[12];
 	uint512 honey;
+   	uint512 buf;
 	honey = HoneyBee( (unsigned char*)static_cast<const void*>(&pbegin[0]), (pend-pbegin) * sizeof(pbegin[0]) );
     facet_one_init(&ctx_one);
     facet_one(&ctx_one, (pbegin == pend ? pblank : static_cast<const void*>(&pbegin[0])), (pend - pbegin) * sizeof(pbegin[0]) );
@@ -328,24 +329,30 @@ template<typename T1> inline uint256 HashHoneyComb( const T1 pbegin, const T1 pe
     facet_four_init(&ctx_four);
     facet_four(&ctx_four, (pbegin == pend ? pblank : static_cast<const void*>(&pbegin[0])), (pend - pbegin) * sizeof(pbegin[0]));
     facet_four_close(&ctx_four, static_cast<void*>(&hash[1]));
-	hash[2] = honey^hash[1];
-	hash[3] = hash[0]^hash[2];	
+    for(int i=0;i<512;i++)buf[i]= honey[i] ^ hash[1][i];
+    hash[2] = buf;buf.SetNull();
+    for(int i=0;i<512;i++)buf[i]= hash[0][i] ^ hash[2][i];
+	hash[3] = buf;buf.SetNull();	
     facet_two_init( &ctx_two );
     facet_two( &ctx_two, static_cast<const void*>(&hash[3]), 64 );
     facet_two_close( &ctx_two, static_cast<void*>(&hash[4]) );
     facet_five_init(&ctx_five);
     facet_five (&ctx_five, (pbegin == pend ? pblank : static_cast<const void*>(&pbegin[0])), (pend - pbegin) * sizeof(pbegin[0]));
     facet_five_close(&ctx_five, static_cast<void*>(&hash[5]));
-	hash[6] = honey^hash[5];
-	hash[7] = hash[4]^hash[6];	
+    for(int i=0;i<512;i++)buf[i]= honey[i] ^ hash[5][i];
+	hash[6] = buf;buf.SetNull();
+    for(int i=0;i<512;i++)buf[i]= hash[4][i] ^ hash[6][i];
+	hash[7] = buf;buf.SetNull();
 	facet_three_init(  &ctx_three  );
     facet_three(  &ctx_three, static_cast<const void*>(&hash[7]), 64   );
     facet_three_close(   &ctx_three, static_cast<void*>( &hash[8] )   );
     facet_six_init(&ctx_six);
     facet_six( &ctx_six, (pbegin == pend ? pblank : static_cast<const void*>(&pbegin[0])), (pend - pbegin) * sizeof(pbegin[0]) );
     facet_six_close(&ctx_six, static_cast<void*>(&hash[9]));
-	hash[10] = honey^hash[9];
-	hash[11] = hash[8]^hash[10];	
+    for(int i=0;i<512;i++)buf[i]= honey[i] ^ hash[9][i];
+	hash[10] = buf;buf.SetNull();
+    for(int i=0;i<512;i++)buf[i]= hash[8][i] ^ hash[10][i];
+	hash[11] = buf;	
 	return hash[11].trim256();
 }	
 

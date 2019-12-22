@@ -42,9 +42,6 @@ else
     NEWINFO="// No build information available"
 fi
 
-if [ ! -d "obj" ]; then
-	mkdir obj
-fi
 # only update build.h if necessary
 if [ "$INFO" != "$NEWINFO" ]; then
     echo "$NEWINFO" >"$FILE"

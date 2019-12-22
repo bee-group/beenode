@@ -30,7 +30,7 @@
 
   <key>CFBundleExecutable</key>
   <string>Beenode-Qt</string>
-  
+
   <key>CFBundleName</key>
   <string>Beenode-Qt</string>
 
@@ -99,7 +99,10 @@
 
   <key>LSAppNapIsDisabled</key>
     <string>True</string>
-  
+
+  <key>NSRequiresAquaSystemAppearance</key>
+    <string>True</string>
+
   <key>LSApplicationCategoryType</key>
     <string>public.app-category.finance</string>
 </dict>

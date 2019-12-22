@@ -1,9 +1,9 @@
 #! /bin/sh
 # depcomp - compile a program generating dependencies as side-effects
 
-scriptversion=2013-05-30.07; # UTC
+scriptversion=2016-01-11.22; # UTC
 
-# Copyright (C) 1999-2014 Free Software Foundation, Inc.
+# Copyright (C) 1999-2017 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -129,7 +129,7 @@ tmpdepfile=${tmpdepfile-`echo "$depfile" | sed 's/\.\([^.]*\)$/.T\1/'`}
 rm -f "$tmpdepfile"
 
 # Avoid interferences from the environment.
-gccflag= dashmflag=
+gccflag= beenodemflag=
 
 # Some modes work just like other modes, but use different flags.  We
 # parameterize here, but still list the modes in the big case below,
@@ -141,10 +141,10 @@ if test "$depmode" = hp; then
   depmode=gcc
 fi
 
-if test "$depmode" = dashXmstdout; then
-  # This is just like dashmstdout with a different argument.
-  dashmflag=-xM
-  depmode=dashmstdout
+if test "$depmode" = beenodeXmstdout; then
+  # This is just like beenodemstdout with a different argument.
+  beenodemflag=-xM
+  depmode=beenodemstdout
 fi
 
 cygpath_u="cygpath -u -f -"
@@ -567,7 +567,7 @@ msvc7msys)
   # This comment above is used by automake to tell side-effect
   # dependency tracking mechanisms from slower ones.
 
-dashmstdout)
+beenodemstdout)
   # Important note: in order to support this mode, a compiler *must*
   # always write the preprocessed file to stdout, regardless of -o.
   "$@" || exit $?
@@ -599,11 +599,11 @@ dashmstdout)
     esac
   done
 
-  test -z "$dashmflag" && dashmflag=-M
+  test -z "$beenodemflag" && beenodemflag=-M
   # Require at least two characters before searching for ':'
   # in the target name.  This is to cope with DOS-style filenames:
   # a dependency such as 'c:/foo/bar' could be seen as target 'c' otherwise.
-  "$@" $dashmflag |
+  "$@" $beenodemflag |
     sed "s|^[$tab ]*[^:$tab ][^:][^:]*:[$tab ]*|$object: |" > "$tmpdepfile"
   rm -f "$depfile"
   cat < "$tmpdepfile" > "$depfile"
@@ -615,7 +615,7 @@ dashmstdout)
   rm -f "$tmpdepfile"
   ;;
 
-dashXmstdout)
+beenodeXmstdout)
   # This case only exists to satisfy depend.m4.  It is never actually
   # run, as this mode is specially recognized in the preamble.
   exit 1
@@ -786,6 +786,6 @@ exit 0
 # eval: (add-hook 'write-file-hooks 'time-stamp)
 # time-stamp-start: "scriptversion="
 # time-stamp-format: "%:y-%02m-%02d.%02H"
-# time-stamp-time-zone: "UTC"
+# time-stamp-time-zone: "UTC0"
 # time-stamp-end: "; # UTC"
 # End:

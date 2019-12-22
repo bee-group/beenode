@@ -938,6 +938,7 @@ QString loadStyleSheet()
     QSettings settings;
     QString cssName;
     QString theme = settings.value("theme", "").toString();
+
     if(!theme.isEmpty()){
         cssName = QString(":/css/") + theme; 
     }

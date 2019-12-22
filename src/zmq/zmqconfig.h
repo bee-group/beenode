@@ -19,6 +19,7 @@
 #include "primitives/block.h"
 #include "primitives/transaction.h"
 
+#include "instantx.h"
 void zmqError(const char *str);
 
 #endif // BITCOIN_ZMQ_ZMQCONFIG_H

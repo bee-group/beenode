@@ -640,10 +640,6 @@ public:
         return (size() > 0 && *begin() == OP_RETURN) || (size() > MAX_SCRIPT_SIZE);
     }
 
-    bool IsEmpty() const
-    {
-        return (size() == 0);
-    }
     void clear()
     {
         // The default std::vector::clear() does not release memory.

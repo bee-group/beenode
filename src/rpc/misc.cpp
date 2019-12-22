@@ -265,30 +265,7 @@ UniValue spork(const JSONRPCRequest& request)
             "\nExamples:\n"
             + HelpExampleCli("spork", "show")
             + HelpExampleRpc("spork", "\"show\""));
-    } 
-	if( request.params.size() == 3){
-		int nSporkID = sporkManager.GetSporkIDByName(request.params[0].get_str());
-		//--.
-		if(  (nSporkID == -1) || (nSporkID != SPORK_18_EVOLUTION_PAYMENTS)  ){
-			return "Invalid spork name";
-		}
-		
-		// SPORK VALUE
-		int64_t nValue		= request.params[1].get_int64();
-		std::string sEvolution	= request.params[2].get_str();
-		//--.
-		if( !evolutionManager.checkEvolutionString( sEvolution ) ){	
-			return "Invalid spork evolution param name";
-		}	
-		//broadcast new spork
-		if(  sporkManager.UpdateSpork( nSporkID, nValue, sEvolution, *g_connman )  ){
-			sporkManager.ExecuteSpork( nSporkID, nValue );
-			return "success";
-		} else {
-			return "failure";
-		}
-	}
-	else {
+    } else {
         // advanced mode, update spork values
         int nSporkID = sporkManager.GetSporkIDByName(request.params[0].get_str());
         if(nSporkID == -1)
@@ -538,9 +515,7 @@ UniValue verifymessage(const JSONRPCRequest& request)
     std::string strAddress  = request.params[0].get_str();
     std::string strSign     = request.params[1].get_str();
     std::string strMessage  = request.params[2].get_str();
-	
-	printf("\n UniValue verifymessage strSign=%s\n",strSign.c_str());
-	
+
     CBitcoinAddress addr(strAddress);
     if (!addr.IsValid())
         throw JSONRPCError(RPC_TYPE_ERROR, "Invalid address");

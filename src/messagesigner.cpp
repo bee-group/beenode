@@ -26,6 +26,7 @@ bool CMessageSigner::SignMessage(const std::string& strMessage, std::vector<unsi
     CHashWriter ss(SER_GETHASH, 0);
     ss << strMessageMagic;
     ss << strMessage;
+
     return CHashSigner::SignHash(ss.GetHash(), key, vchSigRet);
 }
 
@@ -39,6 +40,7 @@ bool CMessageSigner::VerifyMessage(const CKeyID& keyID, const std::vector<unsign
     CHashWriter ss(SER_GETHASH, 0);
     ss << strMessageMagic;
     ss << strMessage;
+
     return CHashSigner::VerifyHash(ss.GetHash(), keyID, vchSig, strErrorRet);
 }
 
@@ -56,15 +58,14 @@ bool CHashSigner::VerifyHash(const uint256& hash, const CKeyID& keyID, const std
 {
     CPubKey pubkeyFromSig;
     if(!pubkeyFromSig.RecoverCompact(hash, vchSig)) {
-        strErrorRet = "Error recovering public key. ";
-		strErrorRet+="hash="+hash.ToString();
+        strErrorRet = "Error recovering public key.";
         return false;
     }
+
     if(pubkeyFromSig.GetID() != keyID) {
         strErrorRet = strprintf("Keys don't match: pubkey=%s, pubkeyFromSig=%s, hash=%s, vchSig=%s",
                     keyID.ToString(), pubkeyFromSig.GetID().ToString(), hash.ToString(),
                     EncodeBase64(&vchSig[0], vchSig.size()));
-					
         return false;
     }
 

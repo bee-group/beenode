@@ -1,8 +1,8 @@
 Source: beenode
 Section: utils
 Priority: optional
-Maintainer: Holger Schinzel <holger@beenode.org>
-Uploaders: Holger Schinzel <holger@beenode.org>
+Maintainer: Holger Schinzel <holger@dash.org>
+Uploaders: Holger Schinzel <holger@dash.org>
 Build-Depends: debhelper,
  devscripts,
  automake,

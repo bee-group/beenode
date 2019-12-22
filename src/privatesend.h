@@ -5,27 +5,28 @@
 #ifndef PRIVATESEND_H
 #define PRIVATESEND_H
 
+#include "bls/bls.h"
 #include "chain.h"
 #include "chainparams.h"
 #include "primitives/transaction.h"
 #include "pubkey.h"
 #include "sync.h"
-#include "tinyformat.h"
 #include "timedata.h"
+#include "tinyformat.h"
 
 class CPrivateSend;
 class CConnman;
 
 // timeouts
-static const int PRIVATESEND_AUTO_TIMEOUT_MIN       = 5;
-static const int PRIVATESEND_AUTO_TIMEOUT_MAX       = 15;
-static const int PRIVATESEND_QUEUE_TIMEOUT          = 30;
-static const int PRIVATESEND_SIGNING_TIMEOUT        = 15;
+static const int PRIVATESEND_AUTO_TIMEOUT_MIN = 5;
+static const int PRIVATESEND_AUTO_TIMEOUT_MAX = 15;
+static const int PRIVATESEND_QUEUE_TIMEOUT = 30;
+static const int PRIVATESEND_SIGNING_TIMEOUT = 15;
 
 //! minimum peer version accepted by mixing pool
-static const int MIN_PRIVATESEND_PEER_PROTO_VERSION = 70208;
+static const int MIN_PRIVATESEND_PEER_PROTO_VERSION = 70213;
 
-static const size_t PRIVATESEND_ENTRY_MAX_SIZE      = 9;
+static const size_t PRIVATESEND_ENTRY_MAX_SIZE = 9;
 
 // pool responses
 enum PoolMessage {
@@ -51,7 +52,6 @@ enum PoolMessage {
     MSG_NOERR,
     MSG_SUCCESS,
     MSG_ENTRIES_ADDED,
-    ERR_INVALID_INPUT_COUNT,
     MSG_POOL_MIN = ERR_ALREADY_HAVE,
     MSG_POOL_MAX = MSG_ENTRIES_ADDED
 };
@@ -87,45 +87,37 @@ public:
         CTxIn(txin),
         prevPubKey(script),
         fHasSig(false)
-        {}
+    {
+    }
 
     CTxDSIn() :
         CTxIn(),
         prevPubKey(),
         fHasSig(false)
-        {}
+    {
+    }
 };
 
 class CSpysendAccept
 {
 public:
     int nDenom;
-    int nInputCount;
     CMutableTransaction txCollateral;
 
     CSpysendAccept() :
         nDenom(0),
-        nInputCount(0),
-        txCollateral(CMutableTransaction())
-        {};
+        txCollateral(CMutableTransaction()){};
 
-    CSpysendAccept(int nDenom, int nInputCount, const CMutableTransaction& txCollateral) :
+    CSpysendAccept(int nDenom, const CMutableTransaction& txCollateral) :
         nDenom(nDenom),
-        nInputCount(nInputCount),
-        txCollateral(txCollateral)
-        {};
+        txCollateral(txCollateral){};
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
         READWRITE(nDenom);
-        int nVersion = s.GetVersion();
-        if (nVersion > 70208) {
-            READWRITE(nInputCount);
-        } else if (ser_action.ForRead()) {
-            nInputCount = 0;
-        }
         READWRITE(txCollateral);
     }
 
@@ -150,19 +142,22 @@ public:
         vecTxOut(std::vector<CTxOut>()),
         txCollateral(MakeTransactionRef()),
         addr(CService())
-        {}
+    {
+    }
 
     CSpySendEntry(const std::vector<CTxDSIn>& vecTxDSIn, const std::vector<CTxOut>& vecTxOut, const CTransaction& txCollateral) :
         vecTxDSIn(vecTxDSIn),
         vecTxOut(vecTxOut),
         txCollateral(MakeTransactionRef(txCollateral)),
         addr(CService())
-        {}
+    {
+    }
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
         READWRITE(vecTxDSIn);
         READWRITE(txCollateral);
         READWRITE(vecTxOut);
@@ -175,11 +170,10 @@ public:
 /**
  * A currently in progress mixing merge and denomination information
  */
-class CSpysendQueue
+class CSpySendQueue
 {
 public:
     int nDenom;
-    int nInputCount;
     COutPoint masternodeOutpoint;
     int64_t nTime;
     bool fReady; //ready for submit
@@ -187,51 +181,33 @@ public:
     // memory only
     bool fTried;
 
-    CSpysendQueue() :
+    CSpySendQueue() :
         nDenom(0),
-        nInputCount(0),
         masternodeOutpoint(COutPoint()),
         nTime(0),
         fReady(false),
         vchSig(std::vector<unsigned char>()),
         fTried(false)
-        {}
+    {
+    }
 
-    CSpysendQueue(int nDenom, int nInputCount, COutPoint outpoint, int64_t nTime, bool fReady) :
+    CSpySendQueue(int nDenom, COutPoint outpoint, int64_t nTime, bool fReady) :
         nDenom(nDenom),
-        nInputCount(nInputCount),
         masternodeOutpoint(outpoint),
         nTime(nTime),
         fReady(fReady),
         vchSig(std::vector<unsigned char>()),
         fTried(false)
-        {}
+    {
+    }
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
         READWRITE(nDenom);
-        int nVersion = s.GetVersion();
-        if (nVersion > 70208) {
-            READWRITE(nInputCount);
-        } else if (ser_action.ForRead()) {
-            nInputCount = 0;
-        }
-        if (nVersion == 70208 && (s.GetType() & SER_NETWORK)) {
-            // converting from/to old format
-            CTxIn txin{};
-            if (ser_action.ForRead()) {
-                READWRITE(txin);
-                masternodeOutpoint = txin.prevout;
-            } else {
-                txin = CTxIn(masternodeOutpoint);
-                READWRITE(txin);
-            }
-        } else {
-            // using new format directly
-            READWRITE(masternodeOutpoint);
-        }
+        READWRITE(masternodeOutpoint);
         READWRITE(nTime);
         READWRITE(fReady);
         if (!(s.GetType() & SER_GETHASH)) {
@@ -249,22 +225,22 @@ public:
      */
     bool Sign();
     /// Check if we have a valid Masternode address
-    bool CheckSignature(const CPubKey& pubKeyMasternode) const;
+    bool CheckSignature(const CKeyID& keyIDOperator, const CBLSPublicKey& blsPubKey) const;
 
-    bool Relay(CConnman &connman);
+    bool Relay(CConnman& connman);
 
     /// Is this queue expired?
     bool IsExpired() { return GetAdjustedTime() - nTime > PRIVATESEND_QUEUE_TIMEOUT; }
 
     std::string ToString() const
     {
-        return strprintf("nDenom=%d, nInputCount=%d, nTime=%lld, fReady=%s, fTried=%s, masternode=%s",
-                        nDenom, nInputCount, nTime, fReady ? "true" : "false", fTried ? "true" : "false", masternodeOutpoint.ToStringShort());
+        return strprintf("nDenom=%d, nTime=%lld, fReady=%s, fTried=%s, masternode=%s",
+            nDenom, nTime, fReady ? "true" : "false", fTried ? "true" : "false", masternodeOutpoint.ToStringShort());
     }
 
-    friend bool operator==(const CSpysendQueue& a, const CSpysendQueue& b)
+    friend bool operator==(const CSpySendQueue& a, const CSpySendQueue& b)
     {
-        return a.nDenom == b.nDenom && a.nInputCount == b.nInputCount && a.masternodeOutpoint == b.masternodeOutpoint && a.nTime == b.nTime && a.fReady == b.fReady;
+        return a.nDenom == b.nDenom && a.masternodeOutpoint == b.masternodeOutpoint && a.nTime == b.nTime && a.fReady == b.fReady;
     }
 };
 
@@ -289,7 +265,8 @@ public:
         masternodeOutpoint(),
         vchSig(),
         sigTime(0)
-        {}
+    {
+    }
 
     CSpysendBroadcastTx(const CTransactionRef& _tx, COutPoint _outpoint, int64_t _sigTime) :
         nConfirmedHeight(-1),
@@ -297,28 +274,16 @@ public:
         masternodeOutpoint(_outpoint),
         vchSig(),
         sigTime(_sigTime)
-        {}
+    {
+    }
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action) {
+    inline void SerializationOp(Stream& s, Operation ser_action)
+    {
         READWRITE(tx);
-        int nVersion = s.GetVersion();
-        if (nVersion == 70208 && (s.GetType() & SER_NETWORK)) {
-            // converting from/to old format
-            CTxIn txin{};
-            if (ser_action.ForRead()) {
-                READWRITE(txin);
-                masternodeOutpoint = txin.prevout;
-            } else {
-                txin = CTxIn(masternodeOutpoint);
-                READWRITE(txin);
-            }
-        } else {
-            // using new format directly
-            READWRITE(masternodeOutpoint);
-        }
+        READWRITE(masternodeOutpoint);
         if (!(s.GetType() & SER_GETHASH)) {
             READWRITE(vchSig);
         }
@@ -341,20 +306,17 @@ public:
     uint256 GetSignatureHash() const;
 
     bool Sign();
-    bool CheckSignature(const CPubKey& pubKeyMasternode) const;
+    bool CheckSignature(const CKeyID& keyIDOperator, const CBLSPublicKey& blsPubKey) const;
 
     void SetConfirmedHeight(int nConfirmedHeightIn) { nConfirmedHeight = nConfirmedHeightIn; }
     bool IsExpired(int nHeight);
 };
 
 // base class
-class CPrivateSendBase
+class CPrivateSendBaseSession
 {
 protected:
     mutable CCriticalSection cs_spysend;
-
-    // The current mixing sessions in progress on the network
-    std::vector<CSpysendQueue> vecSpysendQueue;
 
     std::vector<CSpySendEntry> vecEntries; // Masternode/clients entries
 
@@ -366,19 +328,44 @@ protected:
     CMutableTransaction finalMutableTransaction; // the finalized transaction ready for signing
 
     void SetNull();
-    void CheckQueue();
 
 public:
-    int nSessionDenom; //Users must submit an denom matching this
-    int nSessionInputCount; //Users must submit a count matching this
+    int nSessionDenom; //Users must submit a denom matching this
 
-    CPrivateSendBase() { SetNull(); }
+    CPrivateSendBaseSession() :
+        vecEntries(),
+        nState(POOL_STATE_IDLE),
+        nTimeLastSuccessfulStep(0),
+        nSessionID(0),
+        finalMutableTransaction(),
+        nSessionDenom(0)
+    {
+    }
 
-    int GetQueueSize() const { return vecSpysendQueue.size(); }
     int GetState() const { return nState; }
     std::string GetStateString() const;
 
     int GetEntriesCount() const { return vecEntries.size(); }
+};
+
+// base class
+class CPrivateSendBaseManager
+{
+protected:
+    mutable CCriticalSection cs_vecqueue;
+
+    // The current mixing sessions in progress on the network
+    std::vector<CSpySendQueue> vecSpySendQueue;
+
+    void SetNull();
+    void CheckQueue();
+
+public:
+    CPrivateSendBaseManager() :
+        vecSpySendQueue() {}
+
+    int GetQueueSize() const { return vecSpySendQueue.size(); }
+    bool GetQueueItemAndTry(CSpySendQueue& dsqRet);
 };
 
 // helper class
@@ -389,9 +376,7 @@ private:
     CPrivateSend() {}
     ~CPrivateSend() {}
     CPrivateSend(CPrivateSend const&) = delete;
-    CPrivateSend& operator= (CPrivateSend const&) = delete;
-
-    static const CAmount COLLATERAL = 0.001 * COIN;
+    CPrivateSend& operator=(CPrivateSend const&) = delete;
 
     // static members
     static std::vector<CAmount> vecStandardDenominations;
@@ -414,7 +399,7 @@ public:
     /// Get the denominations for a list of outputs (returns a bitshifted integer)
     static int GetDenominations(const std::vector<CTxOut>& vecTxOut, bool fSingleRandomDenom = false);
     static std::string GetDenominationsToString(int nDenom);
-    static bool GetDenominationsBits(int nDenom, std::vector<int> &vecBitsRet);
+    static bool GetDenominationsBits(int nDenom, std::vector<int>& vecBitsRet);
 
     static std::string GetMessageByID(PoolMessage nMessageID);
 
@@ -425,8 +410,8 @@ public:
 
     /// If the collateral is valid given by a client
     static bool IsCollateralValid(const CTransaction& txCollateral);
-    static CAmount GetCollateralAmount() { return COLLATERAL; }
-    static CAmount GetMaxCollateralAmount() { return COLLATERAL*4; }
+    static CAmount GetCollateralAmount() { return GetSmallestDenomination() / 10; }
+    static CAmount GetMaxCollateralAmount() { return GetCollateralAmount() * 4; }
 
     static bool IsCollateralAmount(CAmount nInputAmount);
 
@@ -436,7 +421,5 @@ public:
     static void UpdatedBlockTip(const CBlockIndex *pindex);
     static void SyncTransaction(const CTransaction& tx, const CBlockIndex *pindex, int posInBlock);
 };
-
-void ThreadCheckPrivateSend(CConnman& connman);
 
 #endif
