@@ -26,6 +26,8 @@
 #include <QPainter>
 #include <QSettings>
 #include <QTimer>
+#include <QUrl>
+#include <QDesktopServices>
 
 #define ICON_OFFSET 16
 #define DECORATION_SIZE 54
@@ -673,79 +675,79 @@ void OverviewPage::DisablePrivateSendCompletely() {
 
 void OverviewPage::on_pushButton_clicked()
 {
-  //  QString link="https://www.beenode.org/";
-  //     QDesktopServices::openUrl(QUrl(link));
+    QString link="https://www.beenode.org/";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_2_clicked()
 {
-//    QString link="https://robot.beenode.org";
-//       QDesktopServices::openUrl(QUrl(link));
+    QString link="https://cryptoshock.com/";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_3_clicked()
 {
- //   QString link="https://chainz.cryptoid.info/bnode/";
- //      QDesktopServices::openUrl(QUrl(link));
+    QString link="https://chainz.cryptoid.info/bnode/";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_4_clicked()
 {
- //   QString link="https://www.livecoin.net/en/trading/BNODE_BTC";
- //      QDesktopServices::openUrl(QUrl(link));
+    QString link="https://www.livecoin.net/en/trading/BNODE_BTC";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_5_clicked()
 {
- //   QString link="https://www.catex.io/trading/BNODE/BTC";
-//       QDesktopServices::openUrl(QUrl(link));
+    QString link="https://www.catex.io/trading/BNODE/BTC";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_6_clicked()
 {
-//    QString link="https://www.facebook.com/BeeNodeCoin";
- //      QDesktopServices::openUrl(QUrl(link));
+    QString link="https://www.facebook.com/BeeNodeCoin";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_7_clicked()
 {
- //   QString link="https://twitter.com/node_bee";
- //      QDesktopServices::openUrl(QUrl(link));
+    QString link="https://twitter.com/node_bee";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_8_clicked()
 {
- //   QString link="https://bitcointalk.org/index.php?topic=5131731.0";
- //      QDesktopServices::openUrl(QUrl(link));
+    QString link="https://bitcointalk.org/index.php?topic=5131731.0";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_9_clicked()
 {
-  //  QString link="https://www.reddit.com/user/BeeNode";
-  //     QDesktopServices::openUrl(QUrl(link));
+    QString link="https://www.reddit.com/user/BeeNode";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_10_clicked()
 {
- //   QString link="https://t.me/BeeNode";
- //      QDesktopServices::openUrl(QUrl(link));
+    QString link="https://t.me/BeeNode";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_11_clicked()
 {
- //   QString link="https://www.youtube.com/channel/UCQo3bPEieFTtTzKPJZrRq8A";
- //      QDesktopServices::openUrl(QUrl(link));
+    QString link="https://www.youtube.com/channel/UCQo3bPEieFTtTzKPJZrRq8A";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_12_clicked()
 {
-//    QString link="https://t.me/BeeNodeChat";
-//       QDesktopServices::openUrl(QUrl(link));
+    QString link="https://t.me/BeeNodeChat";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
 void OverviewPage::on_pushButton_13_clicked()
 {
-//    QString link="https://discordapp.com/invite/YF8YbFG";
- //      QDesktopServices::openUrl(QUrl(link));
+    QString link="https://discordapp.com/invite/YF8YbFG";
+       QDesktopServices::openUrl(QUrl(link));
 }
 
