@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>960</width>
-    <height>585</height>
+    <width>1170</width>
+    <height>795</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -40,13 +40,13 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,0">
      <item>
-      <layout class="QFormLayout" name="formLayout">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <property name="rightMargin">
         <number>0</number>
        </property>
-       <item row="0" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton">
          <property name="minimumSize">
           <size>
@@ -71,7 +71,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_2">
          <property name="minimumSize">
           <size>
@@ -96,7 +96,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_3">
          <property name="minimumSize">
           <size>
@@ -121,7 +121,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_4">
          <property name="minimumSize">
           <size>
@@ -146,7 +146,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_5">
          <property name="minimumSize">
           <size>
@@ -171,7 +171,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_6">
          <property name="minimumSize">
           <size>
@@ -196,7 +196,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_7">
          <property name="minimumSize">
           <size>
@@ -221,7 +221,7 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_8">
          <property name="minimumSize">
           <size>
@@ -246,7 +246,7 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_9">
          <property name="minimumSize">
           <size>
@@ -271,7 +271,7 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_10">
          <property name="minimumSize">
           <size>
@@ -296,7 +296,7 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_11">
          <property name="minimumSize">
           <size>
@@ -321,7 +321,7 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_12">
          <property name="minimumSize">
           <size>
@@ -346,7 +346,7 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="0">
+       <item>
         <widget class="QPushButton" name="pushButton_13">
          <property name="minimumSize">
           <size>
@@ -370,6 +370,19 @@
           <string>Discord</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>
