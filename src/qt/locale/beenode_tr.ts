@@ -3930,8 +3930,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Uyarı: eşlerimizle tamamen mutabık değiliz gibi görünüyor! Güncelleme yapmanız gerekebilir ya da diğer düğümlerin güncelleme yapmaları gerekebilir.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>Ayarlarda bir masternodeprivkey belirtmelisiniz. Lütfen yardım almak için dökümantasyona göz atın.</translation>
+        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
+        <translation>Ayarlarda bir masternodeblsprivkey belirtmelisiniz. Lütfen yardım almak için dökümantasyona göz atın.</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4494,7 +4494,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Tekrar denenecek...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
+        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
         <translation>Geçersiz anadüğümözelanahtarı. Lütfen dökümantasyona göz atın.</translation>
     </message>
     <message>
