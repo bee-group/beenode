@@ -585,7 +585,7 @@ void masternode_genkey_help()
 {
     throw std::runtime_error(
             "masternode genkey (compressed)\n"
-            "Generate new masternodeprivkey\n"
+            "Generate new masternodeblsprivkey\n"
             "\nArguments:\n"
             "1. compressed        (boolean, optional, default=false) generate compressed privkey\n"
         );
@@ -778,7 +778,7 @@ UniValue masternode_check(const JSONRPCRequest& request)
         "  check        - Force check all masternodes and remove invalid ones\n"
         "  count        - Get information about number of masternodes (DEPRECATED options: 'total', 'ps', 'enabled', 'qualify', 'all')\n"
         "  current      - Print info on current masternode winner to be paid the next block (calculated locally)\n"
-        "  genkey       - Generate new masternodeprivkey, optional param: 'compressed' (boolean, optional, default=false) generate compressed privkey\n"
+        "  genkey       - Generate new masternodeblsprivkey, optional param: 'compressed' (boolean, optional, default=false) generate compressed privkey\n"
 #ifdef ENABLE_WALLET
         "  outputs      - Print masternode compatible outputs\n"
         "  start-alias  - Start single remote masternode by assigned alias configured in masternode.conf\n"

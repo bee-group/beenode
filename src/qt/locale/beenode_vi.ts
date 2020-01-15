@@ -3930,8 +3930,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Cảnh báo: Chúng ta có vẻ không được sự đồng ý một cách đầy đủ từ các đối tác ngang hàng! Bạn cần nâng cấp hoặc các nút khác cần nâng cấp.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>Bạn cần chỉ rõ masternodeprivkey trong tệp cấu hình. Hãy xem tài liệu để có hướng dẫn.</translation>
+        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
+        <translation>Bạn cần chỉ rõ masternodeblsprivkey trong tệp cấu hình. Hãy xem tài liệu để có hướng dẫn.</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4494,8 +4494,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Sẽ thử lại...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation>Masternodeprivkey không hợp lệ. Hãy xem lại tài liệu.</translation>
+        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
+        <translation>masternodeblsprivkey không hợp lệ. Hãy xem lại tài liệu.</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>

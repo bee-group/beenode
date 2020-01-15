@@ -3931,8 +3931,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>警告： ピアと完全に同意しないようです！あなたはアップグレードする必要があるかもしれません。または他のノードがアップグレードする必要があるかもしれません。</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation> masternodeprivkeyを設定で指定する必要があります。ドキュメントを参照してください。</translation>
+        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
+        <translation> masternodeblsprivkeyを設定で指定する必要があります。ドキュメントを参照してください。</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4495,8 +4495,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>再試行...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation>無効な masternodeprivkey、ドキュメントを参照してください。</translation>
+        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
+        <translation>無効な masternodeblsprivkey、ドキュメントを参照してください。</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>

@@ -3930,8 +3930,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>dadf</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>Musisz sprecyzować masternodeprivkey w konfiguracji. Proszę przeglądnij dokumentacje w celu pomocy.</translation>
+        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
+        <translation>Musisz sprecyzować masternodeblsprivkey w konfiguracji. Proszę przeglądnij dokumentacje w celu pomocy.</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4494,7 +4494,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Spróbuje ponownie...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
+        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
         <translation>Nieprawidłowy klucz prywatny masternoda. Przeczytaj dokumentację.</translation>
     </message>
     <message>

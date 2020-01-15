@@ -3931,8 +3931,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Upozornenie: Zjavne sa úplne nezhodujeme s našimi peer-mi! Možno potrebujete prejsť na novšiu verziu alebo ostatné uzly potrebujú vyššiu verziu.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>V konfigurácii musíte špecifikovať masternodeprivkey. Pre pomoc sa prosím pozrite do dokumentácie.</translation>
+        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
+        <translation>V konfigurácii musíte špecifikovať masternodeblsprivkey. Pre pomoc sa prosím pozrite do dokumentácie.</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4495,8 +4495,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Skúsime znovu...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation>Neplatný masternodeprivkey. Prosím pozrite do dokumentácie.</translation>
+        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
+        <translation>Neplatný masternodeblsprivkey. Prosím pozrite do dokumentácie.</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>

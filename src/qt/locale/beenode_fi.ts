@@ -3934,8 +3934,8 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>Varoitus: Olemme vertaisverkon kanssa ristiriidassa! Sinun ja/tai solmujen tulee päivitää uusimpaan versioon.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>Sinun täytyy määritellä masternodeprivkey asetustiedostoon. Katso lisätietoja dokumentaatiosta.</translation>
+        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
+        <translation>Sinun täytyy määritellä masternodeblsprivkey asetustiedostoon. Katso lisätietoja dokumentaatiosta.</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4498,8 +4498,8 @@ Näillä toiminnoilla voit korjata korruptoituneen lohkoketjun tai puuttuvat/van
         <translation>Yritetään uudelleen...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation>Virheellinen masternoden yksityisavain (masternodeprivkey). Katso lisätietoja dokumentaatiosta.</translation>
+        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
+        <translation>Virheellinen masternoden yksityisavain (masternodeblsprivkey). Katso lisätietoja dokumentaatiosta.</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>

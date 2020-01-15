@@ -3930,7 +3930,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>경고: 피어와 완전히 일치하지 않는 것으로 보입니다! 당신 혹은 다른 노드들의 업그레이드가 필요합니다.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
+        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
         <translation>마스터노드 설정에서 마스터노드 개인 키를 지정하십시오. 도움이 필요하신 경우 문서를 확인하십시오.</translation>
     </message>
     <message>
@@ -4494,8 +4494,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>다시 시도할 예정입니다...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation>유효하지 않은 masternodeprivkey 입니다. 문서를 확인하세요.</translation>
+        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
+        <translation>유효하지 않은 masternodeblsprivkey 입니다. 문서를 확인하세요.</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>

@@ -3930,8 +3930,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>警告: 我們和某些連線的節點對於區塊鏈結的決定不同！你可能需要升級，或是需要等其它的節點升級。</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>您必須在配置文件中指定一個masternodeprivkey。請參閱文檔以獲得幫助。</translation>
+        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
+        <translation>您必須在配置文件中指定一個masternodeblsprivkey。請參閱文檔以獲得幫助。</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4494,7 +4494,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>將重新嘗試...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
+        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
         <translation>無效的主節點私鑰。請參閱文檔。</translation>
     </message>
     <message>

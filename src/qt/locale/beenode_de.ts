@@ -3932,8 +3932,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Warnung: Wir scheinen nicht vollständig mit unseren Gegenstellen übereinzustimmen! Sie oder die anderen Knoten müssen unter Umständen ihre Client-Software aktualisieren.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>Es muss ein Masternode-Geheimschlüssel (masternodeprivkey) in der Konfiguration angegeben werden. Für weitere Informationen siehe Dokumentation.</translation>
+        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
+        <translation>Es muss ein Masternode-Geheimschlüssel (masternodeblsprivkey) in der Konfiguration angegeben werden. Für weitere Informationen siehe Dokumentation.</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4496,8 +4496,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Versuche erneut...</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation>Masternode-Geheimschlüssel (masternodeprivkey) ist ungültig. Siehe Dokumentation. </translation>
+        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
+        <translation>Masternode-Geheimschlüssel (masternodeblsprivkey) ist ungültig. Siehe Dokumentation. </translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>
