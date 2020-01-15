@@ -237,7 +237,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].bit = 3;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nStartTime = 1577836800; // Jan 1st, 2020
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nTimeout = 1609459200; // Jan 1st, 2021
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nWindowSize = 4032;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nWindowSize = 91;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nThreshold = 40; // 44% of 91
 
 
@@ -373,7 +373,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].bit = 3;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nStartTime = 1577836800; // Jan 1st, 2020
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nTimeout = 1609459200; // Jan 1st, 2021
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nWindowSize = 4032;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nWindowSize = 91;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nThreshold = 40; // 44% of 91
 
         
@@ -497,7 +497,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].bit = 3;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nStartTime = 1577836800; // Jan 1st, 2020
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nTimeout = 1609459200; // Jan 1st, 2021
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nWindowSize = 4032;
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nWindowSize = 91;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nThreshold = 40; // 44% of 91
 
         
