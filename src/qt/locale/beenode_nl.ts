@@ -3936,7 +3936,7 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Beenode net
         <translation>Waarschuwing: Het lijkt erop dat we geen consensus kunnen vinden met onze peers! Mogelijk dient u te upgraden, of andere nodes moeten wellicht upgraden.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
+        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
         <translation>U moet een geheime sleutel van een Masternode invoeren. Raadpleeg de documentatie voor hulp.</translation>
     </message>
     <message>
@@ -4500,7 +4500,7 @@ Nota: Het bericht zal niet verzonden worden met de betaling over het Beenode net
         <translation>Opnieuw aan het proberen...</translation>
     </message>
     <message>
-        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
+        <source>Invalid masternodeprivkey. Please see documenation.</source>
         <translation>Ongeldige geheime sleutel voor de masternode. Raadpleeg de documentatie alstublieft.</translation>
     </message>
     <message>

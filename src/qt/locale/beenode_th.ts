@@ -3930,8 +3930,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>คำเตือน: เราไม่ปรากฎกับ peer ของเรา! คุณอาจต้องอัพเกรดหรือโหนดอื่น ๆ อาจต้องอัพเกรด</translation>
     </message>
     <message>
-        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
-        <translation>คุณต้องระบุ masternodeblsprivkey ในการกำหนดค่า โปรดดูเอกสารประกอบการช่วยเหลือ</translation>
+        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
+        <translation>คุณต้องระบุ masternodeprivkey ในการกำหนดค่า โปรดดูเอกสารประกอบการช่วยเหลือ</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4263,7 +4263,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
     </message>
     <message>
         <source>Invalid masternodeblsprivkey. Please see documenation.</source>
-        <translation>masternodeblsprivkey ไม่ถูกต้อง โปรดดูเอกสารประกอบ</translation>
+        <translation>masternodeprivkey ไม่ถูกต้อง โปรดดูเอกสารประกอบ</translation>
     </message>
     <message>
         <source>Invalid minimum number of spork signers specified with -minsporkkeys</source>
@@ -4494,8 +4494,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>จะลองใหม่ ...</translation>
     </message>
     <message>
-        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
-        <translation>masternodeblsprivkey ไม่ถูกต้อง โปรดดูเอกสารประกอบ</translation>
+        <source>Invalid masternodeprivkey. Please see documenation.</source>
+        <translation>masternodeprivkey ไม่ถูกต้อง โปรดดูเอกสารประกอบ</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>

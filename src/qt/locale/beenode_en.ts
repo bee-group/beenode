@@ -5100,8 +5100,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
     </message>
     <message>
         <location line="+11"/>
-        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
-        <translation>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</translation>
+        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
+        <translation>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</translation>
     </message>
     <message>
         <location line="+24"/>
@@ -5805,8 +5805,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
     </message>
     <message>
         <location line="-165"/>
-        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
-        <translation>Invalid masternodeblsprivkey. Please see documenation.</translation>
+        <source>Invalid masternodeprivkey. Please see documenation.</source>
+        <translation>Invalid masternodeprivkey. Please see documenation.</translation>
     </message>
     <message>
         <location line="-79"/>
