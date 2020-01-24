@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2020 The BeeGroup developers are EternityGroup
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -122,7 +122,10 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 	}
 	
     // it MUST be a regular block
-    return true;
+    if(!sporkManager.IsSporkActive(SPORK_24_DETERMIN_UPDATE))
+        return isBlockRewardValueMet;
+    else
+        return true;
 }
 
 bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount blockReward)
@@ -138,23 +141,40 @@ bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount bloc
     
     // IF THIS ISN'T A SUPERBLOCK OR SUPERBLOCK IS INVALID, IT SHOULD PAY A MASTERNODE DIRECTLY
     
-        
-    if(mnpayments.IsTransactionValid(txNew, nBlockHeight, blockReward)) {
-        LogPrint("mnpayments", "%s -- Valid masternode payment at height %d: %s", __func__, nBlockHeight, txNew.ToString());
-        return true;
-    }
+    if(!sporkManager.IsSporkActive(SPORK_24_DETERMIN_UPDATE))
+    {
+        if(mnpayments.IsTransactionValid(txNew, nBlockHeight,blockReward)) {
+            LogPrint("mnpayments", "IsBlockPayeeValid -- Valid masternode payment at height %d: %s", nBlockHeight, txNew.ToString());
+            return true;
+        }
 
-    if (deterministicMNManager->IsDeterministicMNsSporkActive(nBlockHeight)) {
-        // always enforce masternode payments when spork15 is active
-        LogPrintf("%s -- ERROR: Invalid masternode payment detected at height %d: %s", __func__, nBlockHeight, txNew.ToString());
-        return false;
-    } else {
         if(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
-            LogPrintf("%s -- ERROR: Invalid masternode payment detected at height %d: %s", __func__, nBlockHeight, txNew.ToString());
+            LogPrintf("IsBlockPayeeValid -- ERROR: Invalid masternode payment detected at height %d: %s", nBlockHeight, txNew.ToString());
             return false;
         }
-        LogPrintf("%s-- WARNING: Masternode payment enforcement is disabled, accepting any payee\n", __func__);
+            
+        LogPrintf("IsBlockPayeeValid -- WARNING: Masternode payment enforcement is disabled, accepting any payee\n");
         return true;
+    }
+    else
+    {
+        if(mnpayments.IsTransactionValid(txNew, nBlockHeight, blockReward)) {
+            LogPrint("mnpayments", "%s -- Valid masternode payment at height %d: %s", __func__, nBlockHeight, txNew.ToString());
+            return true;
+        }
+
+        if (deterministicMNManager->IsDeterministicMNsSporkActive(nBlockHeight)) {
+            // always enforce masternode payments when spork15 is active
+            LogPrintf("%s -- ERROR: Invalid masternode payment detected at height %d: %s", __func__, nBlockHeight, txNew.ToString());
+            return false;
+        } else {
+            if(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
+                LogPrintf("%s -- ERROR: Invalid masternode payment detected at height %d: %s", __func__, nBlockHeight, txNew.ToString());
+                return false;
+            }
+            LogPrintf("%s-- WARNING: Masternode payment enforcement is disabled, accepting any payee\n", __func__);
+            return true;
+        }
     }
 }
 
@@ -676,24 +696,65 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew) const
 	}else{
 		nMasternodePayment = GetMasternodePayment(nBlockHeight, txNew.GetValueOut());
 	}
+    // while spork_24 is exist
+    int nMaxSignatures = 0;
 
+    if(!sporkManager.IsSporkActive(SPORK_24_DETERMIN_UPDATE))
+    {
+        
+        for (const auto& payee : vecPayees) {
+            if (payee.GetVoteCount() >= nMaxSignatures) {
+                nMaxSignatures = payee.GetVoteCount();
+            }
+        }
+        // if we don't have at least MNPAYMENTS_SIGNATURES_REQUIRED signatures on a payee, approve whichever is the longest chain
+        if(nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
+    }
+        
+        
+        
     for (const auto& payee : vecPayees) {
-            for (const auto& txout : txNew.vout) {
-                if (payee.GetPayee() == txout.scriptPubKey && nMasternodePayment == txout.nValue) {
-                    LogPrint("mnpayments", "CMasternodeBlockPayees::%s -- Found required payment\n", __func__);
-                    return true;
+        if(!sporkManager.IsSporkActive(SPORK_24_DETERMIN_UPDATE))
+        {
+            if (payee.GetVoteCount() >= MNPAYMENTS_SIGNATURES_REQUIRED) {
+            
+                for (const auto& txout : txNew.vout) {
+                    if (payee.GetPayee() == txout.scriptPubKey && nMasternodePayment == txout.nValue) {
+                        LogPrint("mnpayments", "CMasternodeBlockPayees::%s -- Found required payment\n", __func__);
+                        return true;
+                    }
+                }
+
+                CTxDestination address1;
+                ExtractDestination(payee.GetPayee(), address1);
+                CBitcoinAddress address2(address1);
+
+                if(strPayeesPossible == "") {
+                    strPayeesPossible = address2.ToString();
+                } else {
+                    strPayeesPossible += "," + address2.ToString();
                 }
             }
+        }
+        else
+        {
+                for (const auto& txout : txNew.vout) {
+                    if (payee.GetPayee() == txout.scriptPubKey && nMasternodePayment == txout.nValue) {
+                        LogPrint("mnpayments", "CMasternodeBlockPayees::%s -- Found required payment\n", __func__);
+                        return true;
+                    }
+                }
 
-            CTxDestination address1;
-            ExtractDestination(payee.GetPayee(), address1);
-            CBitcoinAddress address2(address1);
+                CTxDestination address1;
+                ExtractDestination(payee.GetPayee(), address1);
+                CBitcoinAddress address2(address1);
 
-            if(strPayeesPossible == "") {
-                strPayeesPossible = address2.ToString();
-            } else {
-                strPayeesPossible += "," + address2.ToString();
-            }
+                if(strPayeesPossible == "") {
+                    strPayeesPossible = address2.ToString();
+                } else {
+                    strPayeesPossible += "," + address2.ToString();
+                }
+        }
     }
 
     LogPrintf("CMasternodeBlockPayees::%s -- ERROR: Missing required payment, possible payees: '%s', amount: %f BEENODE\n", __func__, strPayeesPossible, (float)nMasternodePayment/COIN);
@@ -741,25 +802,39 @@ bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, int nBlo
         }
         
         CAmount min=0;
-        for (const auto& txout : txNew.vout) {
-            if(min==0){min=txout.nValue;continue;}
-            if(min>txout.nValue && txout.nValue>0)min=txout.nValue;
+        
+        if(sporkManager.IsSporkActive(SPORK_24_DETERMIN_UPDATE))
+        {
+            for (const auto& txout : txNew.vout) {
+                if(min==0){min=txout.nValue;continue;}
+                if(min>txout.nValue && txout.nValue>0)min=txout.nValue;
+            }
         }
         for (const auto& txout : voutMasternodePayments) {
             bool found = false;
             for (const auto& txout2 : txNew.vout) {
-                if (  ( (txout2.nValue >0 && txout.nValue == (txout2.nValue+min)) || (txout2.nValue == 0 && txout.nValue==0) ) && txout.scriptPubKey==txout2.scriptPubKey) {
-                    found = true;
-                    LogPrintf("CMasternodePayments::IsTransactionValid -- successfull \n");
-                    break;
+                
+                
+                if(sporkManager.IsSporkActive(SPORK_24_DETERMIN_UPDATE))
+                {
+                    if (  ( (txout2.nValue >0 && txout.nValue == (txout2.nValue+min)) || (txout2.nValue == 0 && txout.nValue==0) ) && txout.scriptPubKey==txout2.scriptPubKey) {
+                        found = true;
+                        LogPrintf("CMasternodePayments::IsTransactionValid -- successfull \n");
+                        break;
+                    }
+                }
+                else
+                {
+                    if (txout == txout2) {
+                        found = true;
+                        break;
+                    }
                 }
             }
             if (!found) {
                 CTxDestination dest;
                 if (!ExtractDestination(txout.scriptPubKey, dest))
-                {
                     assert(false);
-                }
                 LogPrintf("CMasternodePayments::%s -- ERROR failed to find expected payee %s in block at height %s\n", __func__, CBitcoinAddress(dest).ToString(), nBlockHeight);
                 return false;
             }

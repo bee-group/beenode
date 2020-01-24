@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2014 The Bitcoin Core developers
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2020 The BeeGroup developers are EternityGroup
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,7 +11,7 @@
  */
 
 
-static const int PROTOCOL_VERSION = 70213;
+static const int PROTOCOL_VERSION = 70214;
 
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
@@ -20,7 +20,7 @@ static const int INIT_PROTO_VERSION = 209;
 static const int GETHEADERS_VERSION = 70077;
 
 //! disconnect from peers older than this proto version
-static const int MIN_PEER_PROTO_VERSION = 70210;
+static const int MIN_PEER_PROTO_VERSION = 70213;
 
 //! disconnect from peers older than this proto version when DIP3 is activated via the BIP9 deployment
 static const int MIN_PEER_PROTO_VERSION_DIP3 = 70213;

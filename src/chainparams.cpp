@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin Core developers
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2020 The BeeGroup developers are EternityGroup
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -309,11 +309,12 @@ public:
 			(  76205, uint256S("0x00000000001051eb1c7cff246aa283e90458e21903d6d8be34d44da7c81971a8"))
             (  85900, uint256S("0x0000000000124c4d744f373b1b5bd769c90c3a242239f458498c0cb032668e6a"))
             (  150322, uint256S("0x000000000014d046fef810492f86c90a6377d31f1fbd444cad8768a885da4f71"))
+            (  155185, uint256S("0x0000000000e9d5f459dc8166f5fcf33690dfcaecf6ebe8e5f1c69135e646a75f"))
         };
 
         chainTxData = ChainTxData{
-            1568864216, // * UNIX timestamp of last known number of transactions (Block 1068571)
-            159393,   // * total number of transactions between genesis and that timestamp
+            1579874544, // * UNIX timestamp of last known number of transactions (Block 155185)
+            243579,   // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };

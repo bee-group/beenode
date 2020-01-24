@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2020 The BeeGroup developers are EternityGroup
 
 #include "cachemultimap.h"
 

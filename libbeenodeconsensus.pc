@@ -1,11 +1,11 @@
-prefix=/home/work/beenode/depends/x86_64-pc-linux-gnu
+prefix=/home/work/work/beenode/depends/x86_64-pc-linux-gnu
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
 Name: Beenode Core consensus library
 Description: Library for the Bitcoin consensus protocol.
-Version: 0.7.3
+Version: 0.8.1
 Libs: -L${libdir} -lbeenodeconsensus
 Cflags: -I${includedir}
 Requires.private: libcrypto

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2020 The BeeGroup developers are EternityGroup
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -23,7 +23,6 @@ static const int SPORK_2_INSTANTSEND_ENABLED                            = 10001;
 static const int SPORK_3_INSTANTSEND_BLOCK_FILTERING                    = 10002;
 static const int SPORK_5_INSTANTSEND_MAX_VALUE                          = 10004;
 static const int SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT                 = 10007;
-static const int SPORK_9_SUPERBLOCKS_ENABLED                            = 10008;
 static const int SPORK_10_MASTERNODE_PAY_UPDATED_NODES                  = 10009;
 static const int SPORK_12_RECONSIDER_BLOCKS                             = 10011;
 static const int SPORK_14_REQUIRE_SENTINEL_FLAG                         = 10013;
@@ -32,13 +31,11 @@ static const int SPORK_16_INSTANTSEND_AUTOLOCKS                         = 10015;
 static const int SPORK_17_QUORUM_DKG_ENABLED                            = 10016;
 static const int SPORK_18_EVOLUTION_PAYMENTS							= 10017;
 static const int SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT				= 10018;
-static const int SPORK_20_EVOLUTION_DISABLE_NODE				        = 10019;
 static const int SPORK_21_MASTERNODE_ORDER_ENABLE			        	= 10020;
-static const int SPORK_22_MASTERNODE_UPDATE_PROTO			        	= 10021;
-static const int SPORK_23_MASTERNODE_UPDATE_PROTO			        	= 10022;
+static const int SPORK_24_DETERMIN_UPDATE			        	        = 10023;
 
 static const int SPORK_START                                            = SPORK_2_INSTANTSEND_ENABLED;
-static const int SPORK_END                                              = SPORK_23_MASTERNODE_UPDATE_PROTO;
+static const int SPORK_END                                              = SPORK_24_DETERMIN_UPDATE;
 
 extern std::map<int, int64_t> mapSporkDefaults;
 extern CSporkManager sporkManager;
