@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2020 The BeeGroup developers are EternityGroup
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -503,12 +503,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         && !mnpayments.GetBlockTxOuts(chainActive.Height() + 1, 0, voutMasternodePayments))
             throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Beenode Core is downloading masternode winners...");
 
-    // next bock is a superblock and we need governance info to correctly construct it
-    /*if (sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)
-        && !masternodeSync.IsSynced()
-        && CSuperblock::IsValidBlockHeight(chainActive.Height() + 1))
-            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Beenode Core is syncing with network...");
-    */
+
     static unsigned int nTransactionsUpdatedLast;
 
     if (!lpval.isNull())

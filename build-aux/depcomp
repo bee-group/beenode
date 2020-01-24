@@ -129,7 +129,7 @@ tmpdepfile=${tmpdepfile-`echo "$depfile" | sed 's/\.\([^.]*\)$/.T\1/'`}
 rm -f "$tmpdepfile"
 
 # Avoid interferences from the environment.
-gccflag= beenodemflag=
+gccflag= dashmflag=
 
 # Some modes work just like other modes, but use different flags.  We
 # parameterize here, but still list the modes in the big case below,
@@ -141,10 +141,10 @@ if test "$depmode" = hp; then
   depmode=gcc
 fi
 
-if test "$depmode" = beenodeXmstdout; then
-  # This is just like beenodemstdout with a different argument.
-  beenodemflag=-xM
-  depmode=beenodemstdout
+if test "$depmode" = dashXmstdout; then
+  # This is just like dashmstdout with a different argument.
+  dashmflag=-xM
+  depmode=dashmstdout
 fi
 
 cygpath_u="cygpath -u -f -"
@@ -567,7 +567,7 @@ msvc7msys)
   # This comment above is used by automake to tell side-effect
   # dependency tracking mechanisms from slower ones.
 
-beenodemstdout)
+dashmstdout)
   # Important note: in order to support this mode, a compiler *must*
   # always write the preprocessed file to stdout, regardless of -o.
   "$@" || exit $?
@@ -599,11 +599,11 @@ beenodemstdout)
     esac
   done
 
-  test -z "$beenodemflag" && beenodemflag=-M
+  test -z "$dashmflag" && dashmflag=-M
   # Require at least two characters before searching for ':'
   # in the target name.  This is to cope with DOS-style filenames:
   # a dependency such as 'c:/foo/bar' could be seen as target 'c' otherwise.
-  "$@" $beenodemflag |
+  "$@" $dashmflag |
     sed "s|^[$tab ]*[^:$tab ][^:][^:]*:[$tab ]*|$object: |" > "$tmpdepfile"
   rm -f "$depfile"
   cat < "$tmpdepfile" > "$depfile"
@@ -615,7 +615,7 @@ beenodemstdout)
   rm -f "$tmpdepfile"
   ;;
 
-beenodeXmstdout)
+dashXmstdout)
   # This case only exists to satisfy depend.m4.  It is never actually
   # run, as this mode is specially recognized in the preamble.
   exit 1

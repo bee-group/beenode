@@ -9,7 +9,7 @@
 /* #undef AC_APPLE_UNIVERSAL_BUILD */
 
 /* Version Build */
-#define CLIENT_VERSION_BUILD 3
+#define CLIENT_VERSION_BUILD 2
 
 /* Version is release */
 #define CLIENT_VERSION_IS_RELEASE true
@@ -18,10 +18,10 @@
 #define CLIENT_VERSION_MAJOR 0
 
 /* Minor version */
-#define CLIENT_VERSION_MINOR 7
+#define CLIENT_VERSION_MINOR 8
 
 /* Build revision */
-#define CLIENT_VERSION_REVISION 3
+#define CLIENT_VERSION_REVISION 1
 
 /* Copyright holder(s) before %s replacement */
 #define COPYRIGHT_HOLDERS "The %s developers"
@@ -33,7 +33,7 @@
 #define COPYRIGHT_HOLDERS_SUBSTITUTION "Beenode Core"
 
 /* Copyright year */
-#define COPYRIGHT_YEAR 2019
+#define COPYRIGHT_YEAR 2020
 
 /* Define to 1 to enable wallet functions */
 #define ENABLE_WALLET 1
@@ -319,7 +319,7 @@
 #define PACKAGE_NAME "Beenode Core"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Beenode Core 0.7.3"
+#define PACKAGE_STRING "Beenode Core 0.8.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "beenodecore"
@@ -328,7 +328,7 @@
 #define PACKAGE_URL "https://beenode.org/"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.7.3"
+#define PACKAGE_VERSION "0.8.1"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */

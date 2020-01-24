@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The BeeGroup developers are EternityGroup
+// Copyright (c) 2020 The BeeGroup developers are EternityGroup
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -22,7 +22,6 @@ std::map<int, int64_t> mapSporkDefaults = {
     {SPORK_3_INSTANTSEND_BLOCK_FILTERING,    	0},             // ON
     {SPORK_5_INSTANTSEND_MAX_VALUE,          	1000},          // 1000 Beenode
     {SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT, 	4070908800ULL}, // OFF
-    {SPORK_9_SUPERBLOCKS_ENABLED,            	4070908800ULL}, // OFF
     {SPORK_10_MASTERNODE_PAY_UPDATED_NODES,  	4070908800ULL}, // OFF
     {SPORK_12_RECONSIDER_BLOCKS,             	0},             // 0 BLOCKS
     {SPORK_14_REQUIRE_SENTINEL_FLAG,         	4070908800ULL}, // OFF
@@ -31,10 +30,8 @@ std::map<int, int64_t> mapSporkDefaults = {
     {SPORK_17_QUORUM_DKG_ENABLED,            4070908800ULL}, // OFF
     {SPORK_18_EVOLUTION_PAYMENTS,         		0}, // OFF
     {SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT, 	0x7FFFFFFF}, // OFF
-    {SPORK_20_EVOLUTION_DISABLE_NODE, 	         0x7FFFFFFF},
     {SPORK_21_MASTERNODE_ORDER_ENABLE, 	         1569654200ULL}, // ON
-    {SPORK_22_MASTERNODE_UPDATE_PROTO, 	         1569652800ULL}, // ON
-    {SPORK_23_MASTERNODE_UPDATE_PROTO, 	         4070908800ULL}, // OFF
+    {SPORK_24_DETERMIN_UPDATE, 	         4070908800ULL}, // OFF
 };
 CEvolutionManager evolutionManager;
 CCriticalSection cs_mapEvolution;
@@ -182,9 +179,6 @@ void CSporkManager::ProcessSpork(CNode* pfrom, const std::string& strCommand, CD
 		if( spork.nSporkID == SPORK_18_EVOLUTION_PAYMENTS ){	
 			evolutionManager.setNewEvolutions( spork.sWEvolution );
 		}
-		if( spork.nSporkID == SPORK_20_EVOLUTION_DISABLE_NODE ){	
-			evolutionManager.setNewEvolutions( spork.sWEvolution );
-		}
         spork.Relay(connman);
 
         //does a task if needed
@@ -252,9 +246,6 @@ bool CSporkManager::UpdateSpork(int nSporkID, int64_t nValue, std::string sEvol,
        	if(nSporkID == SPORK_18_EVOLUTION_PAYMENTS){
 			evolutionManager.setNewEvolutions( sEvol );
 		}	
-		if(nSporkID == SPORK_20_EVOLUTION_DISABLE_NODE){
-			evolutionManager.setDisableNodes( sEvol );
-		}
         return true;
     }
 
@@ -353,7 +344,6 @@ int CSporkManager::GetSporkIDByName(const std::string& strName)
     if (strName == "SPORK_3_INSTANTSEND_BLOCK_FILTERING")       return SPORK_3_INSTANTSEND_BLOCK_FILTERING;
     if (strName == "SPORK_5_INSTANTSEND_MAX_VALUE")             return SPORK_5_INSTANTSEND_MAX_VALUE;
     if (strName == "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT")    return SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT;
-    if (strName == "SPORK_9_SUPERBLOCKS_ENABLED")               return SPORK_9_SUPERBLOCKS_ENABLED;
     if (strName == "SPORK_10_MASTERNODE_PAY_UPDATED_NODES")     return SPORK_10_MASTERNODE_PAY_UPDATED_NODES;
     if (strName == "SPORK_12_RECONSIDER_BLOCKS")                return SPORK_12_RECONSIDER_BLOCKS;
     if (strName == "SPORK_14_REQUIRE_SENTINEL_FLAG")            return SPORK_14_REQUIRE_SENTINEL_FLAG;
@@ -362,10 +352,8 @@ int CSporkManager::GetSporkIDByName(const std::string& strName)
     if (strName == "SPORK_17_QUORUM_DKG_ENABLED")               return SPORK_17_QUORUM_DKG_ENABLED;
     if (strName == "SPORK_18_EVOLUTION_PAYMENTS")            	return SPORK_18_EVOLUTION_PAYMENTS;
     if (strName == "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT")	return SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT;
-    if (strName == "SPORK_20_EVOLUTION_DISABLE_NODE")	          return SPORK_20_EVOLUTION_DISABLE_NODE;
     if (strName == "SPORK_21_MASTERNODE_ORDER_ENABLE")			return SPORK_21_MASTERNODE_ORDER_ENABLE;
-    if (strName == "SPORK_22_MASTERNODE_UPDATE_PROTO")	          return SPORK_22_MASTERNODE_UPDATE_PROTO;
-    if (strName == "SPORK_23_MASTERNODE_UPDATE_PROTO")	          return SPORK_23_MASTERNODE_UPDATE_PROTO;
+    if (strName == "SPORK_24_DETERMIN_UPDATE")	                return SPORK_24_DETERMIN_UPDATE;
 
     LogPrint("spork", "CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
     return -1;
@@ -378,7 +366,6 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_3_INSTANTSEND_BLOCK_FILTERING:       return "SPORK_3_INSTANTSEND_BLOCK_FILTERING";
         case SPORK_5_INSTANTSEND_MAX_VALUE:             return "SPORK_5_INSTANTSEND_MAX_VALUE";
         case SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT:    return "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT";
-        case SPORK_9_SUPERBLOCKS_ENABLED:               return "SPORK_9_SUPERBLOCKS_ENABLED";
         case SPORK_10_MASTERNODE_PAY_UPDATED_NODES:     return "SPORK_10_MASTERNODE_PAY_UPDATED_NODES";
         case SPORK_12_RECONSIDER_BLOCKS:                return "SPORK_12_RECONSIDER_BLOCKS";
         case SPORK_14_REQUIRE_SENTINEL_FLAG:            return "SPORK_14_REQUIRE_SENTINEL_FLAG";
@@ -387,10 +374,8 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_17_QUORUM_DKG_ENABLED:               return "SPORK_17_QUORUM_DKG_ENABLED";
         case SPORK_18_EVOLUTION_PAYMENTS:            	return "SPORK_18_EVOLUTION_PAYMENTS";
         case SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT: 	return "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT";
-        case SPORK_20_EVOLUTION_DISABLE_NODE: 	return "SPORK_20_EVOLUTION_DISABLE_NODE";
-        case SPORK_21_MASTERNODE_ORDER_ENABLE: 	return "SPORK_21_MASTERNODE_ORDER_ENABLE";
-        case SPORK_22_MASTERNODE_UPDATE_PROTO: 	return "SPORK_22_MASTERNODE_UPDATE_PROTO";
-        case SPORK_23_MASTERNODE_UPDATE_PROTO: 	return "SPORK_23_MASTERNODE_UPDATE_PROTO";
+        case SPORK_21_MASTERNODE_ORDER_ENABLE: 	        return "SPORK_21_MASTERNODE_ORDER_ENABLE";
+        case SPORK_24_DETERMIN_UPDATE: 	                return "SPORK_24_DETERMIN_UPDATE";
         default:
             LogPrint("spork", "CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);
             return "Unknown";

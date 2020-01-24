@@ -15,7 +15,7 @@
 @SET_MAKE@
 
 # Copyright (c) 2013-2016 The Bitcoin Core developers
-# Copyright (c) 2019 The BeeGroup developers are EternityGroup
+# Copyright (c) 2020 The BeeGroup developers are EternityGroup
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -235,7 +235,8 @@ am__DIST_COMMON = $(srcdir)/Makefile.in \
 	$(top_srcdir)/src/config/beenode-config.h.in \
 	$(top_srcdir)/src/test/buildenv.py.in COPYING \
 	build-aux/compile build-aux/config.guess build-aux/config.sub \
-	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
+	build-aux/depcomp build-aux/install-sh build-aux/ltmain.sh \
+	build-aux/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)

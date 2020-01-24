@@ -190,7 +190,6 @@ public:
         size_t nSize = GetSerializeSize(*this, SER_DISK, 0)+148u;
         return 3*minRelayTxFee.GetFee(nSize);
     }
-
     bool IsDust(const CFeeRate &minRelayTxFee) const
     {
         return (nValue < GetDustThreshold(minRelayTxFee));
