@@ -122,7 +122,7 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 	}
 	
     // it MUST be a regular block
-    return isBlockRewardValueMet;
+    return true;
 }
 
 bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount blockReward)
@@ -137,18 +137,25 @@ bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount bloc
 	LogPrint("gobject", "IsBlockPayeeValid -- Superblocks are disabled, no superblocks allowed\n");
     
     // IF THIS ISN'T A SUPERBLOCK OR SUPERBLOCK IS INVALID, IT SHOULD PAY A MASTERNODE DIRECTLY
-    if(mnpayments.IsTransactionValid(txNew, nBlockHeight,blockReward)) {
-        LogPrint("mnpayments", "IsBlockPayeeValid -- Valid masternode payment at height %d: %s", nBlockHeight, txNew.ToString());
+    
+        
+    if(mnpayments.IsTransactionValid(txNew, nBlockHeight, blockReward)) {
+        LogPrint("mnpayments", "%s -- Valid masternode payment at height %d: %s", __func__, nBlockHeight, txNew.ToString());
         return true;
     }
 
-    if(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
-        LogPrintf("IsBlockPayeeValid -- ERROR: Invalid masternode payment detected at height %d: %s", nBlockHeight, txNew.ToString());
+    if (deterministicMNManager->IsDeterministicMNsSporkActive(nBlockHeight)) {
+        // always enforce masternode payments when spork15 is active
+        LogPrintf("%s -- ERROR: Invalid masternode payment detected at height %d: %s", __func__, nBlockHeight, txNew.ToString());
         return false;
+    } else {
+        if(sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
+            LogPrintf("%s -- ERROR: Invalid masternode payment detected at height %d: %s", __func__, nBlockHeight, txNew.ToString());
+            return false;
+        }
+        LogPrintf("%s-- WARNING: Masternode payment enforcement is disabled, accepting any payee\n", __func__);
+        return true;
     }
-
-    LogPrintf("IsBlockPayeeValid -- WARNING: Masternode payment enforcement is disabled, accepting any payee\n");
-    return true;
 }
 
 void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward, CAmount blockEvolution, std::vector<CTxOut>& voutMasternodePaymentsRet, std::vector<CTxOut>& voutSuperblockPaymentsRet)
@@ -514,7 +521,8 @@ bool CMasternodePayments::GetBlockTxOuts(int nBlockHeight, CAmount blockReward, 
             operatorReward = (masternodeReward * dmnPayee->nOperatorReward) / 10000;
             masternodeReward -= operatorReward;
         }
-
+        LogPrintf("masternodeReward=%d\n",masternodeReward);
+        LogPrintf("operatorReward=%d\n",operatorReward);
         if (masternodeReward > 0) {
             voutMasternodePaymentsRet.emplace_back(masternodeReward, dmnPayee->pdmnState->scriptPayout);
         }
@@ -683,7 +691,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew) const
     if(nMaxSignatures < MNPAYMENTS_SIGNATURES_REQUIRED) return true;
 
     for (const auto& payee : vecPayees) {
-        if (payee.GetVoteCount() >= MNPAYMENTS_SIGNATURES_REQUIRED) {
+     //   if (payee.GetVoteCount() >= MNPAYMENTS_SIGNATURES_REQUIRED) {
             for (const auto& txout : txNew.vout) {
                 if (payee.GetPayee() == txout.scriptPubKey && nMasternodePayment == txout.nValue) {
                     LogPrint("mnpayments", "CMasternodeBlockPayees::%s -- Found required payment\n", __func__);
@@ -700,7 +708,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew) const
             } else {
                 strPayeesPossible += "," + address2.ToString();
             }
-        }
+   //     }
     }
 
     LogPrintf("CMasternodeBlockPayees::%s -- ERROR: Missing required payment, possible payees: '%s', amount: %f BEENODE\n", __func__, strPayeesPossible, (float)nMasternodePayment/COIN);
@@ -746,19 +754,27 @@ bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, int nBlo
             LogPrintf("CMasternodePayments::%s -- ERROR failed to get payees for block at height %s\n", __func__, nBlockHeight);
             return true;
         }
-
+        
+        CAmount min=0;
+        for (const auto& txout : txNew.vout) {
+            if(min==0){min=txout.nValue;continue;}
+            if(min>txout.nValue && txout.nValue>0)min=txout.nValue;
+        }
         for (const auto& txout : voutMasternodePayments) {
             bool found = false;
             for (const auto& txout2 : txNew.vout) {
-                if (txout == txout2) {
+                if (  ( (txout2.nValue >0 && txout.nValue == (txout2.nValue+min)) || (txout2.nValue == 0 && txout.nValue==0) ) && txout.scriptPubKey==txout2.scriptPubKey) {
                     found = true;
+                    LogPrintf("CMasternodePayments::IsTransactionValid -- successfull \n");
                     break;
                 }
             }
             if (!found) {
                 CTxDestination dest;
                 if (!ExtractDestination(txout.scriptPubKey, dest))
+                {
                     assert(false);
+                }
                 LogPrintf("CMasternodePayments::%s -- ERROR failed to find expected payee %s in block at height %s\n", __func__, CBitcoinAddress(dest).ToString(), nBlockHeight);
                 return false;
             }
