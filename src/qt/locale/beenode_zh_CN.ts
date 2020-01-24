@@ -3930,7 +3930,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>警告: 我们和某些连线的节点对于区块链结的决定不同！你可能需要升级，或是需要等其它的节点升级。</translation>
     </message>
     <message>
-        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
+        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
         <translation>您必须在配置中指定一个主节点密钥。请参阅文档以获得帮助。</translation>
     </message>
     <message>
@@ -4494,7 +4494,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>即将重试...</translation>
     </message>
     <message>
-        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
+        <source>Invalid masternodeprivkey. Please see documenation.</source>
         <translation>无效主节点私钥。请查阅文档。</translation>
     </message>
     <message>

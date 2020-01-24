@@ -331,7 +331,7 @@ QT_TRANSLATE_NOOP("beenode-core", ""
 QT_TRANSLATE_NOOP("beenode-core", ""
 "You are starting in lite mode, all Beenode-specific functionality is disabled."),
 QT_TRANSLATE_NOOP("beenode-core", ""
-"You must specify a masternodeblsprivkey in the configuration. Please see "
+"You must specify a masternodeprivkey in the configuration. Please see "
 "documentation for help."),
 QT_TRANSLATE_NOOP("beenode-core", ""
 "You need to rebuild the database using -reindex to go back to unpruned "
@@ -445,7 +445,7 @@ QT_TRANSLATE_NOOP("beenode-core", "Invalid amount for -%s=<amount>: '%s'"),
 QT_TRANSLATE_NOOP("beenode-core", "Invalid amount for -fallbackfee=<amount>: '%s'"),
 QT_TRANSLATE_NOOP("beenode-core", "Invalid amount for -paytxfee=<amount>: '%s' (must be at least %s)"),
 QT_TRANSLATE_NOOP("beenode-core", "Invalid masternodeblsprivkey. Please see documenation."),
-QT_TRANSLATE_NOOP("beenode-core", "Invalid masternodeblsprivkey. Please see documenation."),
+QT_TRANSLATE_NOOP("beenode-core", "Invalid masternodeprivkey. Please see documenation."),
 QT_TRANSLATE_NOOP("beenode-core", "Invalid minimum number of spork signers specified with -minsporkkeys"),
 QT_TRANSLATE_NOOP("beenode-core", "Invalid netmask specified in -whitelist: '%s'"),
 QT_TRANSLATE_NOOP("beenode-core", "Invalid port detected in masternode.conf"),

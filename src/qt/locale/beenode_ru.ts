@@ -3930,8 +3930,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Внимание: обнаружено несогласие с подключенными участниками! Вам или другим участникам, возможно, следует обновиться.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
-        <translation>Необходимо указать masternodeblsprivkey в файле конфигурации. Пожалуйста, ознакомьтесь с документацией.</translation>
+        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
+        <translation>Необходимо указать masternodeprivkey в файле конфигурации. Пожалуйста, ознакомьтесь с документацией.</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4494,8 +4494,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Попробуем еще раз...</translation>
     </message>
     <message>
-        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
-        <translation>Неправильное значение masternodeblsprivkey. Пожалуйста, ознакомьтесь с документацией.</translation>
+        <source>Invalid masternodeprivkey. Please see documenation.</source>
+        <translation>Неправильное значение masternodeprivkey. Пожалуйста, ознакомьтесь с документацией.</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>

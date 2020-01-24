@@ -3930,8 +3930,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Attenzione: Sembra che non ci sia completo accordo con i nostri peer! Un aggiornamento da parte tua o degli altri nodi potrebbe essere necessario.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
-        <translation>Devi specificare una masternodeblsprivkey nella configurazione. Per favore consulta la documentazione di aiuto.</translation>
+        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
+        <translation>Devi specificare una masternodeprivkey nella configurazione. Per favore consulta la documentazione di aiuto.</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4494,8 +4494,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>Ritenterà ...</translation>
     </message>
     <message>
-        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
-        <translation>masternodeblsprivkey non valida. Per favore consulta la documentazione</translation>
+        <source>Invalid masternodeprivkey. Please see documenation.</source>
+        <translation>masternodeprivkey non valida. Per favore consulta la documentazione</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>

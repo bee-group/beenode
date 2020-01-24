@@ -3926,8 +3926,8 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>تحذير: لا يبدو أننا نتفق تمامًا مع نظرائنا! قد تحتاج إلى الترقية ، أو قد تحتاج العقد الأخرى إلى الترقية.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeblsprivkey in the configuration. Please see documentation for help.</source>
-        <translation>يجب عليك تحديد masternodeblsprivkey في التكوين. يرجى الاطلاع على الوثائق مساعدة.</translation>
+        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
+        <translation>يجب عليك تحديد masternodeprivkey في التكوين. يرجى الاطلاع على الوثائق مساعدة.</translation>
     </message>
     <message>
         <source>Accept command line and JSON-RPC commands</source>
@@ -4486,7 +4486,7 @@ https://www.transifex.com/projects/p/beenode/</translation>
         <translation>سيعيد المحاولة ...</translation>
     </message>
     <message>
-        <source>Invalid masternodeblsprivkey. Please see documenation.</source>
+        <source>Invalid masternodeprivkey. Please see documenation.</source>
         <translation>ماسترنود غير صحيح. يرجى الاطلاع على الوثائق</translation>
     </message>
     <message>
