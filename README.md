@@ -15,7 +15,13 @@ are carried out collectively by the network. Beenode Core is the name of the ope
 source software which enables the use of this currency.
 
 For more information, as well as an immediately useable, binary version of
-the Beenode Core software, see https://www.beenode.org/get-beenode/.
+the Beenode Core software, see https://www.beenode.org/
+
+What is CryptoShock?
+---------------------
+Official Beenode Support and Development Project.
+See https://cryptoshock.com/
+
 
 
 License
