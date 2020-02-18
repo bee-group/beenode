@@ -22,7 +22,7 @@ public:
     std::string paramName;  //!< parameter name
 };
 /**
- * Specifiy a (method, idx, name) here if the argument is a non-string RPC
+ * Specify a (method, idx, name) here if the argument is a non-string RPC
  * argument and needs to be converted from JSON.
  *
  * @note Parameter indexes start from 0.
@@ -30,10 +30,12 @@ public:
 static const CRPCConvertParam vRPCConvertParams[] =
 {
     { "setmocktime", 0, "timestamp" },
+#if ENABLE_MINER
     { "generate", 0, "nblocks" },
     { "generate", 1, "maxtries" },
     { "generatetoaddress", 0, "nblocks" },
     { "generatetoaddress", 2, "maxtries" },
+#endif // ENABLE_MINER
     { "getnetworkhashps", 0, "nblocks" },
     { "getnetworkhashps", 1, "height" },
     { "sendtoaddress", 1, "amount" },
@@ -130,14 +132,10 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "keypoolrefill", 0, "newsize" },
     { "getrawmempool", 0, "verbose" },
     { "estimatefee", 0, "nblocks" },
-    { "estimatepriority", 0, "nblocks" },
     { "estimatesmartfee", 0, "nblocks" },
-    { "estimatesmartpriority", 0, "nblocks" },
-    { "prioritisetransaction", 1, "priority_delta" },
-    { "prioritisetransaction", 2, "fee_delta" },
+    { "prioritisetransaction", 1, "fee_delta" },
     { "setban", 2, "bantime" },
     { "setban", 3, "absolute" },
-    { "setbip69enabled", 0, "enabled" },
     { "setnetworkactive", 0, "state" },
     { "setprivatesendrounds", 0, "rounds" },
     { "setprivatesendamount", 0, "amount" },
@@ -154,6 +152,10 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "getaddressdeltas", 0, "addresses" },
     { "getaddressutxos", 0, "addresses" },
     { "getaddressmempool", 0, "addresses" },
+    { "getspecialtxes", 1, "type" },
+    { "getspecialtxes", 2, "count" },
+    { "getspecialtxes", 3, "skip" },
+    { "getspecialtxes", 4, "verbosity" },
     // Echo with conversion (For testing only)
     { "echojson", 0, "arg0" },
     { "echojson", 1, "arg1" },

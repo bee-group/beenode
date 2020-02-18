@@ -34,6 +34,12 @@
 /* Copyright year */
 #undef COPYRIGHT_YEAR
 
+/* Define this symbol if in-wallet miner should be enabled */
+#undef ENABLE_MINER
+
+/* Define this symbol if stacktraces should be enabled */
+#undef ENABLE_STACKTRACES
+
 /* Define to 1 to enable wallet functions */
 #undef ENABLE_WALLET
 
@@ -164,6 +170,9 @@
 /* Define to 1 if the system has the `visibility' function attribute */
 #undef HAVE_FUNC_ATTRIBUTE_VISIBILITY
 
+/* Define this symbol if the BSD getentropy system call is available */
+#undef HAVE_GETENTROPY
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
@@ -281,8 +290,14 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
+/* Define this symbol if the BSD sysctl(KERN_ARND) is available */
+#undef HAVE_SYSCTL_ARND
+
 /* Define to 1 if you have the <sys/endian.h> header file. */
 #undef HAVE_SYS_ENDIAN_H
+
+/* Define this symbol if the Linux getrandom system call is available */
+#undef HAVE_SYS_GETRANDOM
 
 /* Define to 1 if you have the <sys/prctl.h> header file. */
 #undef HAVE_SYS_PRCTL_H
@@ -344,6 +359,9 @@
 
 /* Define this symbol if qt plugins are static */
 #undef QT_STATICPLUGIN
+
+/* Define this symbol to use wrapped CXX ABIs for exception stacktraces */
+#undef STACKTRACE_WRAPPED_CXX_ABI
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS

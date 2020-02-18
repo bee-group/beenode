@@ -98,17 +98,17 @@ public:
     }
 };
 
-class CSpysendAccept
+class CPrivateSendAccept
 {
 public:
     int nDenom;
     CMutableTransaction txCollateral;
 
-    CSpysendAccept() :
+    CPrivateSendAccept() :
         nDenom(0),
         txCollateral(CMutableTransaction()){};
 
-    CSpysendAccept(int nDenom, const CMutableTransaction& txCollateral) :
+    CPrivateSendAccept(int nDenom, const CMutableTransaction& txCollateral) :
         nDenom(nDenom),
         txCollateral(txCollateral){};
 
@@ -121,14 +121,14 @@ public:
         READWRITE(txCollateral);
     }
 
-    friend bool operator==(const CSpysendAccept& a, const CSpysendAccept& b)
+    friend bool operator==(const CPrivateSendAccept& a, const CPrivateSendAccept& b)
     {
         return a.nDenom == b.nDenom && a.txCollateral == b.txCollateral;
     }
 };
 
 // A clients transaction in the mixing pool
-class CSpySendEntry
+class CPrivateSendEntry
 {
 public:
     std::vector<CTxDSIn> vecTxDSIn;
@@ -137,7 +137,7 @@ public:
     // memory only
     CService addr;
 
-    CSpySendEntry() :
+    CPrivateSendEntry() :
         vecTxDSIn(std::vector<CTxDSIn>()),
         vecTxOut(std::vector<CTxOut>()),
         txCollateral(MakeTransactionRef()),
@@ -145,7 +145,7 @@ public:
     {
     }
 
-    CSpySendEntry(const std::vector<CTxDSIn>& vecTxDSIn, const std::vector<CTxOut>& vecTxOut, const CTransaction& txCollateral) :
+    CPrivateSendEntry(const std::vector<CTxDSIn>& vecTxDSIn, const std::vector<CTxOut>& vecTxOut, const CTransaction& txCollateral) :
         vecTxDSIn(vecTxDSIn),
         vecTxOut(vecTxOut),
         txCollateral(MakeTransactionRef(txCollateral)),
@@ -170,7 +170,7 @@ public:
 /**
  * A currently in progress mixing merge and denomination information
  */
-class CSpySendQueue
+class CPrivateSendQueue
 {
 public:
     int nDenom;
@@ -181,7 +181,7 @@ public:
     // memory only
     bool fTried;
 
-    CSpySendQueue() :
+    CPrivateSendQueue() :
         nDenom(0),
         masternodeOutpoint(COutPoint()),
         nTime(0),
@@ -191,7 +191,7 @@ public:
     {
     }
 
-    CSpySendQueue(int nDenom, COutPoint outpoint, int64_t nTime, bool fReady) :
+    CPrivateSendQueue(int nDenom, COutPoint outpoint, int64_t nTime, bool fReady) :
         nDenom(nDenom),
         masternodeOutpoint(outpoint),
         nTime(nTime),
@@ -225,12 +225,12 @@ public:
      */
     bool Sign();
     /// Check if we have a valid Masternode address
-    bool CheckSignature(const CKeyID& keyIDOperator, const CBLSPublicKey& blsPubKey) const;
+    bool CheckSignature(const CBLSPublicKey& blsPubKey) const;
 
     bool Relay(CConnman& connman);
 
-    /// Is this queue expired?
-    bool IsExpired() { return GetAdjustedTime() - nTime > PRIVATESEND_QUEUE_TIMEOUT; }
+    /// Check if a queue is too old or too far into the future
+    bool IsTimeOutOfBounds() const;
 
     std::string ToString() const
     {
@@ -238,7 +238,7 @@ public:
             nDenom, nTime, fReady ? "true" : "false", fTried ? "true" : "false", masternodeOutpoint.ToStringShort());
     }
 
-    friend bool operator==(const CSpySendQueue& a, const CSpySendQueue& b)
+    friend bool operator==(const CPrivateSendQueue& a, const CPrivateSendQueue& b)
     {
         return a.nDenom == b.nDenom && a.masternodeOutpoint == b.masternodeOutpoint && a.nTime == b.nTime && a.fReady == b.fReady;
     }
@@ -246,7 +246,7 @@ public:
 
 /** Helper class to store mixing transaction (tx) information.
  */
-class CSpysendBroadcastTx
+class CPrivateSendBroadcastTx
 {
 private:
     // memory only
@@ -259,7 +259,7 @@ public:
     std::vector<unsigned char> vchSig;
     int64_t sigTime;
 
-    CSpysendBroadcastTx() :
+    CPrivateSendBroadcastTx() :
         nConfirmedHeight(-1),
         tx(MakeTransactionRef()),
         masternodeOutpoint(),
@@ -268,7 +268,7 @@ public:
     {
     }
 
-    CSpysendBroadcastTx(const CTransactionRef& _tx, COutPoint _outpoint, int64_t _sigTime) :
+    CPrivateSendBroadcastTx(const CTransactionRef& _tx, COutPoint _outpoint, int64_t _sigTime) :
         nConfirmedHeight(-1),
         tx(_tx),
         masternodeOutpoint(_outpoint),
@@ -290,23 +290,23 @@ public:
         READWRITE(sigTime);
     }
 
-    friend bool operator==(const CSpysendBroadcastTx& a, const CSpysendBroadcastTx& b)
+    friend bool operator==(const CPrivateSendBroadcastTx& a, const CPrivateSendBroadcastTx& b)
     {
         return *a.tx == *b.tx;
     }
-    friend bool operator!=(const CSpysendBroadcastTx& a, const CSpysendBroadcastTx& b)
+    friend bool operator!=(const CPrivateSendBroadcastTx& a, const CPrivateSendBroadcastTx& b)
     {
         return !(a == b);
     }
     explicit operator bool() const
     {
-        return *this != CSpysendBroadcastTx();
+        return *this != CPrivateSendBroadcastTx();
     }
 
     uint256 GetSignatureHash() const;
 
     bool Sign();
-    bool CheckSignature(const CKeyID& keyIDOperator, const CBLSPublicKey& blsPubKey) const;
+    bool CheckSignature(const CBLSPublicKey& blsPubKey) const;
 
     void SetConfirmedHeight(int nConfirmedHeightIn) { nConfirmedHeight = nConfirmedHeightIn; }
     bool IsExpired(int nHeight);
@@ -316,11 +316,11 @@ public:
 class CPrivateSendBaseSession
 {
 protected:
-    mutable CCriticalSection cs_spysend;
+    mutable CCriticalSection cs_privatesend;
 
-    std::vector<CSpySendEntry> vecEntries; // Masternode/clients entries
+    std::vector<CPrivateSendEntry> vecEntries; // Masternode/clients entries
 
-    PoolState nState; // should be one of the POOL_STATE_XXX values
+    PoolState nState;                // should be one of the POOL_STATE_XXX values
     int64_t nTimeLastSuccessfulStep; // the time when last successful mixing step was performed
 
     int nSessionID; // 0 if no mixing session is active
@@ -355,17 +355,17 @@ protected:
     mutable CCriticalSection cs_vecqueue;
 
     // The current mixing sessions in progress on the network
-    std::vector<CSpySendQueue> vecSpySendQueue;
+    std::vector<CPrivateSendQueue> vecPrivateSendQueue;
 
     void SetNull();
     void CheckQueue();
 
 public:
     CPrivateSendBaseManager() :
-        vecSpySendQueue() {}
+        vecPrivateSendQueue() {}
 
-    int GetQueueSize() const { return vecSpySendQueue.size(); }
-    bool GetQueueItemAndTry(CSpySendQueue& dsqRet);
+    int GetQueueSize() const { return vecPrivateSendQueue.size(); }
+    bool GetQueueItemAndTry(CPrivateSendQueue& dsqRet);
 };
 
 // helper class
@@ -380,7 +380,7 @@ private:
 
     // static members
     static std::vector<CAmount> vecStandardDenominations;
-    static std::map<uint256, CSpysendBroadcastTx> mapDSTX;
+    static std::map<uint256, CPrivateSendBroadcastTx> mapDSTX;
 
     static CCriticalSection cs_mapdstx;
 
@@ -403,8 +403,9 @@ public:
 
     static std::string GetMessageByID(PoolMessage nMessageID);
 
-    /// Get the maximum number of transactions for the pool
-    static int GetMaxPoolTransactions() { return Params().PoolMaxTransactions(); }
+    /// Get the minimum/maximum number of participants for the pool
+    static int GetMinPoolParticipants() { return Params().PoolMinParticipants(); }
+    static int GetMaxPoolParticipants() { return Params().PoolMaxParticipants(); }
 
     static CAmount GetMaxPoolAmount() { return vecStandardDenominations.empty() ? 0 : PRIVATESEND_ENTRY_MAX_SIZE * vecStandardDenominations.front(); }
 
@@ -415,11 +416,11 @@ public:
 
     static bool IsCollateralAmount(CAmount nInputAmount);
 
-    static void AddDSTX(const CSpysendBroadcastTx& dstx);
-    static CSpysendBroadcastTx GetDSTX(const uint256& hash);
+    static void AddDSTX(const CPrivateSendBroadcastTx& dstx);
+    static CPrivateSendBroadcastTx GetDSTX(const uint256& hash);
 
-    static void UpdatedBlockTip(const CBlockIndex *pindex);
-    static void SyncTransaction(const CTransaction& tx, const CBlockIndex *pindex, int posInBlock);
+    static void UpdatedBlockTip(const CBlockIndex* pindex);
+    static void SyncTransaction(const CTransaction& tx, const CBlockIndex* pindex, int posInBlock);
 };
 
 #endif

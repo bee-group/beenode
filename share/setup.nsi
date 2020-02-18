@@ -5,7 +5,7 @@ SetCompressor /SOLID lzma
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 0.8.1
+!define VERSION 0.9.1
 !define COMPANY "Beenode Core project"
 !define URL https://beenode.org/
 
@@ -58,7 +58,7 @@ CRCCheck on
 XPStyle on
 BrandingText " "
 ShowInstDetails show
-VIProductVersion ${VERSION}.2
+VIProductVersion ${VERSION}.5
 VIAddVersionKey ProductName "Beenode Core"
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"
@@ -107,10 +107,6 @@ Section -post SEC0001
     WriteRegStr HKCR "beenodecore" "" "URL:Beenode"
     WriteRegStr HKCR "beenodecore\DefaultIcon" "" $INSTDIR\beenode-qt
     WriteRegStr HKCR "beenodecore\shell\open\command" "" '"$INSTDIR\beenode-qt" "%1"'
-
-    # Delete old key (before we switched to PACKAGE_TARNAME, which is set to 'beenodecore' now, we had 'beenode' hardcoded)
-    # TODO remove this line sometime later
-    DeleteRegKey HKCR "beenode"
 SectionEnd
 
 # Macro for selecting uninstaller sections
@@ -150,9 +146,6 @@ Section -un.post UNSEC0001
     DeleteRegKey /IfEmpty HKCU "${REGKEY}\Components"
     DeleteRegKey /IfEmpty HKCU "${REGKEY}"
     DeleteRegKey HKCR "beenodecore"
-    # Delete old key (before we switched to PACKAGE_TARNAME, which is set to 'beenodecore' now, we had 'beenode' hardcoded)
-    # TODO remove this line sometime later
-    DeleteRegKey HKCR "beenode"
     RmDir /REBOOTOK $SMPROGRAMS\$StartMenuGroup
     RmDir /REBOOTOK $INSTDIR
     Push $R0

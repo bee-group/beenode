@@ -39,7 +39,7 @@ Building Beenode Core
 
 ```bash
 $ ./autogen.sh
-$ ./configure --prefix `pwd`/depends/<host>
+$ ./configure --prefix=`pwd`/depends/<host>
 $ make
 $ make install # optional
 ```

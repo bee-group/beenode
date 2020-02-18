@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The Beenode Core developers
+// Copyright (c) 2020 The BeeGroup developers are EternityGroup
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -88,7 +88,7 @@ bool CFinalCommitment::Verify(const std::vector<CDeterministicMNCPtr>& members, 
             if (!signers[i]) {
                 continue;
             }
-            memberPubKeys.emplace_back(members[i]->pdmnState->pubKeyOperator);
+            memberPubKeys.emplace_back(members[i]->pdmnState->pubKeyOperator.Get());
         }
 
         if (!membersSig.VerifySecureAggregated(memberPubKeys, commitmentHash)) {
@@ -193,7 +193,7 @@ bool CheckLLMQCommitment(const CTransaction& tx, const CBlockIndex* pindexPrev, 
         return true;
     }
 
-    auto members = CLLMQUtils::GetAllQuorumMembers(params.type, qcTx.commitment.quorumHash);
+    auto members = CLLMQUtils::GetAllQuorumMembers(params.type, pindexQuorum);
     if (!qcTx.commitment.Verify(members, false)) {
         return state.DoS(100, false, REJECT_INVALID, "bad-qc-invalid");
     }

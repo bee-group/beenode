@@ -9,7 +9,7 @@
 /* #undef AC_APPLE_UNIVERSAL_BUILD */
 
 /* Version Build */
-#define CLIENT_VERSION_BUILD 2
+#define CLIENT_VERSION_BUILD 5
 
 /* Version is release */
 #define CLIENT_VERSION_IS_RELEASE true
@@ -18,7 +18,7 @@
 #define CLIENT_VERSION_MAJOR 0
 
 /* Minor version */
-#define CLIENT_VERSION_MINOR 8
+#define CLIENT_VERSION_MINOR 9
 
 /* Build revision */
 #define CLIENT_VERSION_REVISION 1
@@ -34,6 +34,12 @@
 
 /* Copyright year */
 #define COPYRIGHT_YEAR 2020
+
+/* Define this symbol if in-wallet miner should be enabled */
+#define ENABLE_MINER 1
+
+/* Define this symbol if stacktraces should be enabled */
+/* #undef ENABLE_STACKTRACES */
 
 /* Define to 1 to enable wallet functions */
 #define ENABLE_WALLET 1
@@ -165,6 +171,9 @@
 /* Define to 1 if the system has the `visibility' function attribute */
 #define HAVE_FUNC_ATTRIBUTE_VISIBILITY 1
 
+/* Define this symbol if the BSD getentropy system call is available */
+#define HAVE_GETENTROPY 1
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
 
@@ -282,8 +291,14 @@
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
 
+/* Define this symbol if the BSD sysctl(KERN_ARND) is available */
+/* #undef HAVE_SYSCTL_ARND */
+
 /* Define to 1 if you have the <sys/endian.h> header file. */
 /* #undef HAVE_SYS_ENDIAN_H */
+
+/* Define this symbol if the Linux getrandom system call is available */
+#define HAVE_SYS_GETRANDOM 1
 
 /* Define to 1 if you have the <sys/prctl.h> header file. */
 #define HAVE_SYS_PRCTL_H 1
@@ -319,7 +334,7 @@
 #define PACKAGE_NAME "Beenode Core"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Beenode Core 0.8.1"
+#define PACKAGE_STRING "Beenode Core 0.9.1"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "beenodecore"
@@ -328,7 +343,7 @@
 #define PACKAGE_URL "https://beenode.org/"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.8.1"
+#define PACKAGE_VERSION "0.9.1"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
@@ -345,6 +360,9 @@
 
 /* Define this symbol if qt plugins are static */
 #define QT_STATICPLUGIN 1
+
+/* Define this symbol to use wrapped CXX ABIs for exception stacktraces */
+#define STACKTRACE_WRAPPED_CXX_ABI 1
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1

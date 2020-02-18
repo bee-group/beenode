@@ -22,10 +22,13 @@ private:
     // to behave honestly. If they don't it takes their money.
     std::vector<CTransactionRef> vecSessionCollaterals;
 
+    // Maximum number of participants in a certain session, random between min and max.
+    int nSessionMaxParticipants;
+
     bool fUnitTest;
 
     /// Add a clients entry to the pool
-    bool AddEntry(const CSpySendEntry& entryNew, PoolMessage& nMessageIDRet);
+    bool AddEntry(const CPrivateSendEntry& entryNew, PoolMessage& nMessageIDRet);
     /// Add signature to a txin
     bool AddScriptSig(const CTxIn& txin);
 
@@ -41,11 +44,11 @@ private:
     void CommitFinalTransaction(CConnman& connman);
 
     /// Is this nDenom and txCollateral acceptable?
-    bool IsAcceptableDSA(const CSpysendAccept& dsa, PoolMessage& nMessageIDRet);
-    bool CreateNewSession(const CSpysendAccept& dsa, PoolMessage& nMessageIDRet, CConnman& connman);
-    bool AddUserToExistingSession(const CSpysendAccept& dsa, PoolMessage& nMessageIDRet);
+    bool IsAcceptableDSA(const CPrivateSendAccept& dsa, PoolMessage& nMessageIDRet);
+    bool CreateNewSession(const CPrivateSendAccept& dsa, PoolMessage& nMessageIDRet, CConnman& connman);
+    bool AddUserToExistingSession(const CPrivateSendAccept& dsa, PoolMessage& nMessageIDRet);
     /// Do we have enough users to take entries?
-    bool IsSessionReady() { return (int)vecSessionCollaterals.size() >= CPrivateSend::GetMaxPoolTransactions(); }
+    bool IsSessionReady();
 
     /// Check that all inputs are signed. (Are all inputs signed?)
     bool IsSignaturesComplete();
@@ -67,7 +70,9 @@ private:
 
 public:
     CPrivateSendServer() :
-        vecSessionCollaterals(), fUnitTest(false) {}
+        vecSessionCollaterals(),
+        nSessionMaxParticipants(0),
+        fUnitTest(false) {}
 
     void ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman);
 
