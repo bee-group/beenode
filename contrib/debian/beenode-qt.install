@@ -1,0 +1,6 @@
+usr/local/bin/beenode-qt usr/bin
+share/pixmaps/beenode32.xpm usr/share/pixmaps
+share/pixmaps/beenode16.xpm usr/share/pixmaps
+share/pixmaps/beenode128.png usr/share/pixmaps
+debian/beenode-qt.desktop usr/share/applications
+debian/beenode-qt.protocol usr/share/kde4/services/

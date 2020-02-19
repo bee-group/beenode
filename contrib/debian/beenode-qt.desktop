@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Beenode Core
+Comment=Beenode P2P Cryptocurrency
+Comment[de]=Verbinde mit dem Beenode peer-to-peer Netzwerk
+Comment[fr]=Beenode, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Beenode, eşten eşe kriptografik sanal para birimi
+Exec=beenode-qt %u
+Terminal=false
+Type=Application
+Icon=beenode128
+MimeType=x-scheme-handler/beenode;
+Categories=Office;Finance;
