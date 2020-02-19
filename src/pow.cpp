@@ -140,10 +140,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
         return nProofOfWorkLimit;
     }
-    if(sporkManager.IsSporkActive(SPORK_25_DETERMIN14_UPDATE))
-        return DarkGravityWave(pindexLast, pblock, params);
-    else
-        return  Lwma3CalculateNextWorkRequired(pindexLast,params);
+    return DarkGravityWave(pindexLast, pblock, params);
 }
 
 // for DIFF_BTC only!
