@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The Beenode Core developers
+// Copyright (c) 2020 The BeeGroup developers are EternityGroup
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -51,16 +51,19 @@ std::pair<std::function<void(T)>, std::future<T> > BuildFutureDoneCallback2()
 
 CBLSWorker::CBLSWorker()
 {
-    int workerCount = std::thread::hardware_concurrency() / 2;
-    workerCount = std::max(std::min(1, workerCount), 4);
-    workerPool.resize(workerCount);
-
-    RenameThreadPool(workerPool, "bls-worker");
 }
 
 CBLSWorker::~CBLSWorker()
 {
     Stop();
+}
+
+void CBLSWorker::Start()
+{
+    int workerCount = std::thread::hardware_concurrency() / 2;
+    workerCount = std::max(std::min(1, workerCount), 4);
+    workerPool.resize(workerCount);
+    RenameThreadPool(workerPool, "beenode-bls-worker");
 }
 
 void CBLSWorker::Stop()
