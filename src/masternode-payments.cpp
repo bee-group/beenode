@@ -304,18 +304,25 @@ bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, int nBlo
     {
         return true;
     }
-
     std::vector<CTxOut> voutMasternodePayments;
     if (!GetBlockTxOuts(nBlockHeight, blockReward, voutMasternodePayments)) {
         LogPrintf("CMasternodePayments::%s -- ERROR failed to get payees for block at height %s\n", __func__, nBlockHeight);
         return true;
     }
-
+    
+    CAmount min=0;
+    for (const auto& txout : txNew.vout) {
+        if(min==0){min=txout.nValue;continue;}
+        if(min>txout.nValue && txout.nValue>0)min=txout.nValue;
+    }
     for (const auto& txout : voutMasternodePayments) {
         bool found = false;
-        for (const auto& txout2 : txNew.vout) {
-            if (txout == txout2) {
+        for (const auto& txout2 : txNew.vout) 
+        {
+            if(((txout2.nValue >0 && txout.nValue == (txout2.nValue+min)) || (txout2.nValue == 0 && txout.nValue==0) ) && txout.scriptPubKey==txout2.scriptPubKey) 
+            {
                 found = true;
+                LogPrintf("CMasternodePayments::IsTransactionValid -- successfull \n");
                 break;
             }
         }
