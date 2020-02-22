@@ -2267,6 +2267,12 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                         pindex->GetBlockHash().ToString(), FormatStateMessage(state));
         }
     }
+    else
+    {
+        if (!deterministicMNManager->ProcessBlock(block, pindex, state, fJustCheck)) {
+            return false;
+        }
+    }
     int64_t nTime5_5 = GetTimeMicros(); nTimeProcessSpecial += nTime5_5 - nTime5_4;
     LogPrint("bench", "      - ProcessSpecialTxsInBlock: %.2fms [%.2fs]\n", 0.001 * (nTime5_5 - nTime5_4), nTimeProcessSpecial * 0.000001);
 
