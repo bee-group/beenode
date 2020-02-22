@@ -64,7 +64,6 @@ void CMasternodeSync::SwitchToNextAsset(CConnman& connman)
             LogPrintf("CMasternodeSync::SwitchToNextAsset -- Completed %s in %llds\n", GetAssetName(), GetTime() - nTimeAssetSyncStarted);
             nCurrentAsset = MASTERNODE_SYNC_FINISHED;
             LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
-            break;
             uiInterface.NotifyAdditionalDataSyncProgressChanged(1);
 
             connman.ForEachNode(CConnman::AllNodes, [](CNode* pnode) {
