@@ -33,7 +33,7 @@ std::map<int, int64_t> mapSporkDefaults = {
     {SPORK_20_INSTANTSEND_LLMQ_BASED,        4070908800ULL}, // OFF
     {SPORK_21_MASTERNODE_ORDER_ENABLE, 	         1569654200ULL}, // ON
     {SPORK_24_DETERMIN_UPDATE, 	         4070908800ULL}, // OFF
-    {SPORK_25_DETERMIN14_UPDATE, 	         4070908800ULL}, // OFF
+    {SPORK_25_DETERMIN14_UPDATE, 	         1582588800ULL}, // OFF
 };
 CEvolutionManager evolutionManager;
 CCriticalSection cs_mapEvolution;
