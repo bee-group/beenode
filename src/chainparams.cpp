@@ -226,9 +226,9 @@ public:
         consensus.BIP65Height = 1;
         consensus.BIP66Height = 1;
         consensus.DIP0001Height = 1;
-        consensus.DIP0003Height = 152061;
-        consensus.DIP0003EnforcementHeight = 160000;
-        consensus.DIP0003EnforcementHash = uint256S("0000000000c37b3175347ddf8149f1f91157c964336f3b2f8adc5911b3ea05b0");
+        consensus.DIP0003Height = 174393;
+        consensus.DIP0003EnforcementHeight = 174394;
+        consensus.DIP0003EnforcementHash = uint256S("000000000003253856e90a6dad76d4dce43684c4a059678442e755ee02d31361");
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~uint256(0) >> 20
         consensus.nPowTargetTimespan = 24 * 60 * 60; // Beenode: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60; // Beenode: 2.5 minutes

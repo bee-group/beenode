@@ -300,6 +300,9 @@ bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, int nBlo
         // can't verify historical blocks here
         return true;
     }
+    
+    if (!masternodeSync.IsBlockchainSynced())//while historical blocks has is did not synch return true
+        return true;
     if(!sporkManager.IsSporkActive(SPORK_25_DETERMIN14_UPDATE))
     {
         return true;
@@ -311,19 +314,34 @@ bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, int nBlo
     }
     
     CAmount min=0;
-    for (const auto& txout : txNew.vout) {
-        if(min==0){min=txout.nValue;continue;}
-        if(min>txout.nValue && txout.nValue>0)min=txout.nValue;
+    if( sporkManager.IsSporkWorkActive(SPORK_18_EVOLUTION_PAYMENTS) )
+    {
+        for (const auto& txout : txNew.vout) {
+            if(min==0){min=txout.nValue;continue;}
+            if(min>txout.nValue && txout.nValue>0)min=txout.nValue;
+        }
     }
     for (const auto& txout : voutMasternodePayments) {
         bool found = false;
         for (const auto& txout2 : txNew.vout) 
         {
-            if(((txout2.nValue >0 && txout.nValue == (txout2.nValue+min)) || (txout2.nValue == 0 && txout.nValue==0) ) && txout.scriptPubKey==txout2.scriptPubKey) 
+            
+            if( sporkManager.IsSporkWorkActive(SPORK_18_EVOLUTION_PAYMENTS) )
             {
-                found = true;
-                LogPrintf("CMasternodePayments::IsTransactionValid -- successfull \n");
-                break;
+                if(((txout2.nValue >0 && txout.nValue == (txout2.nValue+min)) || (txout2.nValue == 0 && txout.nValue==0) ) && txout.scriptPubKey==txout2.scriptPubKey) 
+                {
+                    found = true;
+                    LogPrintf("CMasternodePayments::IsTransactionValid -- successfull \n");
+                    break;
+                }
+            }
+            else
+            {
+                if (txout == txout2) 
+                {
+                    found = true;
+                    break;
+                }
             }
         }
         if (!found) {
