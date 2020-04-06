@@ -561,7 +561,7 @@ void OverviewPage::privateSendStatus()
         ui->labelPrivateSendEnabled->setToolTip(strWarning);
     }
 
-    // check privatesend status and unlock if needed
+    // check spysend status and unlock if needed
     if(nBestHeight != privateSendClient.nCachedNumBlocks) {
         // Balance and number of transactions might have changed
         privateSendClient.nCachedNumBlocks = nBestHeight;
@@ -713,7 +713,7 @@ void OverviewPage::on_pushButton_6_clicked()
 
 void OverviewPage::on_pushButton_7_clicked()
 {
-    QString link="https://twitter.com/Eternity_Group";
+    QString link="https://twitter.com/node_bee";
        QDesktopServices::openUrl(QUrl(link));
 }
 

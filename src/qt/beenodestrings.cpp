@@ -40,11 +40,9 @@ QT_TRANSLATE_NOOP("beenode-core", ""
 "Bind to given address and whitelist peers connecting to it. Use [host]:port "
 "notation for IPv6"),
 QT_TRANSLATE_NOOP("beenode-core", ""
-"Bind to given address to listen for JSON-RPC connections. This option is "
-"ignored unless -rpcallowip is also passed. Port is optional and overrides -"
-"rpcport. Use [host]:port notation for IPv6. This option can be specified "
-"multiple times (default: 127.0.0.1 and ::1 i.e., localhost, or if -"
-"rpcallowip has been specified, 0.0.0.0 and :: i.e., all addresses)"),
+"Bind to given address to listen for JSON-RPC connections. Use [host]:port "
+"notation for IPv6. This option can be specified multiple times (default: "
+"bind to all interfaces)"),
 QT_TRANSLATE_NOOP("beenode-core", ""
 "Cannot obtain a lock on data directory %s. %s is probably already running."),
 QT_TRANSLATE_NOOP("beenode-core", ""
@@ -440,7 +438,7 @@ QT_TRANSLATE_NOOP("beenode-core", "Invalid script detected."),
 QT_TRANSLATE_NOOP("beenode-core", "Invalid spork address specified with -sporkaddr"),
 QT_TRANSLATE_NOOP("beenode-core", "KeePassHttp id for the established association"),
 QT_TRANSLATE_NOOP("beenode-core", "KeePassHttp key for AES encrypted communication with KeePass"),
-QT_TRANSLATE_NOOP("beenode-core", "Keep N BEENODE anonymized (%u-%u, default: %u)"),
+QT_TRANSLATE_NOOP("beenode-core", "Keep N DASH anonymized (%u-%u, default: %u)"),
 QT_TRANSLATE_NOOP("beenode-core", "Keep at most <n> unconnectable transactions in memory (default: %u)"),
 QT_TRANSLATE_NOOP("beenode-core", "Keep the transaction memory pool below <n> megabytes (default: %u)"),
 QT_TRANSLATE_NOOP("beenode-core", "Keypool ran out, please call keypoolrefill first"),

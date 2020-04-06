@@ -108,7 +108,10 @@ CAmount CTransaction::GetValueOut() const
     return nValueOut;
 }
 
-
+unsigned int CTransaction::GetTotalSize() const
+{
+    return ::GetSerializeSize(*this, SER_NETWORK, PROTOCOL_VERSION);
+}
 CAmount CTransaction::GetValueOutWOEvol( const CScript &payeeEvo ) const
 {
 	CAmount nValueOut = 0;
@@ -121,11 +124,6 @@ CAmount CTransaction::GetValueOutWOEvol( const CScript &payeeEvo ) const
 	}	
 	return nValueOut;
 }
-unsigned int CTransaction::GetTotalSize() const
-{
-    return ::GetSerializeSize(*this, SER_NETWORK, PROTOCOL_VERSION);
-}
-
 std::string CTransaction::ToString() const
 {
     std::string str;

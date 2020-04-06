@@ -1,11 +1,10 @@
-// Copyright (c) 2018-2019 The Beenode Core developers
+// Copyright (c) 2018-2019 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "quorums_debug.h"
 
 #include "chainparams.h"
-#include "validation.h"
 
 #include "evo/deterministicmns.h"
 #include "quorums_utils.h"
@@ -24,17 +23,7 @@ UniValue CDKGDebugSessionStatus::ToJson(int detailLevel) const
 
     std::vector<CDeterministicMNCPtr> dmnMembers;
     if (detailLevel == 2) {
-        const CBlockIndex* pindex = nullptr;
-        {
-            LOCK(cs_main);
-            auto it = mapBlockIndex.find(quorumHash);
-            if (it != mapBlockIndex.end()) {
-                pindex = it->second;
-            }
-        }
-        if (pindex != nullptr) {
-            dmnMembers = CLLMQUtils::GetAllQuorumMembers((Consensus::LLMQType) llmqType, pindex);
-        }
+        dmnMembers = CLLMQUtils::GetAllQuorumMembers((Consensus::LLMQType) llmqType, quorumHash);
     }
 
     ret.push_back(Pair("llmqType", llmqType));

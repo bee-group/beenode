@@ -53,7 +53,7 @@ enum LLMQType : uint8_t
 };
 
 // Configures a LLMQ and its DKG
-// See https://github.com/beenodepay/dips/blob/master/dip-0006.md for more details
+// See https://github.com/dashpay/dips/blob/master/dip-0006.md for more details
 struct LLMQParams {
     LLMQType type;
 
@@ -127,6 +127,9 @@ struct Params {
     int nInstantSendKeepLock; // in blocks
     int nInstantSendSigsRequired;
     int nInstantSendSigsTotal;
+    int nSuperblockStartBlock;
+    uint256 nSuperblockStartHash;
+    int nSuperblockCycle; // in blocks
     int nMasternodeMinimumConfirmations;
     /** Block height and hash at which BIP34 becomes active */
     int BIP34Height;

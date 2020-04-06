@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>776</width>
-    <height>387</height>
+    <height>399</height>
    </rect>
   </property>
   <property name="autoFillBackground">
@@ -328,8 +328,6 @@
   <tabstop>showRequestButton</tabstop>
   <tabstop>removeRequestButton</tabstop>
  </tabstops>
- <resources>
-  <include location="../beenode.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

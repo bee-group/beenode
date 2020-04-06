@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The Beenode Core developers
+// Copyright (c) 2019 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BEENODE_QUORUMS_INSTANTSEND_H
-#define BEENODE_QUORUMS_INSTANTSEND_H
+#ifndef DASH_QUORUMS_INSTANTSEND_H
+#define DASH_QUORUMS_INSTANTSEND_H
 
 #include "quorums_signing.h"
 
@@ -53,6 +53,7 @@ public:
     CInstantSendDb(CDBWrapper& _db) : db(_db) {}
 
     void WriteNewInstantSendLock(const uint256& hash, const CInstantSendLock& islock);
+    void RemoveInstantSendLock(const uint256& hash, CInstantSendLockPtr islock);
     void RemoveInstantSendLock(CDBBatch& batch, const uint256& hash, CInstantSendLockPtr islock);
 
     void WriteInstantSendLockMined(const uint256& hash, int nHeight);
@@ -61,7 +62,6 @@ public:
     std::unordered_map<uint256, CInstantSendLockPtr> RemoveConfirmedInstantSendLocks(int nUntilHeight);
     void RemoveArchivedInstantSendLocks(int nUntilHeight);
     bool HasArchivedInstantSendLock(const uint256& islockHash);
-    size_t GetInstantSendLockCount();
 
     CInstantSendLockPtr GetInstantSendLockByHash(const uint256& hash);
     uint256 GetInstantSendLockHashByTxid(const uint256& txid);
@@ -120,7 +120,7 @@ public:
     void InterruptWorkerThread();
 
 public:
-    bool ProcessTx(const CTransaction& tx, bool allowReSigning, const Consensus::Params& params);
+    bool ProcessTx(const CTransaction& tx, const Consensus::Params& params);
     bool CheckCanLock(const CTransaction& tx, bool printDebug, const Consensus::Params& params);
     bool CheckCanLock(const COutPoint& outpoint, bool printDebug, const uint256& txHash, CAmount* retValue, const Consensus::Params& params);
     bool IsLocked(const uint256& txHash);
@@ -137,7 +137,6 @@ public:
     void ProcessMessageInstantSendLock(CNode* pfrom, const CInstantSendLock& islock, CConnman& connman);
     bool PreVerifyInstantSendLock(NodeId nodeId, const CInstantSendLock& islock, bool& retBan);
     bool ProcessPendingInstantSendLocks();
-    std::unordered_set<uint256> ProcessPendingInstantSendLocks(int signHeight, const std::unordered_map<uint256, std::pair<NodeId, CInstantSendLock>>& pend, bool ban);
     void ProcessInstantSendLock(NodeId from, const uint256& hash, const CInstantSendLock& islock);
     void UpdateWalletTransaction(const uint256& txid, const CTransactionRef& tx);
 
@@ -160,8 +159,6 @@ public:
     bool AlreadyHave(const CInv& inv);
     bool GetInstantSendLockByHash(const uint256& hash, CInstantSendLock& ret);
 
-    size_t GetInstantSendLockCount();
-
     void WorkThreadMain();
 };
 
@@ -178,4 +175,4 @@ bool IsInstantSendEnabled();
 
 }
 
-#endif//BEENODE_QUORUMS_INSTANTSEND_H
+#endif//DASH_QUORUMS_INSTANTSEND_H

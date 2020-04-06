@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2019 The Beenode Core developers
+// Copyright (c) 2017-2018 The Beenode Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -37,7 +37,7 @@ uint256 CSimplifiedMNListEntry::CalcHash() const
 std::string CSimplifiedMNListEntry::ToString() const
 {
     return strprintf("CSimplifiedMNListEntry(proRegTxHash=%s, confirmedHash=%s, service=%s, pubKeyOperator=%s, votingAddress=%s, isValid=%d)",
-        proRegTxHash.ToString(), confirmedHash.ToString(), service.ToString(false), pubKeyOperator.Get().ToString(), CBitcoinAddress(keyIDVoting).ToString(), isValid);
+        proRegTxHash.ToString(), confirmedHash.ToString(), service.ToString(false), pubKeyOperator.ToString(), CBitcoinAddress(keyIDVoting).ToString(), isValid);
 }
 
 void CSimplifiedMNListEntry::ToJson(UniValue& obj) const
@@ -47,34 +47,30 @@ void CSimplifiedMNListEntry::ToJson(UniValue& obj) const
     obj.push_back(Pair("proRegTxHash", proRegTxHash.ToString()));
     obj.push_back(Pair("confirmedHash", confirmedHash.ToString()));
     obj.push_back(Pair("service", service.ToString(false)));
-    obj.push_back(Pair("pubKeyOperator", pubKeyOperator.Get().ToString()));
+    obj.push_back(Pair("pubKeyOperator", pubKeyOperator.ToString()));
     obj.push_back(Pair("votingAddress", CBitcoinAddress(keyIDVoting).ToString()));
     obj.push_back(Pair("isValid", isValid));
 }
 
 CSimplifiedMNList::CSimplifiedMNList(const std::vector<CSimplifiedMNListEntry>& smlEntries)
 {
-    mnList.resize(smlEntries.size());
-    for (size_t i = 0; i < smlEntries.size(); i++) {
-        mnList[i] = std::make_unique<CSimplifiedMNListEntry>(smlEntries[i]);
-    }
+    mnList = smlEntries;
 
-    std::sort(mnList.begin(), mnList.end(), [&](const std::unique_ptr<CSimplifiedMNListEntry>& a, const std::unique_ptr<CSimplifiedMNListEntry>& b) {
-        return a->proRegTxHash.Compare(b->proRegTxHash) < 0;
+    std::sort(mnList.begin(), mnList.end(), [&](const CSimplifiedMNListEntry& a, const CSimplifiedMNListEntry& b) {
+        return a.proRegTxHash.Compare(b.proRegTxHash) < 0;
     });
 }
 
 CSimplifiedMNList::CSimplifiedMNList(const CDeterministicMNList& dmnList)
 {
-    mnList.resize(dmnList.GetAllMNsCount());
+    mnList.reserve(dmnList.GetAllMNsCount());
 
-    size_t i = 0;
-    dmnList.ForEachMN(false, [this, &i](const CDeterministicMNCPtr& dmn) {
-        mnList[i++] = std::make_unique<CSimplifiedMNListEntry>(*dmn);
+    dmnList.ForEachMN(false, [this](const CDeterministicMNCPtr& dmn) {
+        mnList.emplace_back(*dmn);
     });
 
-    std::sort(mnList.begin(), mnList.end(), [&](const std::unique_ptr<CSimplifiedMNListEntry>& a, const std::unique_ptr<CSimplifiedMNListEntry>& b) {
-        return a->proRegTxHash.Compare(b->proRegTxHash) < 0;
+    std::sort(mnList.begin(), mnList.end(), [&](const CSimplifiedMNListEntry& a, const CSimplifiedMNListEntry& b) {
+        return a.proRegTxHash.Compare(b.proRegTxHash) < 0;
     });
 }
 
@@ -83,7 +79,7 @@ uint256 CSimplifiedMNList::CalcMerkleRoot(bool* pmutated) const
     std::vector<uint256> leaves;
     leaves.reserve(mnList.size());
     for (const auto& e : mnList) {
-        leaves.emplace_back(e->CalcHash());
+        leaves.emplace_back(e.CalcHash());
     }
     return ComputeMerkleRoot(leaves, pmutated);
 }
@@ -217,14 +213,9 @@ bool BuildSimplifiedMNListDiff(const uint256& baseBlockHash, const uint256& bloc
 
     LOCK(deterministicMNManager->cs);
 
-    auto baseDmnList = deterministicMNManager->GetListForBlock(baseBlockIndex);
-    auto dmnList = deterministicMNManager->GetListForBlock(blockIndex);
+    auto baseDmnList = deterministicMNManager->GetListForBlock(baseBlockHash);
+    auto dmnList = deterministicMNManager->GetListForBlock(blockHash);
     mnListDiffRet = baseDmnList.BuildSimplifiedDiff(dmnList);
-
-    // We need to return the value that was provided by the other peer as it otherwise won't be able to recognize the
-    // response. This will usually be identical to the block found in baseBlockIndex. The only difference is when a
-    // null block hash was provided to get the diff from the genesis block.
-    mnListDiffRet.baseBlockHash = baseBlockHash;
 
     if (!mnListDiffRet.BuildQuorumsDiff(baseBlockIndex, blockIndex)) {
         errorRet = strprintf("failed to build quorums diff");

@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The Beenode Core developers
+// Copyright (c) 2019 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BEENODE_UNORDERED_LRU_CACHE_H
-#define BEENODE_UNORDERED_LRU_CACHE_H
+#ifndef DASH_UNORDERED_LRU_CACHE_H
+#define DASH_UNORDERED_LRU_CACHE_H
 
 #include <unordered_map>
 
@@ -107,4 +107,4 @@ private:
     }
 };
 
-#endif // BEENODE_UNORDERED_LRU_CACHE_H
+#endif // DASH_UNORDERED_LRU_CACHE_H

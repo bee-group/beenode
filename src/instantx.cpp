@@ -1,4 +1,4 @@
-// Copyright (c) 2020 The BeeGroup developers are EternityGroup
+// Copyright (c) 2014-2019 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -56,7 +56,7 @@ const std::string CInstantSend::SERIALIZATION_VERSION_STRING = "CInstantSend-Ver
 
 void CInstantSend::ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman)
 {
-    if (fLiteMode) return; // disable all Beenode specific functionality
+    if (fLiteMode) return; // disable all Dash specific functionality
     if (!llmq::IsOldInstantSendEnabled()) return;
 
     // NOTE: NetMsgType::TXLOCKREQUEST is handled via ProcessMessage() in net_processing.cpp
@@ -1123,7 +1123,7 @@ bool CTxLockVote::CheckSignature() const
 
     CBLSSignature sig;
     sig.SetBuf(vchMasternodeSignature);
-    if (!sig.IsValid() || !sig.VerifyInsecure(dmn->pdmnState->pubKeyOperator.Get(), hash)) {
+    if (!sig.IsValid() || !sig.VerifyInsecure(dmn->pdmnState->pubKeyOperator, hash)) {
         LogPrintf("CTxLockVote::CheckSignature -- VerifyInsecure() failed\n");
         return false;
     }

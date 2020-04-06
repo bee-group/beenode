@@ -229,8 +229,8 @@ public:
 
     bool Relay(CConnman& connman);
 
-    /// Check if a queue is too old or too far into the future
-    bool IsTimeOutOfBounds() const;
+    /// Is this queue expired?
+    bool IsExpired() { return GetAdjustedTime() - nTime > PRIVATESEND_QUEUE_TIMEOUT; }
 
     std::string ToString() const
     {

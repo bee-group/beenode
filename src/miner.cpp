@@ -197,7 +197,8 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
 
     // NOTE: unlike in bitcoin, we need to pass PREVIOUS block height here
     CAmount blockReward = nFees + GetBlockSubsidy(pindexPrev->nBits, pindexPrev->nHeight, Params().GetConsensus());
-	CAmount blockEvolution = GetBlockSubsidy( pindexPrev->nBits, pindexPrev->nHeight, Params().GetConsensus(), true );
+	CAmount blockEvolution = GetBlockSubsidy( pindexPrev->nBits, pindexPrev->nHeight, Params().GetConsensus(), true );		
+		
     // Compute regular coinbase transaction.
     coinbaseTx.vout[0].nValue = blockReward;
 

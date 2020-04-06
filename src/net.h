@@ -660,8 +660,6 @@ public:
     double dMinPing;
     std::string addrLocal;
     CAddress addr;
-    // In case this is a verified MN, this value is the proTx of the MN
-    uint256 verifiedProRegTxHash;
 };
 
 

@@ -266,8 +266,6 @@ libbeenode_server_a_SOURCES = \
   evo/evodb.cpp \
   evo/mnauth.cpp \
   evo/providertx.cpp \
-  evo/deterministicmns.cpp \
-  evo/cbtx.cpp \
   evo/simplifiedmns.cpp \
   evo/specialtx.cpp \
   httprpc.cpp \

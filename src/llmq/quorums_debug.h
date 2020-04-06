@@ -1,9 +1,9 @@
-// Copyright (c) 2018-2019 The Beenode Core developers
+// Copyright (c) 2018-2019 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BEENODE_QUORUMS_DEBUG_H
-#define BEENODE_QUORUMS_DEBUG_H
+#ifndef DASH_QUORUMS_DEBUG_H
+#define DASH_QUORUMS_DEBUG_H
 
 #include "consensus/params.h"
 #include "sync.h"
@@ -108,4 +108,4 @@ extern CDKGDebugManager* quorumDKGDebugManager;
 
 }
 
-#endif //BEENODE_QUORUMS_DEBUG_H
+#endif //DASH_QUORUMS_DEBUG_H

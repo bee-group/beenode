@@ -500,7 +500,7 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     std::vector<CTxOut> voutMasternodePayments;
     mnpayments.GetBlockTxOuts(chainActive.Height() + 1, 0, voutMasternodePayments);
 
-
+    // next bock is a superblock and we need governance info to correctly construct it
     static unsigned int nTransactionsUpdatedLast;
 
     if (!lpval.isNull())

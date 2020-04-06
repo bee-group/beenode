@@ -1,9 +1,9 @@
-// Copyright (c) 2018-2019 The Beenode Core developers
+// Copyright (c) 2018-2019 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BEENODE_QUORUMS_H
-#define BEENODE_QUORUMS_H
+#ifndef DASH_QUORUMS_H
+#define DASH_QUORUMS_H
 
 #include "evo/evodb.h"
 #include "evo/deterministicmns.h"
@@ -37,7 +37,7 @@ class CQuorum
 public:
     const Consensus::LLMQParams& params;
     CFinalCommitment qc;
-    const CBlockIndex* pindexQuorum;
+    int height;
     uint256 minedBlockHash;
     std::vector<CDeterministicMNCPtr> members;
 
@@ -55,7 +55,7 @@ private:
 public:
     CQuorum(const Consensus::LLMQParams& _params, CBLSWorker& _blsWorker) : params(_params), blsCache(_blsWorker), stopCachePopulatorThread(false) {}
     ~CQuorum();
-    void Init(const CFinalCommitment& _qc, const CBlockIndex* _pindexQuorum, const uint256& _minedBlockHash, const std::vector<CDeterministicMNCPtr>& _members);
+    void Init(const CFinalCommitment& _qc, int _height, const uint256& _minedBlockHash, const std::vector<CDeterministicMNCPtr>& _members);
 
     bool IsMember(const uint256& proTxHash) const;
     bool IsValidMember(const uint256& proTxHash) const;
@@ -118,4 +118,4 @@ extern CQuorumManager* quorumManager;
 
 }
 
-#endif //BEENODE_QUORUMS_H
+#endif //DASH_QUORUMS_H

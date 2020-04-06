@@ -35,9 +35,7 @@ MasternodeList::MasternodeList(const PlatformStyle* platformStyle, QWidget* pare
     clientModel(0),
     walletModel(0),
     fFilterUpdatedDIP3(true),
-    nTimeFilterUpdatedDIP3(0),
-    nTimeUpdatedDIP3(0),
-    mnListChanged(true)
+    nTimeFilterUpdatedDIP3(0)
 {
     ui->setupUi(this);
 
@@ -91,7 +89,7 @@ void MasternodeList::setClientModel(ClientModel* model)
     this->clientModel = model;
     if (model) {
         // try to update list when masternode count changes
-        connect(clientModel, SIGNAL(masternodeListChanged()), this, SLOT(handleMasternodeListChanged()));
+        connect(clientModel, SIGNAL(masternodeListChanged()), this, SLOT(updateDIP3ListForced()));
     }
 }
 
@@ -106,48 +104,37 @@ void MasternodeList::showContextMenuDIP3(const QPoint& point)
     if (item) contextMenuDIP3->exec(QCursor::pos());
 }
 
-void MasternodeList::handleMasternodeListChanged()
-{
-    LOCK(cs_dip3list);
-    mnListChanged = true;
-}
-
 void MasternodeList::updateDIP3ListScheduled()
 {
+    updateDIP3List(false);
+}
+
+void MasternodeList::updateDIP3ListForced()
+{
+    updateDIP3List(true);
+}
+
+void MasternodeList::updateDIP3List(bool fForce)
+{
+    if (!clientModel || ShutdownRequested()) {
+        return;
+    }
+
     TRY_LOCK(cs_dip3list, fLockAcquired);
     if (!fLockAcquired) return;
 
-    if (!clientModel || ShutdownRequested()) {
-        return;
-    }
-
     // To prevent high cpu usage update only once in MASTERNODELIST_FILTER_COOLDOWN_SECONDS seconds
     // after filter was last changed unless we want to force the update.
-    if (fFilterUpdatedDIP3) {
+    if (!fForce) {
+        if (!fFilterUpdatedDIP3) return;
+
         int64_t nSecondsToWait = nTimeFilterUpdatedDIP3 - GetTime() + MASTERNODELIST_FILTER_COOLDOWN_SECONDS;
         ui->countLabelDIP3->setText(QString::fromStdString(strprintf("Please wait... %d", nSecondsToWait)));
 
-        if (nSecondsToWait <= 0) {
-            updateDIP3List();
-            fFilterUpdatedDIP3 = false;
-        }
-    } else if (mnListChanged) {
-        int64_t nSecondsToWait = nTimeUpdatedDIP3 - GetTime() + MASTERNODELIST_UPDATE_SECONDS;
-
-        if (nSecondsToWait <= 0) {
-            updateDIP3List();
-            mnListChanged = false;
-        }
-    }
-}
-
-void MasternodeList::updateDIP3List()
-{
-    if (!clientModel || ShutdownRequested()) {
-        return;
+        if (nSecondsToWait > 0) return;
     }
 
-    LOCK(cs_dip3list);
+    fFilterUpdatedDIP3 = false;
 
     QString strToFilter;
     ui->countLabelDIP3->setText("Updating...");
@@ -156,8 +143,6 @@ void MasternodeList::updateDIP3List()
     ui->tableWidgetMasternodesDIP3->setRowCount(0);
 
     auto mnList = clientModel->getMasternodeList();
-    nTimeUpdatedDIP3 = GetTime();
-
     auto projectedPayees = mnList.GetProjectedMNPayees(mnList.GetValidMNsCount());
     std::map<uint256, int> nextPayments;
     for (size_t i = 0; i < projectedPayees.size(); i++) {

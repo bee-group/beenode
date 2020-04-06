@@ -10,8 +10,10 @@
 #include "utilstrencodings.h"
 #include "key.h"
 #include "primitives/transaction.h"
+
 #include <unordered_map>
 #include <unordered_set>
+
 class CSporkMessage;
 class CSporkManager;
 class CEvolutionManager;
@@ -24,22 +26,19 @@ class CEvolutionManager;
 static const int SPORK_2_INSTANTSEND_ENABLED                            = 10001;
 static const int SPORK_3_INSTANTSEND_BLOCK_FILTERING                    = 10002;
 static const int SPORK_5_INSTANTSEND_MAX_VALUE                          = 10004;
-static const int SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT                 = 10007;
-static const int SPORK_10_MASTERNODE_PAY_UPDATED_NODES                  = 10009;
 static const int SPORK_12_RECONSIDER_BLOCKS                             = 10011;
 static const int SPORK_15_DETERMINISTIC_MNS_ENABLED                     = 10014;
 static const int SPORK_16_INSTANTSEND_AUTOLOCKS                         = 10015;
 static const int SPORK_17_QUORUM_DKG_ENABLED                            = 10016;
-static const int SPORK_18_EVOLUTION_PAYMENTS							= 10017;
-static const int SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT				= 10018;
 static const int SPORK_19_CHAINLOCKS_ENABLED                            = 10021;
 static const int SPORK_20_INSTANTSEND_LLMQ_BASED                        = 10022;
+static const int SPORK_18_EVOLUTION_PAYMENTS							= 10017;
+static const int SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT				= 10018;
 static const int SPORK_21_MASTERNODE_ORDER_ENABLE			        	= 10020;
 static const int SPORK_24_DETERMIN_UPDATE			        	        = 10023;
-static const int SPORK_25_DETERMIN14_UPDATE			        	        = 10024;
 
 static const int SPORK_START                                            = SPORK_2_INSTANTSEND_ENABLED;
-static const int SPORK_END                                              = SPORK_25_DETERMIN14_UPDATE;
+static const int SPORK_END                                              = SPORK_24_DETERMIN_UPDATE;
 
 extern std::map<int, int64_t> mapSporkDefaults;
 extern CSporkManager sporkManager;
@@ -98,6 +97,9 @@ public:
         READWRITE(nTimeSigned);
 		READWRITE(sWEvolution);
 		READWRITE(vchSig);
+       /* if (!(s.GetType() & SER_GETHASH)) {
+            READWRITE(vchSig);
+        }*/
     }
 
     /**
@@ -150,8 +152,8 @@ private:
 
     mutable CCriticalSection cs;
     std::unordered_map<uint256, CSporkMessage> mapSporksByHash;
-    std::map<int, uint256> mapSporkHashesByID;
     std::unordered_map<int, std::map<CKeyID, CSporkMessage> > mapSporksActive;
+    std::map<int, uint256> mapSporkHashesByID;
 
     std::set<CKeyID> setSporkPubKeyIDs;
     int nMinSporkKeys;
@@ -228,18 +230,11 @@ public:
      */
     bool UpdateSpork(int nSporkID, int64_t nValue,std::string sEvol,  CConnman& connman);
 	
-
-    /**
-     * IsSporkActive returns a bool for time-based sporks, and should be used
-     * to determine whether the spork can be considered active or not.
-     *
-     * For value-based sporks such as SPORK_5_INSTANTSEND_MAX_VALUE, the spork
-     * value should not be considered a timestamp, but an integer value
-     * instead, and therefore this method doesn't make sense and should not be
-     * used.
-     */
-    bool IsSporkActive(int nSporkID);
+	void setActiveSpork( CSporkMessage &spork );
 	int64_t getActiveSporkValue( int nSporkID,CSporkMessage& spork  );
+	bool isActiveSporkInMap(int nSporkID);
+	
+    bool IsSporkActive(int nSporkID);
 
     /**
      * GetSporkValue returns the spork value given a Spork ID. If no active spork

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The Beenode Core developers
+// Copyright (c) 2019 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -72,7 +72,7 @@ void CMNAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataS
         }
 
         auto mnList = deterministicMNManager->GetListAtChainTip();
-        auto dmn = mnList.GetMN(mnauth.proRegTxHash);
+        auto dmn = mnList.GetValidMN(mnauth.proRegTxHash);
         if (!dmn) {
             LOCK(cs_main);
             // in case he was unlucky and not up to date, just let him be connected as a regular node, which gives him
@@ -89,7 +89,7 @@ void CMNAuth::ProcessMessage(CNode* pnode, const std::string& strCommand, CDataS
             signHash = ::SerializeHash(std::make_tuple(dmn->pdmnState->pubKeyOperator, pnode->sentMNAuthChallenge, !pnode->fInbound));
         }
 
-        if (!mnauth.sig.VerifyInsecure(dmn->pdmnState->pubKeyOperator.Get(), signHash)) {
+        if (!mnauth.sig.VerifyInsecure(dmn->pdmnState->pubKeyOperator, signHash)) {
             LOCK(cs_main);
             // Same as above, MN seems to not know about his fate yet, so give him a chance to update. If this is a
             // malicious actor (DoSing us), we'll ban him soon.
@@ -127,17 +127,13 @@ void CMNAuth::NotifyMasternodeListChanged(bool undo, const CDeterministicMNList&
         if (pnode->verifiedProRegTxHash.IsNull()) {
             return;
         }
-        auto verifiedDmn = oldMNList.GetMN(pnode->verifiedProRegTxHash);
-        if (!verifiedDmn) {
-            return;
-        }
         bool doRemove = false;
-        if (diff.removedMns.count(verifiedDmn->internalId)) {
+        if (diff.removedMns.count(pnode->verifiedProRegTxHash)) {
             doRemove = true;
         } else {
-            auto it = diff.updatedMNs.find(verifiedDmn->internalId);
+            auto it = diff.updatedMNs.find(pnode->verifiedProRegTxHash);
             if (it != diff.updatedMNs.end()) {
-                if ((it->second.fields & CDeterministicMNStateDiff::Field_pubKeyOperator) && it->second.state.pubKeyOperator.GetHash() != pnode->verifiedPubKeyHash) {
+                if (it->second->pubKeyOperator.GetHash() != pnode->verifiedPubKeyHash) {
                     doRemove = true;
                 }
             }

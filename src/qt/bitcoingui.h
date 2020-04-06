@@ -19,10 +19,6 @@
 #include <QPushButton>
 #include <QSystemTrayIcon>
 
-#ifdef Q_OS_MAC
-#include <qt/macos_appnap.h>
-#endif
-
 class ClientModel;
 class NetworkStyle;
 class Notificator;
@@ -136,10 +132,6 @@ private:
     RPCConsole *rpcConsole;
     HelpMessageDialog *helpMessageDialog;
     ModalOverlay *modalOverlay;
-
-#ifdef Q_OS_MAC
-    CAppNapInhibitor* m_app_nap_inhibitor = nullptr;
-#endif
 
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;

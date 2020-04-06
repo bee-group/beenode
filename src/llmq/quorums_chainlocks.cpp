@@ -1,4 +1,4 @@
-// Copyright (c) 2019 The Beenode Core developers
+// Copyright (c) 2019 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -347,21 +347,13 @@ void CChainLocksHandler::TrySignChainTip()
 
 void CChainLocksHandler::SyncTransaction(const CTransaction& tx, const CBlockIndex* pindex, int posInBlock)
 {
+    if (!masternodeSync.IsBlockchainSynced()) {
+        return;
+    }
+
     bool handleTx = true;
     if (tx.IsCoinBase() || tx.vin.empty()) {
         handleTx = false;
-    }
-
-    if (!masternodeSync.IsBlockchainSynced()) {
-        if (handleTx && posInBlock == CMainSignals::SYNC_TRANSACTION_NOT_IN_BLOCK) {
-            auto info = mempool.info(tx.GetHash());
-            if (!info.tx) {
-                return;
-            }
-            LOCK(cs);
-            txFirstSeenTime.emplace(tx.GetHash(), info.nTime);
-        }
-        return;
     }
 
     LOCK(cs);
@@ -559,7 +551,7 @@ void CChainLocksHandler::HandleNewRecoveredSig(const llmq::CRecoveredSig& recove
 
         clsig.nHeight = lastSignedHeight;
         clsig.blockHash = lastSignedMsgHash;
-        clsig.sig = recoveredSig.sig.Get();
+        clsig.sig = recoveredSig.sig.GetSig();
     }
     ProcessNewChainLock(-1, clsig, ::SerializeHash(clsig));
 }

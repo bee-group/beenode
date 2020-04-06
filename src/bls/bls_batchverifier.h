@@ -1,9 +1,9 @@
-// Copyright (c) 2018-2019 The Beenode Core developers
+// Copyright (c) 2018-2019 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BEENODE_CRYPTO_BLS_BATCHVERIFIER_H
-#define BEENODE_CRYPTO_BLS_BATCHVERIFIER_H
+#ifndef DASH_CRYPTO_BLS_BATCHVERIFIER_H
+#define DASH_CRYPTO_BLS_BATCHVERIFIER_H
 
 #include "bls.h"
 
@@ -232,4 +232,4 @@ private:
     }
 };
 
-#endif //BEENODE_CRYPTO_BLS_BATCHVERIFIER_H
+#endif //DASH_CRYPTO_BLS_BATCHVERIFIER_H

@@ -92,7 +92,7 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     }
     
     /* Theme selector */
-    ui->theme->addItem(QString("BEENODE-dark"), QVariant("drkblue"));
+    ui->theme->addItem(QString("BEENODE-blue"), QVariant("drkblue"));
     ui->theme->addItem(QString("BEENODE-traditional"), QVariant("trad"));
     
     /* Language selector */

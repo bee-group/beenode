@@ -18,22 +18,19 @@ CSporkManager sporkManager;
 const std::string CSporkManager::SERIALIZATION_VERSION_STRING = "CSporkManager-Version-2";
 
 std::map<int, int64_t> mapSporkDefaults = {
-    {SPORK_2_INSTANTSEND_ENABLED,            0},             // ON
-    {SPORK_3_INSTANTSEND_BLOCK_FILTERING,    0},             // ON
-    {SPORK_5_INSTANTSEND_MAX_VALUE,          1000},          // 1000 Beenode
-    {SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT, 4070908800ULL}, // OFF
-    {SPORK_10_MASTERNODE_PAY_UPDATED_NODES,  4070908800ULL}, // OFF
-    {SPORK_12_RECONSIDER_BLOCKS,             0},             // 0 BLOCKS
+    {SPORK_2_INSTANTSEND_ENABLED,            	0},             // ON
+    {SPORK_3_INSTANTSEND_BLOCK_FILTERING,    	0},             // ON
+    {SPORK_5_INSTANTSEND_MAX_VALUE,          	1000},          // 1000 Beenode
+    {SPORK_12_RECONSIDER_BLOCKS,             	0},             // 0 BLOCKS
     {SPORK_15_DETERMINISTIC_MNS_ENABLED,     4070908800ULL}, // OFF
     {SPORK_16_INSTANTSEND_AUTOLOCKS,         4070908800ULL}, // OFF
     {SPORK_17_QUORUM_DKG_ENABLED,            4070908800ULL}, // OFF
-    {SPORK_18_EVOLUTION_PAYMENTS,         		0}, // OFF
-    {SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT, 	0x7FFFFFFF}, // OFF
     {SPORK_19_CHAINLOCKS_ENABLED,            4070908800ULL}, // OFF
     {SPORK_20_INSTANTSEND_LLMQ_BASED,        4070908800ULL}, // OFF
+    {SPORK_18_EVOLUTION_PAYMENTS,         		0}, // OFF
+    {SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT, 	0x7FFFFFFF}, // OFF
     {SPORK_21_MASTERNODE_ORDER_ENABLE, 	         1569654200ULL}, // ON
     {SPORK_24_DETERMIN_UPDATE, 	         4070908800ULL}, // OFF
-    {SPORK_25_DETERMIN14_UPDATE, 	          1569654200ULL}, // OFF
 };
 CEvolutionManager evolutionManager;
 CCriticalSection cs_mapEvolution;
@@ -243,21 +240,56 @@ bool CSporkManager::UpdateSpork(int nSporkID, int64_t nValue, std::string sEvol,
             LogPrintf("CSporkManager::UpdateSpork: failed to find keyid for private key\n");
             return false;
         }
-
         {
-	        LOCK(cs);
-	        mapSporksByHash[spork.GetHash()] = spork;
-	        mapSporksActive[nSporkID][keyIDSigner] = spork;
+            LOCK(cs);
+            mapSporksByHash[spork.GetHash()] = spork;
+            mapSporksActive[nSporkID][keyIDSigner] = spork;
 	       	if(nSporkID == SPORK_18_EVOLUTION_PAYMENTS){
 				evolutionManager.setNewEvolutions( sEvol );
-			}
-		}	
+			}	
+        }
         spork.Relay(connman);
         return true;
     }
 
     return false;
 }
+void CSporkManager::setActiveSpork( CSporkMessage &spork )
+{
+	LOCK( cs_mapActive );
+    CKeyID keyIDSigner;
+    
+    if (!spork.GetSignerKeyID(keyIDSigner) || !setSporkPubKeyIDs.count(keyIDSigner)) {
+        LogPrintf("CSporkManager::setActiveSpork: failed to find keyid for private key\n");
+        return;
+    }
+	mapSporksActive[spork.nSporkID][keyIDSigner] = spork;
+}
+
+int64_t CSporkManager::getActiveSporkValue( int nSporkID,CSporkMessage& spork )
+{
+	int64_t r = -1;
+	
+	LOCK( cs_mapActive );
+    
+    
+    CKeyID keyIDSigner;
+        if (!spork.GetSignerKeyID(keyIDSigner) || !setSporkPubKeyIDs.count(keyIDSigner)) {
+            LogPrintf("CSporkManager::getActiveSporkValue: failed to find keyid for private key\n");
+            return -1;
+        }
+	
+    if( mapSporksActive.count(nSporkID) ) r = mapSporksActive[spork.nSporkID][keyIDSigner].nValue;
+	
+	return r;
+}
+
+bool CSporkManager::isActiveSporkInMap(int nSporkID)
+{
+	LOCK( cs_mapActive );	
+	return mapSporksActive.count(nSporkID);
+}
+
 
 // grab the spork, otherwise say it's off
 bool CSporkManager::IsSporkActive(int nSporkID)
@@ -291,24 +323,6 @@ bool CSporkManager::IsSporkWorkActive(int nSporkID)
     }
     return r > 0;
 }
-int64_t CSporkManager::getActiveSporkValue( int nSporkID,CSporkMessage& spork )
-{
-	int64_t r = -1;
-	
-	LOCK( cs_mapActive );
-    
-    
-    CKeyID keyIDSigner;
-        if (!spork.GetSignerKeyID(keyIDSigner) || !setSporkPubKeyIDs.count(keyIDSigner)) {
-            LogPrintf("CSporkManager::getActiveSporkValue: failed to find keyid for private key\n");
-            return -1;
-        }
-	
-    if( mapSporksActive.count(nSporkID) ) r = mapSporksActive[spork.nSporkID][keyIDSigner].nValue;
-	
-	return r;
-}
-
 // grab the value of the spork on the network, or the default
 int64_t CSporkManager::GetSporkValue(int nSporkID)
 {
@@ -332,20 +346,16 @@ int CSporkManager::GetSporkIDByName(const std::string& strName)
     if (strName == "SPORK_2_INSTANTSEND_ENABLED")               return SPORK_2_INSTANTSEND_ENABLED;
     if (strName == "SPORK_3_INSTANTSEND_BLOCK_FILTERING")       return SPORK_3_INSTANTSEND_BLOCK_FILTERING;
     if (strName == "SPORK_5_INSTANTSEND_MAX_VALUE")             return SPORK_5_INSTANTSEND_MAX_VALUE;
-    if (strName == "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT")    return SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT;
-    if (strName == "SPORK_10_MASTERNODE_PAY_UPDATED_NODES")     return SPORK_10_MASTERNODE_PAY_UPDATED_NODES;
     if (strName == "SPORK_12_RECONSIDER_BLOCKS")                return SPORK_12_RECONSIDER_BLOCKS;
     if (strName == "SPORK_15_DETERMINISTIC_MNS_ENABLED")        return SPORK_15_DETERMINISTIC_MNS_ENABLED;
     if (strName == "SPORK_16_INSTANTSEND_AUTOLOCKS")            return SPORK_16_INSTANTSEND_AUTOLOCKS;
     if (strName == "SPORK_17_QUORUM_DKG_ENABLED")               return SPORK_17_QUORUM_DKG_ENABLED;
-    if (strName == "SPORK_18_EVOLUTION_PAYMENTS")            	return SPORK_18_EVOLUTION_PAYMENTS;
-    if (strName == "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT")	return SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT;
     if (strName == "SPORK_19_CHAINLOCKS_ENABLED")               return SPORK_19_CHAINLOCKS_ENABLED;
     if (strName == "SPORK_20_INSTANTSEND_LLMQ_BASED")           return SPORK_20_INSTANTSEND_LLMQ_BASED;
+    if (strName == "SPORK_18_EVOLUTION_PAYMENTS")            	return SPORK_18_EVOLUTION_PAYMENTS;
+    if (strName == "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT")	return SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT;
     if (strName == "SPORK_21_MASTERNODE_ORDER_ENABLE")			return SPORK_21_MASTERNODE_ORDER_ENABLE;
     if (strName == "SPORK_24_DETERMIN_UPDATE")	                return SPORK_24_DETERMIN_UPDATE;
-    if (strName == "SPORK_25_DETERMIN14_UPDATE")	            return SPORK_25_DETERMIN14_UPDATE;
-
 
     LogPrint("spork", "CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
     return -1;
@@ -357,19 +367,16 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_2_INSTANTSEND_ENABLED:               return "SPORK_2_INSTANTSEND_ENABLED";
         case SPORK_3_INSTANTSEND_BLOCK_FILTERING:       return "SPORK_3_INSTANTSEND_BLOCK_FILTERING";
         case SPORK_5_INSTANTSEND_MAX_VALUE:             return "SPORK_5_INSTANTSEND_MAX_VALUE";
-        case SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT:    return "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT";
-        case SPORK_10_MASTERNODE_PAY_UPDATED_NODES:     return "SPORK_10_MASTERNODE_PAY_UPDATED_NODES";
         case SPORK_12_RECONSIDER_BLOCKS:                return "SPORK_12_RECONSIDER_BLOCKS";
         case SPORK_15_DETERMINISTIC_MNS_ENABLED:        return "SPORK_15_DETERMINISTIC_MNS_ENABLED";
         case SPORK_16_INSTANTSEND_AUTOLOCKS:            return "SPORK_16_INSTANTSEND_AUTOLOCKS";
         case SPORK_17_QUORUM_DKG_ENABLED:               return "SPORK_17_QUORUM_DKG_ENABLED";
-        case SPORK_18_EVOLUTION_PAYMENTS:            	return "SPORK_18_EVOLUTION_PAYMENTS";
-        case SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT: 	return "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT";
         case SPORK_19_CHAINLOCKS_ENABLED:               return "SPORK_19_CHAINLOCKS_ENABLED";
         case SPORK_20_INSTANTSEND_LLMQ_BASED:           return "SPORK_20_INSTANTSEND_LLMQ_BASED";
+        case SPORK_18_EVOLUTION_PAYMENTS:            	return "SPORK_18_EVOLUTION_PAYMENTS";
+        case SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT: 	return "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT";
         case SPORK_21_MASTERNODE_ORDER_ENABLE: 	        return "SPORK_21_MASTERNODE_ORDER_ENABLE";
         case SPORK_24_DETERMIN_UPDATE: 	                return "SPORK_24_DETERMIN_UPDATE";
-        case SPORK_25_DETERMIN14_UPDATE: 	            return "SPORK_25_DETERMIN14_UPDATE";
         default:
             LogPrint("spork", "CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);
             return "Unknown";

@@ -1,9 +1,9 @@
-// Copyright (c) 2018-2019 The Beenode Core developers
+// Copyright (c) 2018-2019 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BEENODE_QUORUMS_DKGSESSION_H
-#define BEENODE_QUORUMS_DKGSESSION_H
+#ifndef DASH_QUORUMS_DKGSESSION_H
+#define DASH_QUORUMS_DKGSESSION_H
 
 #include "consensus/params.h"
 #include "net.h"
@@ -249,7 +249,8 @@ private:
     CBLSWorkerCache cache;
     CDKGSessionManager& dkgManager;
 
-    const CBlockIndex* pindexQuorum;
+    uint256 quorumHash;
+    int height{-1};
 
 private:
     std::vector<std::unique_ptr<CDKGMember>> members;
@@ -286,7 +287,7 @@ public:
     CDKGSession(const Consensus::LLMQParams& _params, CBLSWorker& _blsWorker, CDKGSessionManager& _dkgManager) :
         params(_params), blsWorker(_blsWorker), cache(_blsWorker), dkgManager(_dkgManager) {}
 
-    bool Init(const CBlockIndex* pindexQuorum, const std::vector<CDeterministicMNCPtr>& mns, const uint256& _myProTxHash);
+    bool Init(int _height, const uint256& _quorumHash, const std::vector<CDeterministicMNCPtr>& mns, const uint256& _myProTxHash);
 
     size_t GetMyMemberIndex() const { return myIdx; }
 
@@ -344,4 +345,4 @@ void SetSimulatedDKGErrorRate(const std::string& type, double rate);
 
 }
 
-#endif //BEENODE_QUORUMS_DKGSESSION_H
+#endif //DASH_QUORUMS_DKGSESSION_H

@@ -1,9 +1,9 @@
-// Copyright (c) 2018-2019 The Beenode Core developers
+// Copyright (c) 2018-2019 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BEENODE_QUORUMS_DKGSESSIONHANDLER_H
-#define BEENODE_QUORUMS_DKGSESSIONHANDLER_H
+#ifndef DASH_QUORUMS_DKGSESSIONHANDLER_H
+#define DASH_QUORUMS_DKGSESSIONHANDLER_H
 
 #include "llmq/quorums_dkgsession.h"
 
@@ -125,7 +125,7 @@ public:
     void ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStream& vRecv, CConnman& connman);
 
 private:
-    bool InitNewQuorum(const CBlockIndex* pindexQuorum);
+    bool InitNewQuorum(int newQuorumHeight, const uint256& newQuorumHash);
 
     std::pair<QuorumPhase, uint256> GetPhaseAndQuorumHash() const;
 
@@ -141,4 +141,4 @@ private:
 
 }
 
-#endif //BEENODE_QUORUMS_DKGSESSIONHANDLER_H
+#endif //DASH_QUORUMS_DKGSESSIONHANDLER_H

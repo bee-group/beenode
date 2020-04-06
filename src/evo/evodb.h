@@ -9,9 +9,7 @@
 #include "sync.h"
 #include "uint256.h"
 
-// "b_b" was used in the initial version of deterministic MN storage
-// "b_b2" was used after compact diffs were introduced
-static const std::string EVODB_BEST_BLOCK = "b_b2";
+static const std::string EVODB_BEST_BLOCK = "b_b";
 
 class CEvoDB
 {
@@ -73,11 +71,6 @@ public:
     CDBWrapper& GetRawDB()
     {
         return db;
-    }
-
-    size_t GetMemoryUsage()
-    {
-        return rootDBTransaction.GetMemoryUsage();
     }
 
     bool CommitRootTransaction();

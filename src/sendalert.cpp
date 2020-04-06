@@ -60,7 +60,7 @@ void ThreadSendAlert(CConnman& connman)
     alert.strStatusBar  = "URGENT: Upgrade required: see https://www.beenode.org";
 
     // Set specific client version/versions here. If setSubVer is empty, no filtering on subver is done:
-    // alert.setSubVer.insert(std::string("/Beenode Core:0.7.1.1/"));
+    // alert.setSubVer.insert(std::string("/Beenode Core:0.8.1.2/"));
 
     // Sign
     if(!alert.Sign())

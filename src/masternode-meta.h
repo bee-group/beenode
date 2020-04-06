@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2019 The Beenode Core developers
+// Copyright (c) 2014-2019 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -100,11 +100,7 @@ public:
 
         std::string strVersion;
         if(ser_action.ForRead()) {
-            Clear();
             READWRITE(strVersion);
-            if (strVersion != SERIALIZATION_VERSION_STRING) {
-                return;
-            }
         }
         else {
             strVersion = SERIALIZATION_VERSION_STRING;
@@ -126,6 +122,10 @@ public:
         }
 
         READWRITE(nDsqCount);
+
+        if(ser_action.ForRead() && (strVersion != SERIALIZATION_VERSION_STRING)) {
+            Clear();
+        }
     }
 
 public:

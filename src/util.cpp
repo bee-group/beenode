@@ -287,7 +287,6 @@ bool LogAcceptCategory(const char* category)
                 // "beenode" is a composite category enabling all Beenode-related debug output
                 if(ptrCategory->count(std::string("beenode"))) {
                     ptrCategory->insert(std::string("chainlocks"));
-                    ptrCategory->insert(std::string("gobject"));
                     ptrCategory->insert(std::string("instantsend"));
                     ptrCategory->insert(std::string("keepass"));
                     ptrCategory->insert(std::string("llmq"));

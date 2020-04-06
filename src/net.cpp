@@ -691,11 +691,6 @@ void CNode::copyStats(CNodeStats &stats)
     // Leave string empty if addrLocal invalid (not filled in yet)
     CService addrLocalUnlocked = GetAddrLocal();
     stats.addrLocal = addrLocalUnlocked.IsValid() ? addrLocalUnlocked.ToString() : "";
-
-    {
-        LOCK(cs_mnauth);
-        X(verifiedProRegTxHash);
-    }
 }
 #undef X
 
@@ -1892,7 +1887,7 @@ void CConnman::ThreadOpenConnections()
         {
             CAddrInfo addr = addrman.Select(fFeeler);
 
-            bool isMasternode = mnList.GetMNByService(addr) != nullptr;
+            bool isMasternode = mnList.GetValidMNByService(addr) != nullptr;
 
             // if we selected an invalid address, restart
             if (!addr.IsValid() || setConnected.count(addr.GetGroup()))
@@ -2075,8 +2070,6 @@ void CConnman::ThreadOpenMasternodeConnections()
         if (interruptNet)
             return;
 
-        int64_t nANow = GetAdjustedTime();
-
         // NOTE: Process only one pending masternode at a time
 
         CService addr;
@@ -2086,17 +2079,12 @@ void CConnman::ThreadOpenMasternodeConnections()
             std::vector<CService> pending;
             for (const auto& group : masternodeQuorumNodes) {
                 for (const auto& proRegTxHash : group.second) {
-                    auto dmn = mnList.GetMN(proRegTxHash);
+                    auto dmn = mnList.GetValidMN(proRegTxHash);
                     if (!dmn) {
                         continue;
                     }
                     const auto& addr2 = dmn->pdmnState->addr;
                     if (!connectedNodes.count(addr2) && !IsMasternodeOrDisconnectRequested(addr2) && !connectedProRegTxHashes.count(proRegTxHash)) {
-                        auto addrInfo = addrman.GetAddressInfo(addr2);
-                        // back off trying connecting to an address if we already tried recently
-                        if (addrInfo.IsValid() && nANow - addrInfo.nLastTry < 60) {
-                            continue;
-                        }
                         pending.emplace_back(addr2);
                     }
                 }
@@ -2809,7 +2797,7 @@ bool CConnman::IsMasternodeQuorumNode(const CNode* pnode)
     uint256 assumedProTxHash;
     if (pnode->verifiedProRegTxHash.IsNull() && !pnode->fInbound) {
         auto mnList = deterministicMNManager->GetListAtChainTip();
-        auto dmn = mnList.GetMNByService(pnode->addr);
+        auto dmn = mnList.GetValidMNByService(pnode->addr);
         if (dmn == nullptr) {
             // This is definitely not a masternode
             return false;

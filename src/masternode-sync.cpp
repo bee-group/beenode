@@ -62,10 +62,9 @@ void CMasternodeSync::SwitchToNextAsset(CConnman& connman)
             break;
         case(MASTERNODE_SYNC_WAITING):
             LogPrintf("CMasternodeSync::SwitchToNextAsset -- Completed %s in %llds\n", GetAssetName(), GetTime() - nTimeAssetSyncStarted);
-            nCurrentAsset = MASTERNODE_SYNC_FINISHED;
+            nCurrentAsset = MASTERNODE_SYNC_FINISHED;;
             LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
             uiInterface.NotifyAdditionalDataSyncProgressChanged(1);
-
             connman.ForEachNode(CConnman::AllNodes, [](CNode* pnode) {
                 netfulfilledman.AddFulfilledRequest(pnode->addr, "full-sync");
             });
@@ -166,6 +165,9 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
             if (nCurrentAsset == MASTERNODE_SYNC_WAITING) {
                 connman.PushMessage(pnode, msgMaker.Make(NetMsgType::GETSPORKS)); //get current network sporks
                 SwitchToNextAsset(connman);
+            } else {
+                nCurrentAsset = MASTERNODE_SYNC_FINISHED;
+                SwitchToNextAsset(connman);
             }
             connman.ReleaseNodeVector(vNodesCopy);
             return;
@@ -206,8 +208,6 @@ void CMasternodeSync::ProcessTick(CConnman& connman)
                     SwitchToNextAsset(connman);
                 }
             }
-
-
         }
     }
     // looped through all nodes, release them

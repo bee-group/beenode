@@ -1,9 +1,9 @@
-// Copyright (c) 2019 The Beenode Core developers
+// Copyright (c) 2019 The Dash Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef BEENODE_MNAUTH_H
-#define BEENODE_MNAUTH_H
+#ifndef DASH_MNAUTH_H
+#define DASH_MNAUTH_H
 
 #include "bls/bls.h"
 #include "serialize.h"
@@ -55,4 +55,4 @@ public:
 };
 
 
-#endif //BEENODE_MNAUTH_H
+#endif //DASH_MNAUTH_H

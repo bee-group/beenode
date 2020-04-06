@@ -10,7 +10,7 @@
 #include "chainparams.h"
 #include "primitives/block.h"
 #include "uint256.h"
-#include "spork.h"
+
 #include <math.h>
 
 unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params) {
@@ -77,70 +77,52 @@ unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const CBlockH
 
     return bnNew.GetCompact();
 }
-unsigned int Lwma3CalculateNextWorkRequired(const CBlockIndex* pindexLast, const Consensus::Params& params)
+
+unsigned int GetNextWorkRequiredBTC(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-    const int64_t T = params.nPowTargetSpacing;
+    assert(pindexLast != NULL);
+    unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
 
-   // For T=600, 300, 150 use approximately N=60, 90, 120
-    const int64_t N = 96;//params.lwmaAveragingWindow;
-
-    // Define a k that will be used to get a proper average after weighting the solvetimes.
-    const int64_t k = N * (N + 1) * T / 2;
-
-    const int64_t height = pindexLast->nHeight;
-    const arith_uint256 powLimit = UintToArith256(params.powLimit);
-
-   // New coins should just give away first N blocks before using this algorithm.
-    if (height < N) { return powLimit.GetCompact(); }
-
-    arith_uint256 avgTarget, nextTarget;
-    int64_t thisTimestamp, previousTimestamp;
-    int64_t sumWeightedSolvetimes = 0, j = 0;
-
-    const CBlockIndex* blockPreviousTimestamp = pindexLast->GetAncestor(height - N);
-    previousTimestamp = blockPreviousTimestamp->GetBlockTime();
-
-    // Loop through N most recent blocks.
-    for (int64_t i = height - N + 1; i <= height; i++) {
-        const CBlockIndex* block = pindexLast->GetAncestor(i);
-
-        // Prevent solvetimes from being negative in a safe way. It must be done like this.
-        // In particular, do not attempt anything like  if(solvetime < 0) {solvetime=0;}
-        // The +1 ensures new coins do not calculate nextTarget = 0.
-        thisTimestamp = (block->GetBlockTime() > previousTimestamp) ?
-                            block->GetBlockTime() : previousTimestamp + 1;
-
-       // A 6*T limit will prevent large drops in difficulty from long solvetimes.
-        int64_t solvetime = std::min(6 * T, thisTimestamp - previousTimestamp);
-
-       // The following is part of "preventing negative solvetimes".
-        previousTimestamp = thisTimestamp;
-
-       // Give linearly higher weight to more recent solvetimes.
-        j++;
-        sumWeightedSolvetimes += solvetime * j;
-
-        arith_uint256 target;
-        target.SetCompact(block->nBits);
-        avgTarget += target / N / k; // Dividing by k here prevents an overflow below.
+    // Only change once per interval
+    if ((pindexLast->nHeight+1) % params.DifficultyAdjustmentInterval() != 0)
+    {
+        if (params.fPowAllowMinDifficultyBlocks)
+        {
+            // Special difficulty rule for testnet:
+            // If the new block's timestamp is more than 2* 2.5 minutes
+            // then allow mining of a min-difficulty block.
+            if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*2)
+                return nProofOfWorkLimit;
+            else
+            {
+                // Return the last non-special-min-difficulty-rules-block
+                const CBlockIndex* pindex = pindexLast;
+                while (pindex->pprev && pindex->nHeight % params.DifficultyAdjustmentInterval() != 0 && pindex->nBits == nProofOfWorkLimit)
+                    pindex = pindex->pprev;
+                return pindex->nBits;
+            }
+        }
+        return pindexLast->nBits;
     }
-   // Desired equation in next line was nextTarget = avgTarget * sumWeightSolvetimes / k
-   // but 1/k was moved to line above to prevent overflow in new coins
 
-    nextTarget = avgTarget * sumWeightedSolvetimes;
+    // Go back by what we want to be 1 day worth of blocks
+    int nHeightFirst = pindexLast->nHeight - (params.DifficultyAdjustmentInterval()-1);
+    assert(nHeightFirst >= 0);
+    const CBlockIndex* pindexFirst = pindexLast->GetAncestor(nHeightFirst);
+    assert(pindexFirst);
 
-    if (nextTarget > powLimit) { nextTarget = powLimit; }
-
-    return nextTarget.GetCompact();
+   return CalculateNextWorkRequired(pindexLast, pindexFirst->GetBlockTime(), params);
 }
+
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
-	// this is only active on devnets
+    // this is only active on devnets
     if (pindexLast->nHeight < params.nMinimumDifficultyBlocks) {
         unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
         return nProofOfWorkLimit;
     }
-    return DarkGravityWave(pindexLast, pblock, params);
+        return DarkGravityWave(pindexLast, pblock, params);
+
 }
 
 // for DIFF_BTC only!
