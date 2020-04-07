@@ -116,13 +116,6 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
 								nBlockHeight, block.vtx[0]->GetValueOut(), blockReward);
 	}
 	
-    if(!masternodeSync.IsSynced() || fLiteMode) {
-        if(fDebug) LogPrintf("%s -- WARNING: Not enough data, checked superblock max bounds only\n", __func__);
-        // not enough data for full checks but at least we know that the superblock limits were honored.
-        // We rely on the network to have followed the correct chain in this case
-        return true;
-    }
-	
     // it MUST be a regular block
     if(!sporkManager.IsSporkActive(SPORK_24_DETERMIN_UPDATE))
         return isBlockRewardValueMet;
@@ -137,6 +130,12 @@ bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount bloc
         if(fDebug) LogPrintf("%s -- WARNING: Not enough data, skipping block payee checks\n", __func__);
         return true;
     }
+
+    // we are still using budgets, but we have no data about them anymore,
+    // we can only check masternode payments
+
+    const Consensus::Params& consensusParams = Params().GetConsensus();
+
     // Check for correct masternode payment
     if(mnpayments.IsTransactionValid(txNew, nBlockHeight, blockReward)) {
         LogPrint("mnpayments", "%s -- Valid masternode payment at height %d: %s", __func__, nBlockHeight, txNew.ToString());
@@ -153,7 +152,6 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
 	if(  sporkManager.IsSporkWorkActive(SPORK_18_EVOLUTION_PAYMENTS) ){	
 		CMasternodePayments::CreateEvolution(  txNew, nBlockHeight, blockEvolution, voutSuperblockPaymentsRet  );
     }		
-	
 
     if (!mnpayments.GetMasternodeTxOuts(nBlockHeight, blockReward, voutMasternodePaymentsRet)) {
         LogPrint("mnpayments", "%s -- no masternode to pay (MN list probably empty)\n", __func__);
@@ -296,23 +294,17 @@ bool CMasternodePayments::IsScheduled(const CDeterministicMNCPtr& dmnIn, int nNo
 
 bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, int nBlockHeight, CAmount blockReward) const
 {
-    if (!deterministicMNManager->IsDIP3Enforced(nBlockHeight) ) {
+    if (!deterministicMNManager->IsDIP3Enforced(nBlockHeight)) {
         // can't verify historical blocks here
         return true;
     }
-    
-    if (!masternodeSync.IsBlockchainSynced())//while historical blocks has is did not synch return true
-        return true;
-    if(!sporkManager.IsSporkActive(SPORK_25_DETERMIN14_UPDATE))
-    {
-        return true;
-    }
+
     std::vector<CTxOut> voutMasternodePayments;
     if (!GetBlockTxOuts(nBlockHeight, blockReward, voutMasternodePayments)) {
         LogPrintf("CMasternodePayments::%s -- ERROR failed to get payees for block at height %s\n", __func__, nBlockHeight);
         return true;
     }
-    
+
     CAmount min=0;
     if( sporkManager.IsSporkWorkActive(SPORK_18_EVOLUTION_PAYMENTS) )
     {
@@ -321,6 +313,8 @@ bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, int nBlo
             if(min>txout.nValue && txout.nValue>0)min=txout.nValue;
         }
     }
+    
+
     for (const auto& txout : voutMasternodePayments) {
         bool found = false;
         for (const auto& txout2 : txNew.vout) 
