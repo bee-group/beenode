@@ -223,9 +223,9 @@ public:
         consensus.nMasternodeMinimumConfirmations = 15;
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256S(GENESIS_MAIN_HASH);
-        consensus.BIP65Height = 1;
-        consensus.BIP66Height = 1;
-        consensus.DIP0001Height = 1;
+        consensus.BIP65Height = 619382; // 00000000000076d8fcea02ec0963de4abfd01e771fec0863f960c2c64fe6f357
+        consensus.BIP66Height = 245817; // 00000000000b1fa2dfa312863570e13fae9ca7b5566cb27e55422620b469aefa
+        consensus.DIP0001Height = 150322;
         consensus.DIP0003Height = 152061;
         consensus.DIP0003EnforcementHeight = 174394;
         consensus.DIP0003EnforcementHash = uint256S("000000000003253856e90a6dad76d4dce43684c4a059678442e755ee02d31361");
@@ -267,13 +267,15 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nThreshold = 40; // 44% of 91
         // Deployment of DIP0008
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].bit = 4;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nStartTime = 1583020800; // May 15th, 2019
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nTimeout = 1614556800; // May 15th, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nStartTime = 1609459200; // May 15th, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nTimeout = 1709459200; // May 15th, 2021
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nWindowSize = 91;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nThreshold = 40; // 80% of 4032
-//TODO:
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nThreshold = 40; // // 44% of 91
+
+
+        //¬ыставлены в 0, так как не пон¤тно откуда брать. ѕосути можно из getblockcahininfo, так как все так поступают
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000104be52d3f2abf99"); // 1067570
+        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000009d3c8ae9685020"); // 14661
 
 
         
@@ -347,7 +349,7 @@ public:
             (  85900, uint256S("0x0000000000124c4d744f373b1b5bd769c90c3a242239f458498c0cb032668e6a"))
             (  150322, uint256S("0x000000000014d046fef810492f86c90a6377d31f1fbd444cad8768a885da4f71"))
             (  155185, uint256S("0x0000000000e9d5f459dc8166f5fcf33690dfcaecf6ebe8e5f1c69135e646a75f"))
-            (   168370, uint256S("0x000000000018b9284d2391dc464a7062425b42cc22b0ae6c4b909d191450cd64"))
+            (  156446, uint256S("0x0000000000bbe8f057c96ca17d1b01cde0c21e0efaa92c0ec6db259338bd9dde"))
         };
 
         chainTxData = ChainTxData{

@@ -188,7 +188,7 @@ bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CValid
 
         if (!deterministicMNManager->IsDIP3Enforced(pindexPrev->nHeight)) {
             if (ptx.keyIDOwner != ptx.keyIDVoting) {
-                return state.DoS(10, false, REJECT_INVALID, "bad-protx-key-not-same");
+            //    return state.DoS(10, false, REJECT_INVALID, "bad-protx-key-not-same");
             }
         }
     }
