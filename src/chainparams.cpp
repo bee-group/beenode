@@ -267,10 +267,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nThreshold = 40; // 44% of 91
         // Deployment of DIP0008
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].bit = 4;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nStartTime = 1609459200; // May 15th, 2020
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nTimeout = 1709459200; // May 15th, 2021
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nStartTime = 1589619919; // May 15th, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nTimeout = 1609459200; // May 15th, 2021
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nWindowSize = 91;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nThreshold = 40; // // 44% of 91
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nThreshold = 0; // // 44% of 91
 
 
         //¬ыставлены в 0, так как не пон¤тно откуда брать. ѕосути можно из getblockcahininfo, так как все так поступают
