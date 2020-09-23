@@ -11,6 +11,7 @@
 
 #include "netaddress.h"
 #include "pubkey.h"
+#include "spork.h"
 
 class CBlockIndex;
 class UniValue;

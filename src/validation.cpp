@@ -2248,11 +2248,8 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
 		if( !evolutionManager.IsTransactionValid( block.vtx[0], pindex->nHeight, blockCurrEvolution )  ){
 			mapRejectedBlocks.insert(std::make_pair(block.GetHash(), GetTime()));
             
-            if(sporkManager.IsSporkActive(SPORK_25_DETERMIN14_UPDATE))
-            {
                 return state.DoS(0, error("ConnectBlock(BEENODE): couldn't find beenode evolution payments"),
 								REJECT_INVALID, "bad-cb-payee");
-            }
 		}
 	}	
 	
@@ -2260,19 +2257,10 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     int64_t nTime5_4 = GetTimeMicros(); nTimePayeeValid += nTime5_4 - nTime5_3;
     LogPrint("bench", "      - IsBlockPayeeValid: %.2fms [%.2fs]\n", 0.001 * (nTime5_4 - nTime5_3), nTimePayeeValid * 0.000001);
 
-    if(sporkManager.IsSporkActive(SPORK_25_DETERMIN14_UPDATE))
-    {
-        if (!ProcessSpecialTxsInBlock(block, pindex, state, fJustCheck, fScriptChecks)) {
+    if (!ProcessSpecialTxsInBlock(block, pindex, state, fJustCheck, fScriptChecks)) {
             return error("ConnectBlock(BEENODE): ProcessSpecialTxsInBlock for block %s failed with %s",
                         pindex->GetBlockHash().ToString(), FormatStateMessage(state));
         }
-    }
-    else
-    {
-        if (!deterministicMNManager->ProcessBlock(block, pindex, state, fJustCheck)) {
-            return false;
-        }
-    }
     int64_t nTime5_5 = GetTimeMicros(); nTimeProcessSpecial += nTime5_5 - nTime5_4;
     LogPrint("bench", "      - ProcessSpecialTxsInBlock: %.2fms [%.2fs]\n", 0.001 * (nTime5_5 - nTime5_4), nTimeProcessSpecial * 0.000001);
 
@@ -3439,15 +3427,11 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, const Co
         }
     }
     
-    if(sporkManager.IsSporkActive(SPORK_25_DETERMIN14_UPDATE))
-    {
         if (fDIP0003Active_context) {
             if (block.vtx[0]->nType != TRANSACTION_COINBASE) {
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-type", false, "coinbase is not a CbTx");
             }
         }
-    }
-
     return true;
 }
 
@@ -3634,14 +3618,11 @@ bool ProcessNewBlock(const CChainParams& chainparams, const std::shared_ptr<cons
             // Store to disk
             ret = AcceptBlock(pblock, state, chainparams, &pindex, fForceProcessing, NULL, fNewBlock);
         }
-        if(sporkManager.IsSporkActive(SPORK_25_DETERMIN14_UPDATE))
-        {
             CheckBlockIndex(chainparams.GetConsensus());
             if (!ret) {
                 GetMainSignals().BlockChecked(*pblock, state);
                 return error("%s: AcceptBlock FAILED: %s", __func__, FormatStateMessage(state));
             }
-        }
     }
 
     NotifyHeaderTip();

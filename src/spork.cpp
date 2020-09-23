@@ -21,8 +21,6 @@ std::map<int, int64_t> mapSporkDefaults = {
     {SPORK_2_INSTANTSEND_ENABLED,            0},             // ON
     {SPORK_3_INSTANTSEND_BLOCK_FILTERING,    0},             // ON
     {SPORK_5_INSTANTSEND_MAX_VALUE,          1000},          // 1000 Beenode
-    {SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT, 4070908800ULL}, // OFF
-    {SPORK_10_MASTERNODE_PAY_UPDATED_NODES,  4070908800ULL}, // OFF
     {SPORK_12_RECONSIDER_BLOCKS,             0},             // 0 BLOCKS
     {SPORK_15_DETERMINISTIC_MNS_ENABLED,     4070908800ULL}, // OFF
     {SPORK_16_INSTANTSEND_AUTOLOCKS,         4070908800ULL}, // OFF
@@ -31,9 +29,7 @@ std::map<int, int64_t> mapSporkDefaults = {
     {SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT, 	0x7FFFFFFF}, // OFF
     {SPORK_19_CHAINLOCKS_ENABLED,            4070908800ULL}, // OFF
     {SPORK_20_INSTANTSEND_LLMQ_BASED,        4070908800ULL}, // OFF
-    {SPORK_21_MASTERNODE_ORDER_ENABLE, 	         1569654200ULL}, // ON
-    {SPORK_24_DETERMIN_UPDATE, 	         4070908800ULL}, // OFF
-    {SPORK_25_DETERMIN14_UPDATE, 	          1569654200ULL}, // OFF
+    {SPORK_10_CHECK_PROTX,                   4070908800ULL}, // OFF
 };
 CEvolutionManager evolutionManager;
 CCriticalSection cs_mapEvolution;
@@ -313,7 +309,6 @@ int64_t CSporkManager::getActiveSporkValue( int nSporkID,CSporkMessage& spork )
 int64_t CSporkManager::GetSporkValue(int nSporkID)
 {
     LOCK(cs);
-
     int64_t nSporkValue = -1;
     if (SporkValueIsActive(nSporkID, nSporkValue)) {
         return nSporkValue;
@@ -332,8 +327,6 @@ int CSporkManager::GetSporkIDByName(const std::string& strName)
     if (strName == "SPORK_2_INSTANTSEND_ENABLED")               return SPORK_2_INSTANTSEND_ENABLED;
     if (strName == "SPORK_3_INSTANTSEND_BLOCK_FILTERING")       return SPORK_3_INSTANTSEND_BLOCK_FILTERING;
     if (strName == "SPORK_5_INSTANTSEND_MAX_VALUE")             return SPORK_5_INSTANTSEND_MAX_VALUE;
-    if (strName == "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT")    return SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT;
-    if (strName == "SPORK_10_MASTERNODE_PAY_UPDATED_NODES")     return SPORK_10_MASTERNODE_PAY_UPDATED_NODES;
     if (strName == "SPORK_12_RECONSIDER_BLOCKS")                return SPORK_12_RECONSIDER_BLOCKS;
     if (strName == "SPORK_15_DETERMINISTIC_MNS_ENABLED")        return SPORK_15_DETERMINISTIC_MNS_ENABLED;
     if (strName == "SPORK_16_INSTANTSEND_AUTOLOCKS")            return SPORK_16_INSTANTSEND_AUTOLOCKS;
@@ -342,9 +335,7 @@ int CSporkManager::GetSporkIDByName(const std::string& strName)
     if (strName == "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT")	return SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT;
     if (strName == "SPORK_19_CHAINLOCKS_ENABLED")               return SPORK_19_CHAINLOCKS_ENABLED;
     if (strName == "SPORK_20_INSTANTSEND_LLMQ_BASED")           return SPORK_20_INSTANTSEND_LLMQ_BASED;
-    if (strName == "SPORK_21_MASTERNODE_ORDER_ENABLE")			return SPORK_21_MASTERNODE_ORDER_ENABLE;
-    if (strName == "SPORK_24_DETERMIN_UPDATE")	                return SPORK_24_DETERMIN_UPDATE;
-    if (strName == "SPORK_25_DETERMIN14_UPDATE")	            return SPORK_25_DETERMIN14_UPDATE;
+    if (strName == "SPORK_10_CHECK_PROTX")	                    return SPORK_10_CHECK_PROTX;
 
 
     LogPrint("spork", "CSporkManager::GetSporkIDByName -- Unknown Spork name '%s'\n", strName);
@@ -357,8 +348,6 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_2_INSTANTSEND_ENABLED:               return "SPORK_2_INSTANTSEND_ENABLED";
         case SPORK_3_INSTANTSEND_BLOCK_FILTERING:       return "SPORK_3_INSTANTSEND_BLOCK_FILTERING";
         case SPORK_5_INSTANTSEND_MAX_VALUE:             return "SPORK_5_INSTANTSEND_MAX_VALUE";
-        case SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT:    return "SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT";
-        case SPORK_10_MASTERNODE_PAY_UPDATED_NODES:     return "SPORK_10_MASTERNODE_PAY_UPDATED_NODES";
         case SPORK_12_RECONSIDER_BLOCKS:                return "SPORK_12_RECONSIDER_BLOCKS";
         case SPORK_15_DETERMINISTIC_MNS_ENABLED:        return "SPORK_15_DETERMINISTIC_MNS_ENABLED";
         case SPORK_16_INSTANTSEND_AUTOLOCKS:            return "SPORK_16_INSTANTSEND_AUTOLOCKS";
@@ -367,9 +356,7 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT: 	return "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT";
         case SPORK_19_CHAINLOCKS_ENABLED:               return "SPORK_19_CHAINLOCKS_ENABLED";
         case SPORK_20_INSTANTSEND_LLMQ_BASED:           return "SPORK_20_INSTANTSEND_LLMQ_BASED";
-        case SPORK_21_MASTERNODE_ORDER_ENABLE: 	        return "SPORK_21_MASTERNODE_ORDER_ENABLE";
-        case SPORK_24_DETERMIN_UPDATE: 	                return "SPORK_24_DETERMIN_UPDATE";
-        case SPORK_25_DETERMIN14_UPDATE: 	            return "SPORK_25_DETERMIN14_UPDATE";
+        case SPORK_10_CHECK_PROTX:                      return "SPORK_10_CHECK_PROTX";
         default:
             LogPrint("spork", "CSporkManager::GetSporkNameByID -- Unknown Spork ID %d\n", nSporkID);
             return "Unknown";
