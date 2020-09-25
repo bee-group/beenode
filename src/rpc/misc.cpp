@@ -240,29 +240,69 @@ public:
 */
 UniValue spork(const JSONRPCRequest& request)
 {
-    if (request.params.size() == 1) {
-        // basic mode, show info
-        std:: string strCommand = request.params[0].get_str();
-        if (strCommand == "show") {
-            UniValue ret(UniValue::VOBJ);
-            for(int nSporkID = SPORK_START; nSporkID <= SPORK_END; nSporkID++){
-                if(sporkManager.GetSporkNameByID(nSporkID) != "Unknown")
-                    ret.push_back(Pair(sporkManager.GetSporkNameByID(nSporkID), sporkManager.GetSporkValue(nSporkID)));
-            }
-            return ret;
-        } else if(strCommand == "active"){
-            UniValue ret(UniValue::VOBJ);
-            for(int nSporkID = SPORK_START; nSporkID <= SPORK_END; nSporkID++){
-                if(sporkManager.GetSporkNameByID(nSporkID) != "Unknown")
-                    ret.push_back(Pair(sporkManager.GetSporkNameByID(nSporkID), sporkManager.IsSporkActive(nSporkID)));
-            }
-            return ret;
+    if(request.params.size() == 1 && request.params[0].get_str() == "show"){
+        UniValue ret(UniValue::VOBJ);
+        for(int nSporkID = SPORK_START; nSporkID <= SPORK_END; nSporkID++){
+            if(sporkManager.GetSporkNameByID(nSporkID) != "Unknown")
+                ret.push_back(Pair(sporkManager.GetSporkNameByID(nSporkID), sporkManager.GetSporkValue(nSporkID)));
         }
-    }
+        return ret;
+    } else if(request.params.size() == 1 && request.params[0].get_str() == "active"){
+        UniValue ret(UniValue::VOBJ);
+        for(int nSporkID = SPORK_START; nSporkID <= SPORK_END; nSporkID++){
+            if(sporkManager.GetSporkNameByID(nSporkID) != "Unknown")
+                ret.push_back(Pair(sporkManager.GetSporkNameByID(nSporkID), sporkManager.IsSporkActive(nSporkID)));
+        }
+        return ret;
+    }else if( request.params.size() == 2) {
+        int nSporkID = sporkManager.GetSporkIDByName(request.params[0].get_str());
+        if(nSporkID == -1){
+            return "Invalid spork name";
+        }
+		
+        if (!g_connman)
+            throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
+		
+        // SPORK VALUE
+        int64_t nValue = request.params[1].get_int64();
 
-    if (request.fHelp || request.params.size() != 2) {
-        // default help, for basic mode
-        throw std::runtime_error(
+		if(  (nSporkID == SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT) ){
+			if( ( nValue - (int64_t)chainActive.Height()) < 2 )
+				return "Invalid config, bad value";
+		}
+		
+        //broadcast new spork
+        if(sporkManager.UpdateSpork(nSporkID, nValue, "", *g_connman)){
+            sporkManager.ExecuteSpork(nSporkID, nValue);
+            return "success";
+        } else {
+            return "failure";
+        }		
+    }else if( request.params.size() == 3){
+		int nSporkID = sporkManager.GetSporkIDByName(request.params[0].get_str());
+		//--.
+		if(  (nSporkID == -1) || (nSporkID != SPORK_18_EVOLUTION_PAYMENTS)  ){
+			return "Invalid spork name";
+		}
+		
+		// SPORK VALUE
+		int64_t nValue		= request.params[1].get_int64();
+		std::string sEvolution	= request.params[2].get_str();
+		//--.
+		if( !evolutionManager.checkEvolutionString( sEvolution ) ){	
+			return "Invalid spork evolution param name";
+		}	
+		//broadcast new spork
+		if(  sporkManager.UpdateSpork( nSporkID, nValue, sEvolution, *g_connman )  ){
+			sporkManager.ExecuteSpork( nSporkID, nValue );
+			return "success";
+		} else {
+			return "failure";
+		}
+	}	
+    else
+    {
+            throw std::runtime_error(
             "spork \"command\"\n"
             "\nShows information about current state of sporks\n"
             "\nArguments:\n"
@@ -281,39 +321,6 @@ UniValue spork(const JSONRPCRequest& request)
             "\nExamples:\n"
             + HelpExampleCli("spork", "show")
             + HelpExampleRpc("spork", "\"show\""));
-    } else {
-        // advanced mode, update spork values
-        int nSporkID = sporkManager.GetSporkIDByName(request.params[0].get_str());
-        if(nSporkID == -1)
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid spork name");
-
-        if (!g_connman)
-            throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
-
-        // SPORK VALUE
-        int64_t nValue = request.params[1].get_int64();
-		if(  (nSporkID == SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT) ){
-			if( ( nValue - (int64_t)chainActive.Height()) < 2 )
-				return "Invalid config, bad value";
-		}
-		
-        //broadcast new spork
-        if(sporkManager.UpdateSpork(nSporkID, nValue, "",*g_connman)){
-            sporkManager.ExecuteSpork(nSporkID, nValue);
-            return "success";
-        } else {
-            throw std::runtime_error(
-                "spork \"name\" value\n"
-                "\nUpdate the value of the specific spork. Requires \"-sporkkey\" to be set to sign the message.\n"
-                "\nArguments:\n"
-                "1. \"name\"              (string, required) The name of the spork to update\n"
-                "2. value               (number, required) The new desired value of the spork\n"
-                "\nResult:\n"
-                "  result               (string) \"success\" if spork value was updated or this help otherwise\n"
-                "\nExamples:\n"
-                + HelpExampleCli("spork", "SPORK_2_INSTANTSEND_ENABLED 4070908800")
-                + HelpExampleRpc("spork", "\"SPORK_2_INSTANTSEND_ENABLED\", 4070908800"));
-        }
     }
 
 }
