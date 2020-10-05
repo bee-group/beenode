@@ -1164,11 +1164,7 @@ CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params&
 
     // Hard fork to reduce the block reward by 10 extra percent (allowing budget/superblocks)
     CAmount nSuperblockPart = nSubsidy/10;
-	if( sporkManager.IsSporkWorkActive(SPORK_18_EVOLUTION_PAYMENTS) ){
-		eSubsidy = nSubsidy - nSuperblockPart; 
-	}else{
-		eSubsidy=nSubsidy;
-	}	
+	eSubsidy = nSubsidy - nSuperblockPart;
 	return fSuperblockPartOnly ? nSuperblockPart : eSubsidy;
 }
 

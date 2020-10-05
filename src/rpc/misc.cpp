@@ -278,28 +278,7 @@ UniValue spork(const JSONRPCRequest& request)
         } else {
             return "failure";
         }		
-    }else if( request.params.size() == 3){
-		int nSporkID = sporkManager.GetSporkIDByName(request.params[0].get_str());
-		//--.
-		if(  (nSporkID == -1) || (nSporkID != SPORK_18_EVOLUTION_PAYMENTS)  ){
-			return "Invalid spork name";
-		}
-		
-		// SPORK VALUE
-		int64_t nValue		= request.params[1].get_int64();
-		std::string sEvolution	= request.params[2].get_str();
-		//--.
-		if( !evolutionManager.checkEvolutionString( sEvolution ) ){	
-			return "Invalid spork evolution param name";
-		}	
-		//broadcast new spork
-		if(  sporkManager.UpdateSpork( nSporkID, nValue, sEvolution, *g_connman )  ){
-			sporkManager.ExecuteSpork( nSporkID, nValue );
-			return "success";
-		} else {
-			return "failure";
-		}
-	}	
+    }
     else
     {
             throw std::runtime_error(

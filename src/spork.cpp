@@ -25,11 +25,10 @@ std::map<int, int64_t> mapSporkDefaults = {
     {SPORK_15_DETERMINISTIC_MNS_ENABLED,     4070908800ULL}, // OFF
     {SPORK_16_INSTANTSEND_AUTOLOCKS,         4070908800ULL}, // OFF
     {SPORK_17_QUORUM_DKG_ENABLED,            4070908800ULL}, // OFF
-    {SPORK_18_EVOLUTION_PAYMENTS,         		0}, // OFF
     {SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT, 	0x7FFFFFFF}, // OFF
     {SPORK_19_CHAINLOCKS_ENABLED,            4070908800ULL}, // OFF
     {SPORK_20_INSTANTSEND_LLMQ_BASED,        4070908800ULL}, // OFF
-    {SPORK_10_CHECK_PROTX,                   4070908800ULL}, // OFF
+    {SPORK_10_CHECK_PROTX,                   0x7FFFFFFF}, // OFF
 };
 CEvolutionManager evolutionManager;
 CCriticalSection cs_mapEvolution;
@@ -176,9 +175,7 @@ void CSporkManager::ProcessSpork(CNode* pfrom, const std::string& strCommand, CD
             mapSporkHashesByID[spork.nSporkID]=hash;
             mapSporksActive[spork.nSporkID][keyIDSigner] = spork;
         }
-		if( spork.nSporkID == SPORK_18_EVOLUTION_PAYMENTS ){	
-			evolutionManager.setNewEvolutions( spork.sWEvolution );
-		}
+		
         spork.Relay(connman);
 
         //does a task if needed
@@ -244,9 +241,6 @@ bool CSporkManager::UpdateSpork(int nSporkID, int64_t nValue, std::string sEvol,
 	        LOCK(cs);
 	        mapSporksByHash[spork.GetHash()] = spork;
 	        mapSporksActive[nSporkID][keyIDSigner] = spork;
-	       	if(nSporkID == SPORK_18_EVOLUTION_PAYMENTS){
-				evolutionManager.setNewEvolutions( sEvol );
-			}
 		}	
         spork.Relay(connman);
         return true;
@@ -331,7 +325,6 @@ int CSporkManager::GetSporkIDByName(const std::string& strName)
     if (strName == "SPORK_15_DETERMINISTIC_MNS_ENABLED")        return SPORK_15_DETERMINISTIC_MNS_ENABLED;
     if (strName == "SPORK_16_INSTANTSEND_AUTOLOCKS")            return SPORK_16_INSTANTSEND_AUTOLOCKS;
     if (strName == "SPORK_17_QUORUM_DKG_ENABLED")               return SPORK_17_QUORUM_DKG_ENABLED;
-    if (strName == "SPORK_18_EVOLUTION_PAYMENTS")            	return SPORK_18_EVOLUTION_PAYMENTS;
     if (strName == "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT")	return SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT;
     if (strName == "SPORK_19_CHAINLOCKS_ENABLED")               return SPORK_19_CHAINLOCKS_ENABLED;
     if (strName == "SPORK_20_INSTANTSEND_LLMQ_BASED")           return SPORK_20_INSTANTSEND_LLMQ_BASED;
@@ -352,7 +345,6 @@ std::string CSporkManager::GetSporkNameByID(int nSporkID)
         case SPORK_15_DETERMINISTIC_MNS_ENABLED:        return "SPORK_15_DETERMINISTIC_MNS_ENABLED";
         case SPORK_16_INSTANTSEND_AUTOLOCKS:            return "SPORK_16_INSTANTSEND_AUTOLOCKS";
         case SPORK_17_QUORUM_DKG_ENABLED:               return "SPORK_17_QUORUM_DKG_ENABLED";
-        case SPORK_18_EVOLUTION_PAYMENTS:            	return "SPORK_18_EVOLUTION_PAYMENTS";
         case SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT: 	return "SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT";
         case SPORK_19_CHAINLOCKS_ENABLED:               return "SPORK_19_CHAINLOCKS_ENABLED";
         case SPORK_20_INSTANTSEND_LLMQ_BASED:           return "SPORK_20_INSTANTSEND_LLMQ_BASED";
@@ -522,28 +514,6 @@ void CEvolutionManager::setNewEvolutions( const std::string &sEvol )
 	unsigned long bComplete = 0;
 	unsigned long uCountEvolution = 0;
 	unsigned long uStart = 0;
-	
-	mapEvolution.clear();
-
-	for( unsigned int i = 0; i < sEvol.size() ; i++ )
-	{
-		if( (sEvol.c_str()[i] == '[') && (bComplete == 0) ){
-			bComplete = 1;
-			uStart = i + 1;
-		}
-
-		if( (sEvol.c_str()[i] == ',') && (bComplete == 1)  ){
-			mapEvolution.insert(  make_pair( uCountEvolution, std::string(sEvol.c_str() + uStart, i-uStart))  );
-			uCountEvolution++;
-			uStart = i + 1;
-		}
-
-		if(  (sEvol.c_str()[i] == ']') && (bComplete == 1)  ){
-			bComplete = 2;
-			mapEvolution.insert(  make_pair( uCountEvolution, std::string(sEvol.c_str() + uStart, i - uStart))  );
-			uCountEvolution++;
-		}
-	}
 }
 
 void CEvolutionManager::setDisableNodes( const std::string &sEvol )

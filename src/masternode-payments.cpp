@@ -132,10 +132,8 @@ bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount bloc
 void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward, CAmount blockEvolution, std::vector<CTxOut>& voutMasternodePaymentsRet, std::vector<CTxOut>& voutSuperblockPaymentsRet)
 {
     // only create superblocks if spork is enabled 
-	if(  sporkManager.IsSporkWorkActive(SPORK_18_EVOLUTION_PAYMENTS) ){	
-		CMasternodePayments::CreateEvolution(  txNew, nBlockHeight, blockEvolution, voutSuperblockPaymentsRet  );
-    }		
-
+    CMasternodePayments::CreateEvolution(  txNew, nBlockHeight, blockEvolution, voutSuperblockPaymentsRet  );
+    
     if (!mnpayments.GetMasternodeTxOuts(nBlockHeight, blockReward, voutMasternodePaymentsRet)) {
         LogPrint("mnpayments", "%s -- no masternode to pay (MN list probably empty)\n", __func__);
     }
@@ -289,36 +287,22 @@ bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, int nBlo
     }
 
     CAmount min=0;
-    if( sporkManager.IsSporkWorkActive(SPORK_18_EVOLUTION_PAYMENTS) )
-    {
-        for (const auto& txout : txNew.vout) {
-            if(min==0){min=txout.nValue;continue;}
-            if(min>txout.nValue && txout.nValue>0)min=txout.nValue;
-        }
+    for (const auto& txout : txNew.vout) {
+        if(min==0){min=txout.nValue;continue;}
+        if(min>txout.nValue && txout.nValue>0)min=txout.nValue;
     }
+    
     
 
     for (const auto& txout : voutMasternodePayments) {
         bool found = false;
         for (const auto& txout2 : txNew.vout) 
         {
-            
-            if( sporkManager.IsSporkWorkActive(SPORK_18_EVOLUTION_PAYMENTS) )
+            if(((txout2.nValue >0 && txout.nValue == (txout2.nValue+min)) || (txout2.nValue == 0 && txout.nValue==0) ) && txout.scriptPubKey==txout2.scriptPubKey) 
             {
-                if(((txout2.nValue >0 && txout.nValue == (txout2.nValue+min)) || (txout2.nValue == 0 && txout.nValue==0) ) && txout.scriptPubKey==txout2.scriptPubKey) 
-                {
-                    found = true;
-                    LogPrintf("CMasternodePayments::IsTransactionValid -- successfull \n");
-                    break;
-                }
-            }
-            else
-            {
-                if (txout == txout2) 
-                {
-                    found = true;
-                    break;
-                }
+                found = true;
+                LogPrintf("CMasternodePayments::IsTransactionValid -- successfull \n");
+                break;
             }
         }
         if (!found) {

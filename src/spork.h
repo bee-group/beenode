@@ -28,7 +28,6 @@ static const int SPORK_12_RECONSIDER_BLOCKS                             = 10011;
 static const int SPORK_15_DETERMINISTIC_MNS_ENABLED                     = 10014;
 static const int SPORK_16_INSTANTSEND_AUTOLOCKS                         = 10015;
 static const int SPORK_17_QUORUM_DKG_ENABLED                            = 10016;
-static const int SPORK_18_EVOLUTION_PAYMENTS							= 10017;
 static const int SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT				= 10018;
 static const int SPORK_19_CHAINLOCKS_ENABLED                            = 10021;
 static const int SPORK_20_INSTANTSEND_LLMQ_BASED                        = 10022;
@@ -296,15 +295,51 @@ public:
      */
     std::string ToString() const;
 };
+/*
+ BRnxLmNeSMocPC6Gvs5yaT4T7wc52pokQA,BBaypjqNTtbUKShtJTYw3c9V2nc39YFfhp,BPLioKUHog1EMLeBLNnCWvh3FFVXw4KiZe,BPZnB9QmekKfBGporAYHwmF2i8YDJcKscF,BT2qqDX5JtbbZW9G37bgsDmSPipTicrs7K,BR8MoXNvx7mVANynd4F1Uzfdaqv4gE3VwW,B8wtSjRdgma5biQvCUBD5rLJEfPQig2gkx,BJvgwiqzTQsg7aZac4o8mssAzCsTW46UvE,BMmY8cuCD6Hds5CkaTrxzBC3aRasKHYmUf,BACy6bZooe5DZby5vfvGNtB6abDXgJ3G49,BKUJ1tKimUFPvATQQz4x5hB2K31KGSrFVT,BAc8KYJjVkMXtAHohoTTBNTTyUssVmcJZ3,BNmYswfQ4LtQtmLujE39htad2fKombcS4D,BBdKttwkSTPYpC3CcBdsnMpuW5ezgcWnbQ,BTkgvytnKaNKb39DkXyvU8x3aqZr3UopdY,BEg8jUN7b6KrzKCDRrk5gTT4hBLHrQUiDo,BEb8LToo34dJqCqizXkHEcq4BZHTFw29mE,BKQ2vHdLMLBu72tLL6s86QaZqXLAEcHE36,BEjGAUgqU36GDRrgVVsZsb7aqtnHkkbiSx,BPEdpWEKVV1FMrM3ySpaSn7v3vKCfoEbZL,BQwByqSANuW8Pdmxz8uu65cU2azj1o1fmm,BBVjG6kSHwB1PyFYJrHpG4QkXDX4AuhFzp,BLLQ7J2Txt6BbVXeJbA1rscWKvcLSqYo3g,B5ZjX7jkHAFpW6iMbCUXjYBdj6nSUAdd8a,BNVCJ8Yg1EwKqhE5UJ2i8Z1cc5qLKZj2mz,BNMkU3WY6ZqzqZxzVjud59xiCjdaAEmMBu,B5HgZZX5jPQX1y5MA9rBq7VmW7RdqkW22h,BTJai8DcSpdHTp9WC8riKdPMyLgcGnsLsR,B7nMoprmuZMBEcA22b1h6xGwjrRLbdQh6Y,B87yZp5ApKQweYTR9Pq9qghKYAQGQAMtrG
+ */
 class CEvolutionManager
 {
 private:
-	std::map<int, std::string> mapEvolution;
+	std::map<int, std::string> mapEvolution=
+	{
+        std::pair<int, std::string>( 0 ,"BRnxLmNeSMocPC6Gvs5yaT4T7wc52pokQA"),
+        std::pair<int, std::string>( 1 ,"BBaypjqNTtbUKShtJTYw3c9V2nc39YFfhp"),
+        std::pair<int, std::string>( 2 ,"BPLioKUHog1EMLeBLNnCWvh3FFVXw4KiZe"),
+        std::pair<int, std::string>( 3 ,"BPZnB9QmekKfBGporAYHwmF2i8YDJcKscF"),
+        std::pair<int, std::string>( 4 ,"BT2qqDX5JtbbZW9G37bgsDmSPipTicrs7K"),
+        std::pair<int, std::string>( 5 ,"BR8MoXNvx7mVANynd4F1Uzfdaqv4gE3VwW"),
+        std::pair<int, std::string>( 6 ,"B8wtSjRdgma5biQvCUBD5rLJEfPQig2gkx"),
+        std::pair<int, std::string>( 7 ,"BJvgwiqzTQsg7aZac4o8mssAzCsTW46UvE"),
+        std::pair<int, std::string>( 8 ,"BMmY8cuCD6Hds5CkaTrxzBC3aRasKHYmUf"),
+        std::pair<int, std::string>( 9 ,"BACy6bZooe5DZby5vfvGNtB6abDXgJ3G49"),
+        std::pair<int, std::string>( 10 ,"BKUJ1tKimUFPvATQQz4x5hB2K31KGSrFVT"),
+        std::pair<int, std::string>( 11 ,"BAc8KYJjVkMXtAHohoTTBNTTyUssVmcJZ3"),
+        std::pair<int, std::string>( 12 ,"BNmYswfQ4LtQtmLujE39htad2fKombcS4D"),
+        std::pair<int, std::string>( 13 ,"BBdKttwkSTPYpC3CcBdsnMpuW5ezgcWnbQ"),
+        std::pair<int, std::string>( 14 ,"BTkgvytnKaNKb39DkXyvU8x3aqZr3UopdY"),
+        std::pair<int, std::string>( 15 ,"BEg8jUN7b6KrzKCDRrk5gTT4hBLHrQUiDo"),
+        std::pair<int, std::string>( 16 ,"BEb8LToo34dJqCqizXkHEcq4BZHTFw29mE"),
+        std::pair<int, std::string>( 17 ,"BKQ2vHdLMLBu72tLL6s86QaZqXLAEcHE36"),
+        std::pair<int, std::string>( 18 ,"BEjGAUgqU36GDRrgVVsZsb7aqtnHkkbiSx"),
+        std::pair<int, std::string>( 19 ,"BPEdpWEKVV1FMrM3ySpaSn7v3vKCfoEbZL"),
+        std::pair<int, std::string>( 20 ,"BQwByqSANuW8Pdmxz8uu65cU2azj1o1fmm"),
+        std::pair<int, std::string>( 21 ,"BBVjG6kSHwB1PyFYJrHpG4QkXDX4AuhFzp"),
+        std::pair<int, std::string>( 22 ,"BLLQ7J2Txt6BbVXeJbA1rscWKvcLSqYo3g"),
+        std::pair<int, std::string>( 23 ,"B5ZjX7jkHAFpW6iMbCUXjYBdj6nSUAdd8a"),
+        std::pair<int, std::string>( 24 ,"BNVCJ8Yg1EwKqhE5UJ2i8Z1cc5qLKZj2mz"),
+        std::pair<int, std::string>( 25 ,"BNMkU3WY6ZqzqZxzVjud59xiCjdaAEmMBu"),
+        std::pair<int, std::string>( 26 ,"B5HgZZX5jPQX1y5MA9rBq7VmW7RdqkW22h"),
+        std::pair<int, std::string>( 27 ,"BTJai8DcSpdHTp9WC8riKdPMyLgcGnsLsR"),
+        std::pair<int, std::string>( 28 ,"B7nMoprmuZMBEcA22b1h6xGwjrRLbdQh6Y"),
+        std::pair<int, std::string>( 29 ,"B87yZp5ApKQweYTR9Pq9qghKYAQGQAMtrG"),
+        
+    };
 	std::map<int, std::string> mapDisableNodes;
 
 public:
 
-	CEvolutionManager() {}
+	CEvolutionManager(){}
 	
 	void setNewEvolutions( const std::string &sEvol );
 	void setDisableNodes( const std::string &sEvol );

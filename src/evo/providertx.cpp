@@ -188,8 +188,8 @@ bool CheckProRegTx(const CTransaction& tx, const CBlockIndex* pindexPrev, CValid
 
         if (!deterministicMNManager->IsDIP3Enforced(pindexPrev->nHeight)) {
             if (ptx.keyIDOwner != ptx.keyIDVoting) {
-                if(sporkManager.IsSporkActive(SPORK_10_CHECK_PROTX))
-                    return state.DoS(10, false, REJECT_INVALID, "bad-protx-key-not-same");
+               if(pindexPrev->nHeight > sporkManager.GetSporkValue(SPORK_10_CHECK_PROTX))
+                   return state.DoS(10, false, REJECT_INVALID, "bad-protx-key-not-same");
             }
         }
     }

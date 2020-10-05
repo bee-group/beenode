@@ -730,10 +730,9 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     }
     result.push_back(Pair("coinbase_payload", HexStr(pblock->vtx[0]->vExtraPayload)));
     result.push_back(Pair("evolution", superblockObjArray));
-	bool bWk1 = sporkManager.IsSporkWorkActive(SPORK_18_EVOLUTION_PAYMENTS);
-    bool bWk2 = (pindexPrev->nHeight+1) > sporkManager.GetSporkValue(SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT);
-	result.push_back(Pair("evolution_payments_started", bWk1) );
-    result.push_back(Pair("evolution_payments_enforced", bWk2) );
+    bool bWk1 = (pindexPrev->nHeight+1) > sporkManager.GetSporkValue(SPORK_19_EVOLUTION_PAYMENTS_ENFORCEMENT);
+	result.push_back(Pair("evolution_payments_started", 1) );
+    result.push_back(Pair("evolution_payments_enforced", bWk1) );
 
     return result;
 }
