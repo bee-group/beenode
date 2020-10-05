@@ -1,4 +1,4 @@
-Beenode Core staging tree 0.9.1
+Beenode Core staging tree 0.9
 ===============================
 
 
