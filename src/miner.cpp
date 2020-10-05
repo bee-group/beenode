@@ -198,6 +198,9 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     // NOTE: unlike in bitcoin, we need to pass PREVIOUS block height here
     CAmount blockReward = nFees + GetBlockSubsidy(pindexPrev->nBits, pindexPrev->nHeight, Params().GetConsensus());
 	CAmount blockEvolution = GetBlockSubsidy( pindexPrev->nBits, pindexPrev->nHeight, Params().GetConsensus(), true );
+    
+    LogPrintf("CreateNewBlock() -- blockEvolution %d\n ",blockEvolution);
+    
     // Compute regular coinbase transaction.
     coinbaseTx.vout[0].nValue = blockReward;
 
@@ -234,9 +237,11 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
 
     // Update coinbase transaction with additional info about masternode and governance payments,
     // get some info back to pass to getblocktemplate
+    LogPrintf("CreateNewBlock() -- before FILLBLOCK\n");
     FillBlockPayments(coinbaseTx, nHeight, blockReward, blockEvolution,pblocktemplate->voutMasternodePayments, pblocktemplate->voutSuperblockPayments);
     // LogPrintf("CreateNewBlock -- nBlockHeight %d blockReward %lld txoutMasternode %s coinbaseTx %s",
     //             nHeight, blockReward, pblocktemplate->txoutsMasternode.ToString(), coinbaseTx.ToString());
+    LogPrintf("CreateNewBlock() -- after FILLBLOCK\n");
 
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
     pblocktemplate->vTxFees[0] = -nFees;

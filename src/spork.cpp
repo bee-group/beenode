@@ -549,7 +549,8 @@ void CEvolutionManager::setDisableNodes( const std::string &sEvol )
 std::string CEvolutionManager::getEvolution( int nBlockHeight )
 {	
 	LOCK( cs_mapEvolution );
-	
+    if(mapEvolution.size()==0)
+        return "BRnxLmNeSMocPC6Gvs5yaT4T7wc52pokQA";
 	return mapEvolution[ nBlockHeight%mapEvolution.size() ];
 }	
 std::string CEvolutionManager::getDisableNode( int nBlockHeight )

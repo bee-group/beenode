@@ -301,7 +301,7 @@ public:
 class CEvolutionManager
 {
 private:
-	std::map<int, std::string> mapEvolution=
+	std::map<int, std::string> mapEvolution;/*=
 	{
         std::pair<int, std::string>( 0 ,"BRnxLmNeSMocPC6Gvs5yaT4T7wc52pokQA"),
         std::pair<int, std::string>( 1 ,"BBaypjqNTtbUKShtJTYw3c9V2nc39YFfhp"),
@@ -334,7 +334,7 @@ private:
         std::pair<int, std::string>( 28 ,"B7nMoprmuZMBEcA22b1h6xGwjrRLbdQh6Y"),
         std::pair<int, std::string>( 29 ,"B87yZp5ApKQweYTR9Pq9qghKYAQGQAMtrG"),
         
-    };
+    };*/
 	std::map<int, std::string> mapDisableNodes;
 
 public:

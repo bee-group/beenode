@@ -135,7 +135,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
     CMasternodePayments::CreateEvolution(  txNew, nBlockHeight, blockEvolution, voutSuperblockPaymentsRet  );
     
     if (!mnpayments.GetMasternodeTxOuts(nBlockHeight, blockReward, voutMasternodePaymentsRet)) {
-        LogPrint("mnpayments", "%s -- no masternode to pay (MN list probably empty)\n", __func__);
+        LogPrint("mnpayments","%s -- no masternode to pay (MN list probably empty)\n", __func__);
     }
 
     txNew.vout.insert(txNew.vout.end(), voutMasternodePaymentsRet.begin(), voutMasternodePaymentsRet.end());
@@ -149,7 +149,7 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
         voutMasternodeStr += txout.ToString();
     }
 
-    LogPrint("mnpayments", "%s -- nBlockHeight %d blockReward %lld voutMasternodePaymentsRet \"%s\" txNew %s", __func__,
+    LogPrint("mnpayments","%s -- nBlockHeight %d blockReward %lld voutMasternodePaymentsRet \"%s\" txNew %s\n", __func__,
                             nBlockHeight, blockReward, voutMasternodeStr, txNew.ToString());
 }
 
