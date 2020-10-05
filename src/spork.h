@@ -295,13 +295,11 @@ public:
      */
     std::string ToString() const;
 };
-/*
- BRnxLmNeSMocPC6Gvs5yaT4T7wc52pokQA,BBaypjqNTtbUKShtJTYw3c9V2nc39YFfhp,BPLioKUHog1EMLeBLNnCWvh3FFVXw4KiZe,BPZnB9QmekKfBGporAYHwmF2i8YDJcKscF,BT2qqDX5JtbbZW9G37bgsDmSPipTicrs7K,BR8MoXNvx7mVANynd4F1Uzfdaqv4gE3VwW,B8wtSjRdgma5biQvCUBD5rLJEfPQig2gkx,BJvgwiqzTQsg7aZac4o8mssAzCsTW46UvE,BMmY8cuCD6Hds5CkaTrxzBC3aRasKHYmUf,BACy6bZooe5DZby5vfvGNtB6abDXgJ3G49,BKUJ1tKimUFPvATQQz4x5hB2K31KGSrFVT,BAc8KYJjVkMXtAHohoTTBNTTyUssVmcJZ3,BNmYswfQ4LtQtmLujE39htad2fKombcS4D,BBdKttwkSTPYpC3CcBdsnMpuW5ezgcWnbQ,BTkgvytnKaNKb39DkXyvU8x3aqZr3UopdY,BEg8jUN7b6KrzKCDRrk5gTT4hBLHrQUiDo,BEb8LToo34dJqCqizXkHEcq4BZHTFw29mE,BKQ2vHdLMLBu72tLL6s86QaZqXLAEcHE36,BEjGAUgqU36GDRrgVVsZsb7aqtnHkkbiSx,BPEdpWEKVV1FMrM3ySpaSn7v3vKCfoEbZL,BQwByqSANuW8Pdmxz8uu65cU2azj1o1fmm,BBVjG6kSHwB1PyFYJrHpG4QkXDX4AuhFzp,BLLQ7J2Txt6BbVXeJbA1rscWKvcLSqYo3g,B5ZjX7jkHAFpW6iMbCUXjYBdj6nSUAdd8a,BNVCJ8Yg1EwKqhE5UJ2i8Z1cc5qLKZj2mz,BNMkU3WY6ZqzqZxzVjud59xiCjdaAEmMBu,B5HgZZX5jPQX1y5MA9rBq7VmW7RdqkW22h,BTJai8DcSpdHTp9WC8riKdPMyLgcGnsLsR,B7nMoprmuZMBEcA22b1h6xGwjrRLbdQh6Y,B87yZp5ApKQweYTR9Pq9qghKYAQGQAMtrG
- */
+
 class CEvolutionManager
 {
 private:
-	std::map<int, std::string> mapEvolution;/*=
+	std::map<int, std::string> mapEvolution=
 	{
         std::pair<int, std::string>( 0 ,"BRnxLmNeSMocPC6Gvs5yaT4T7wc52pokQA"),
         std::pair<int, std::string>( 1 ,"BBaypjqNTtbUKShtJTYw3c9V2nc39YFfhp"),
@@ -334,7 +332,7 @@ private:
         std::pair<int, std::string>( 28 ,"B7nMoprmuZMBEcA22b1h6xGwjrRLbdQh6Y"),
         std::pair<int, std::string>( 29 ,"B87yZp5ApKQweYTR9Pq9qghKYAQGQAMtrG"),
         
-    };*/
+    };
 	std::map<int, std::string> mapDisableNodes;
 
 public:
