@@ -270,7 +270,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nStartTime = 1590105600; // May 15th, 2020
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nTimeout = 1609459200; // jan 1st, 2021
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nWindowSize = 91;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nThreshold = 0; // // 44% of 91
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nThreshold = 73; // // 80% of 91
 
 
         //¬ыставлены в 0, так как не пон¤тно откуда брать. ѕосути можно из getblockcahininfo, так как все так поступают
