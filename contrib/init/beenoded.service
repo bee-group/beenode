@@ -8,15 +8,15 @@ Group=beenodecore
 
 Type=forking
 PIDFile=/var/lib/beenoded/beenoded.pid
-ExecStart=/usr/bin/beenoded -daemon -pid=/var/lib/beenoded/beenoded.pid \
+ExecStart=/usr/bin/beenoded -pid=/var/lib/beenoded/beenoded.pid \
 -conf=/etc/beenodecore/beenode.conf -datadir=/var/lib/beenoded -disablewallet
 
 Restart=always
 PrivateTmp=true
 TimeoutStopSec=60s
 TimeoutStartSec=2s
-StartLimitInterval=120s
-StartLimitBurst=5
+StartLimitInterval=20s
+StartLimitBurst=50
 
 [Install]
 WantedBy=multi-user.target
