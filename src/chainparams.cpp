@@ -262,13 +262,13 @@ public:
         // Deployment of DIP0003
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].bit = 3;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nStartTime = 1577836800; // Jan 1st, 2020
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nTimeout = 1609459200; // Jan 1st, 2021
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nTimeout = 1620833555; // May 12th, 2021
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nWindowSize = 91;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0003].nThreshold = 40; // 44% of 91
         // Deployment of DIP0008
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].bit = 4;
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nStartTime = 1590105600; // May 15th, 2020
-        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nTimeout = 1609459200; // jan 1st, 2021
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nStartTime = 1620833729; // May 12th, 2021
+        consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nTimeout = 1652369704; // jan 1st, 2022
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nWindowSize = 91;
         consensus.vDeployments[Consensus::DEPLOYMENT_DIP0008].nThreshold = 73; // // 80% of 91
 
@@ -350,11 +350,12 @@ public:
             (  150322, uint256S("0x000000000014d046fef810492f86c90a6377d31f1fbd444cad8768a885da4f71"))
             (  155185, uint256S("0x0000000000e9d5f459dc8166f5fcf33690dfcaecf6ebe8e5f1c69135e646a75f"))
             (  156446, uint256S("0x0000000000bbe8f057c96ca17d1b01cde0c21e0efaa92c0ec6db259338bd9dde"))
+	    (  413864, uint256S("0x000000000049fa053738e0be8148c8fa77503a96938e9f364dc41412540e54ec"))
         };
 
         chainTxData = ChainTxData{
-            1581956730, // * UNIX timestamp of last known number of transactions (Block 155185)
-            267696,   // * total number of transactions between genesis and that timestamp
+            1652369617, // * UNIX timestamp of last known number of transactions (Block 155185)
+            667442,   // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
             0.1         // * estimated number of transactions per second after that timestamp
         };
