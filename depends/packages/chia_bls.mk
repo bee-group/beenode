@@ -1,9 +1,9 @@
 package=chia_bls
 $(package)_version=v20181101
 # It's actually from https://github.com/Chia-Network/bls-signatures, but we have so many patches atm that it's forked
-$(package)_download_path= https://github.com/bee-group/bls/blob/main
+$(package)_download_path=https://github.com/bee-group/bls/archive/refs/tags
 $(package)_file_name=$($(package)_version).tar.gz
-$(package)_sha256_hash=5501610e9cfa7b5d7a9cd95494837115943cc9adef8b85c930b5565736e4fa0f
+$(package)_sha256_hash=c7f994118f4205dface4e4aebccc29955a2b5a13643ca4d74f3b6dd208ad0f8f
 $(package)_dependencies=gmp
 #$(package)_patches=...TODO (when we switch back to https://github.com/Chia-Network/bls-signatures)
 
